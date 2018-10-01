@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="NealST&#39;s blog">
+  <meta name="keyword" content="NealST, blog">
+  
+  <link rel="shortcut icon" type="image/ico" href="https://cdn-images-1.medium.com/fit/c/32/32/0*AtTPSoS2h31j5-Ca." />
+  
+  <title>
+    
+    狂拽酷炫的terminal，你值得拥有 |
+    墨筝
+    
+  </title>
+  <link rel="preload" href="https://i.loli.net/2018/09/22/5ba634761474a.png" as="image" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/nprogress@0.2.0/nprogress.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+  <script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <script src="/js/qrious.js"></script>
+  
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo-img"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+      <li class="list-item">
+        
+        <a href="/" class="item-link">
+          Home</a>
+        
+      </li>
+      
+      <li class="list-item">
+        
+        <a href="/tags/" class="item-link">
+          Tags</a>
+        
+      </li>
+      
+      <li class="list-item">
+        
+        <a href="/archives/" class="item-link">
+          Archives</a>
+        
+      </li>
+      
+      <li class="list-item">
+        
+        <a href="/project/" class="item-link">
+          Projects</a>
+        
+      </li>
+      
+      <li class="list-item">
+        
+        <a href="/about/" class="item-link">
+          About</a>
+        
+      </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+        <li class="menu-item">
+          
+          <a href="/" class="menu-link">
+            Home</a>
+          
+        </li>
+        
+        <li class="menu-item">
+          
+          <a href="/tags/" class="menu-link">
+            Tags</a>
+          
+        </li>
+        
+        <li class="menu-item">
+          
+          <a href="/archives/" class="menu-link">
+            Archives</a>
+          
+        </li>
+        
+        <li class="menu-item">
+          
+          <a href="/project/" class="menu-link">
+            Projects</a>
+          
+        </li>
+        
+        <li class="menu-item">
+          
+          <a href="/about/" class="menu-link">
+            About</a>
+          
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+    <div id="article-banner">
+  <h2>
+    狂拽酷炫的terminal，你值得拥有
+  </h2>
+  <p class="post-date">
+    2018-10-01
+  </p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content">
+      <p><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e0b8ec4885875?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
+<p>命令行是程序员日常工作中的重要组成部分，一个优秀的命令行环境不仅要功能强大，其外观更要造化钟神秀，这样才能让程序员有一个更加轻松愉悦的工作心情。或许你目前的命令行是长下面这样:</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e0bf83be9651d?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
+<p>你是否幻想过拥有一个如黑客帝国一般的命令行:</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e0c1002fc6cc6?imageslim" alt=""></p>
+<p>当然这是不现实的，但我们至少可以让我们的命令行拥有如下所示的颜值:</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e0c39d8006d6e?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
+<p>下面我们就来看看要怎么配置才能实现这样的效果，友情提示，本文所提到的配置都是针对 mac terminal 哦。</p>
+<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><h3 id="升级你的-terminal"><a href="#升级你的-terminal" class="headerlink" title="升级你的 terminal"></a>升级你的 terminal</h3><p>请安装<a href="https://www.iterm2.com/features.html" target="_blank" rel="noopener">iterm</a>,<a href="https://ohmyz.sh/" target="_blank" rel="noopener">oh-my-zsh</a></p>
+<h3 id="下载，安装，并使用字体色"><a href="#下载，安装，并使用字体色" class="headerlink" title="下载，安装，并使用字体色"></a>下载，安装，并使用字体色</h3><ol>
+<li>进入<a href="https://gist.github.com/rdempsey/596193b8ede69767719c#file-matrix_color_scheme_iterm2" target="_blank" rel="noopener">gist</a>后，点击‘download zip’，可以先在你的桌面创建一个目录 itermThemes,解压之前下载好的 zip 文件后，将解压目录中的文件(注意，仅需要目标文件，不要整个文件夹)移至 itermThemes 中.打开 terminal，进入 itermThemes 目录(cd Desktop/itermThemes)，然后 copy 下面的代码到命令行中，按回车执行, 这段代码会遍历该目录下的 color codes,然后将结果命名为‘matrix_color_scheme_2’并存储在 iterm 的自定义 colors 中</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> f <span class="keyword">in</span> *; <span class="keyword">do</span></span><br><span class="line"> THEME=$(basename <span class="string">"<span class="variable">$f</span>"</span>)</span><br><span class="line"> defaults write -app iTerm <span class="string">'Custom Color Presets'</span> -dict-add <span class="string">"<span class="variable">$THEME</span>"</span> <span class="string">"<span class="variable">$(cat "$f")</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>在 terminal 的 preferences 中配置使用该 color,具体路径是 iTerm2, Preferences, Profiles, Colors, Color Presets，“matrix_color_scheme_iterm2”，如下图所示:<br><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e10fb15268f36?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""><br> 字体色配置完成后，现在你的 terminal 将会达到初步的酷炫效果：<br><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e110ca534c481?imageslim" alt=""><br> 要实现我们之前设定的效果，还有更重要的一步要做。</li>
+</ol>
+<h3 id="安装主题－Powerlevel9k，以及-powerline-字体"><a href="#安装主题－Powerlevel9k，以及-powerline-字体" class="headerlink" title="安装主题－Powerlevel9k，以及 powerline 字体"></a>安装主题－Powerlevel9k，以及 powerline 字体</h3><p>Powerlevel9k 是一个强大的主题，可以实时展示你当前所处的目录，你的当前 git 分支以及你输入指令的执行耗时：<br> <img src="https://user-gold-cdn.xitu.io/2018/4/20/162e1174e80931de?imageslim" alt=""></p>
+<ol>
+<li>在你的 terminal 中执行以下命令,该命令会将 Powerlevel9k 的仓库 clone 下来到你的 oh-my-zsh 自定义主题文件夹中</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>用你熟悉的编辑器打来你的 zsh 配置，然后替换 zsh 主题。比如：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.zshrc</span><br><span class="line">ZSH_THEME=<span class="string">"powerlevel9k/powerlevel9k"</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>通过如下指令安装 powerline 字体:</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># clone</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/powerline/fonts.git --depth=1</span><br><span class="line"><span class="comment"># install</span></span><br><span class="line"><span class="built_in">cd</span> fonts</span><br><span class="line">./install.sh</span><br><span class="line"><span class="comment"># clean-up a bit</span></span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line">rm -rf fonts</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>在 iterm preferences 中选择 powerline 字体并使用它，操作路径是 iTerm, Preferences, Profiles, Text, Change Font, Select Meslo LG M for Powerline。如下图所示:<br><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e1200a73d690b?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""><br>现在你将拥有一个狂拽酷炫的 terminal,这会让你的工作环境更加赏心悦目<br><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e122ab07fce3c?imageslim" alt=""></li>
+</ol>
+<h2 id="节语"><a href="#节语" class="headerlink" title="节语"></a>节语</h2><p>配置完成其实只是个开始，关于 iTerm，oh-my-zsh,以及 Powerlevel9k 还有更多有趣的特性和自定义配置以及插件可以去深入玩耍，比如我可以在 zshrc 中添加下面的配置来缩短每行命令中展示的文件路径，从而给你输入的指令腾出更多的空间：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Shorten directory shown</span></span><br><span class="line">POWERLEVEL9K_SHORTEN_DIR_LENGTH=1</span><br><span class="line">POWERLEVEL9K_SHORTEN_DELIMITER=””</span><br><span class="line">POWERLEVEL9K_SHORTEN_STRATEGY=”truncate_from_right”</span><br><span class="line"><span class="comment">#Set default user to avoid showing 'user' on every line</span></span><br><span class="line">DEFAULT_USER=”whoami”</span><br></pre></td></tr></table></figure>
+<p>诚然，每个人有每个人的审美，你也可以选择使用其他的颜色或字体，重要的是你开心就好。<br><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e12b5c36bbad5?imageslim" alt=""></p>
+
+    </section>
+    <!-- Tags START -->
+    
+    <div class="tags">
+      <span>Tags:</span>
+      
+  <a href="/tags#iterm,zsh,terminal" >
+    <span class="tag-code">iterm,zsh,terminal</span>
+  </a>
+
+    </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/2018/10/01/render-engine/">
+        
+          彻底了解渲染引擎以及几点关于性能优化的建议
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+    <!-- 二维码 END -->
+    
+    <!-- Gitment START -->
+    <div id="comment-container"></div>
+    <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#开始"><span class="toc-nav-text">开始</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#升级你的-terminal"><span class="toc-nav-text">升级你的 terminal</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#下载，安装，并使用字体色"><span class="toc-nav-text">下载，安装，并使用字体色</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装主题－Powerlevel9k，以及-powerline-字体"><span class="toc-nav-text">安装主题－Powerlevel9k，以及 powerline 字体</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#节语"><span class="toc-nav-text">节语</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://NealST.github.io/2018/10/01/terminal/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function () {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+    // zoom image
+    $(".markdown-content img").on('click', function () {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="' + src + '" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function () {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: window.location.href
+    });
+
+    new Valine({
+      el: '#comment-container',
+      appId: 'sumb6Ib2mGOKEx3xrY1t1QRa-gzGzoHsz',
+      appKey: 'fnx3pWTkzA728VlEoiwVSGou',
+      notify: false,
+      verify: false,
+      avatar: 'wavatar',
+      placeholder: '请填写评论'
+    });
+  })();
+</script>
+
+<script>
+  var disqus_shortname = '';
+  
+  var disqus_url = 'https://NealST.github.io/2018/10/01/terminal/';
+  
+    (function () {
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//go.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy;
+    2018 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/NealST">NealST</a>
+  </p>
+</footer>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function () {
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function () {
+    $('figure pre').each(function (i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+  window.addEventListener('load', function () {
+    console.log('hello')
+    if (document.getElementById("particles-js")) {
+      particlesJS("particles-js", {
+        particles: {
+          number: {
+            value: 80,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: "#ffffff"
+          },
+          shape: {
+            type: "circle",
+            stroke: {
+              width: 0,
+              color: "#000000"
+            },
+            polygon: {
+              nb_sides: 5
+            },
+            image: {
+              width: 100,
+              height: 100
+            }
+          },
+          opacity: {
+            value: 0.5,
+            random: false,
+            anim: {
+              enable: false,
+              speed: 1,
+              opacity_min: 0.1,
+              sync: false
+            }
+          },
+          size: {
+            value: 3,
+            random: true,
+            anim: {
+              enable: true,
+              speed: 1,
+              size_min: 0.1,
+              sync: false
+            }
+          },
+          line_linked: {
+            enable: true,
+            distance: 176.37479644244019,
+            color: "#ffffff",
+            opacity: 0.2805962670675185,
+            width: 1.4430665163472378
+          },
+          move: {
+            enable: true,
+            speed: 1,
+            direction: "none",
+            random: false,
+            straight: false,
+            out_mode: "out",
+            bounce: false,
+            attract: {
+              enable: true,
+              rotateX: 400.851810096455,
+              rotateY: 1200
+            }
+          }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: {
+              enable: true,
+              mode: "grab"
+            },
+            onclick: {
+              enable: true,
+              mode: "push"
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 400,
+              line_linked: {
+                opacity: 1
+              }
+            },
+            bubble: {
+              distance: 400,
+              size: 40,
+              duration: 2,
+              opacity: 8,
+              speed: 3
+            },
+            repulse: {
+              distance: 200,
+              duration: 0.4
+            },
+            push: {
+              particles_nb: 4
+            },
+            remove: {
+              particles_nb: 2
+            }
+          }
+        },
+        retina_detect: true
+      });
+    }
+  })
+</script>
+<script src="/js/script.js"></script>
+  </body>
+</html>

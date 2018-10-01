@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="NealST&#39;s blog">
+  <meta name="keyword" content="NealST, blog">
+  
+  <link rel="shortcut icon" type="image/ico" href="https://cdn-images-1.medium.com/fit/c/32/32/0*AtTPSoS2h31j5-Ca." />
+  
+  <title>
+    
+    javascript的内存管理以及3种常见的内存泄漏 |
+    墨筝
+    
+  </title>
+  <link rel="preload" href="https://i.loli.net/2018/09/22/5ba634761474a.png" as="image" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/nprogress@0.2.0/nprogress.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+  <script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <script src="/js/qrious.js"></script>
+  
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo-img"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+      <li class="list-item">
+        
+        <a href="/" class="item-link">
+          Home</a>
+        
+      </li>
+      
+      <li class="list-item">
+        
+        <a href="/tags/" class="item-link">
+          Tags</a>
+        
+      </li>
+      
+      <li class="list-item">
+        
+        <a href="/archives/" class="item-link">
+          Archives</a>
+        
+      </li>
+      
+      <li class="list-item">
+        
+        <a href="/project/" class="item-link">
+          Projects</a>
+        
+      </li>
+      
+      <li class="list-item">
+        
+        <a href="/about/" class="item-link">
+          About</a>
+        
+      </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+        <li class="menu-item">
+          
+          <a href="/" class="menu-link">
+            Home</a>
+          
+        </li>
+        
+        <li class="menu-item">
+          
+          <a href="/tags/" class="menu-link">
+            Tags</a>
+          
+        </li>
+        
+        <li class="menu-item">
+          
+          <a href="/archives/" class="menu-link">
+            Archives</a>
+          
+        </li>
+        
+        <li class="menu-item">
+          
+          <a href="/project/" class="menu-link">
+            Projects</a>
+          
+        </li>
+        
+        <li class="menu-item">
+          
+          <a href="/about/" class="menu-link">
+            About</a>
+          
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+    <div id="article-banner">
+  <h2>
+    javascript的内存管理以及3种常见的内存泄漏
+  </h2>
+  <p class="post-date">
+    2018-10-01
+  </p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content">
+      <p>根据<a href="https://githut.info/" target="_blank" rel="noopener">GitHut stats</a>的统计数据显示，javascript 语言在 Github 中的活跃项目仓库数量和总的 push 数量已经登上了榜首的位置，而且在越来越多的领域里我们都能看 javascript 持续活跃的身影和不断前行的脚步<br><img src="https://user-gold-cdn.xitu.io/2017/12/10/1603e8b026b7739a?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
+<p>尽管我们正在越来越多的编写 Javascript 代码，但是我们不一定真的了解它。编写本系列专栏的目的就是深入到 javascript 的底层，了解其运行原理，帮助我们写出更高效的代码，减少一些不必要的 bug.<br>javascript 代码的执行分为 3 个部分：runtime, js engine, event loop，运行时(runtime)提供了 window，dom 等 API 注入，js 引擎负责内存管理，代码编译执行，事件循环则负责处理我们的异步逻辑，具体如下图所示：<br><img src="https://user-gold-cdn.xitu.io/2017/12/10/1603eac4434ce4c4?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""><br>在这篇文章中我将主要探讨 javascript 内存管理，调用栈以及如何处理内存泄漏问题。 在后续的文章中我会继续介绍事件循环以及 js 引擎的执行机制。</p>
+<h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><p>javascript 自带垃圾回收机制，它可以自动分配内存并回收不再使用的内存，这也使很多开发者认为我们没有必要去关注 js 的内存管理。但是我相信我们在平时开发过程中都或多或少的遇到过内存泄漏问题，理解 javascript 的内存管理机制可以帮助我们解决此类问题并写出更好的代码，而且作为一名程序员，我们也应当保持足够的好奇心去了解我们写出的代码在底层的运行原理。</p>
+<h3 id="内存是什么"><a href="#内存是什么" class="headerlink" title="内存是什么"></a>内存是什么</h3><p>在进入具体探讨之前，我们先来看下内存到底是什么。内存从物理意义上是指由一系列晶体管构成的可以存储数据的回路，从逻辑的角度我们可以将内存看作是一个巨大的可读写的比特数组。它存储着我们编写的代码以及我们在代码中定义的各类变量。对于很多静态类型编程语言来说，在代码进入编译阶段时编译器会根据变量声明时指定的类型提前申请分配给该变量的内存（比如，整型变量对应的是 4 个字节，浮点数对应 8 个字节）。内存区域分为栈空间和堆空间两部分，对于可以确定大小的变量，它们会被存储在栈空间中，比如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int n; <span class="comment">// 4 bytes</span></span><br><span class="line">int x[<span class="number">4</span>]; <span class="comment">// array of 4 elements, each 4 bytes</span></span><br><span class="line">double m; <span class="comment">// 8 bytes</span></span><br></pre></td></tr></table></figure>
+<p>还有一种类型的变量，不能在编译阶段就确定其需要多大的存储区域，其占用内存大小是在运行时确定的，比如:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int n = readInput(); <span class="comment">// n的大小依赖于用户的输入</span></span><br></pre></td></tr></table></figure>
+<p>对于这一类型的变量，它们会被存储在堆空间中。内存静态分配(static allocation)与动态分配(Dynamic allocation)的区别如下所示:<br><img src="https://user-gold-cdn.xitu.io/2017/12/10/1603f5e473ea9cc9?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
+<h3 id="内存生命周期"><a href="#内存生命周期" class="headerlink" title="内存生命周期"></a>内存生命周期</h3><p>对于任何编程语言，内存的生命周期都基本一致，如下所示：<br><img src="https://user-gold-cdn.xitu.io/2017/12/10/1603f689c847ae60?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
+<ol>
+<li>分配内存，在一些底层语言，比如 c 语言中我们也可以通过 malloc() 和 free()函数来手动完成内存的分配和释放。在 javascript 中这个过程是在我们做变量声明赋值时自动完成的，比如:</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> n = <span class="number">374</span>; <span class="comment">// allocates memory for a number</span></span><br><span class="line"><span class="keyword">var</span> s = <span class="string">"sessionstack"</span>; <span class="comment">// allocates memory for a string</span></span><br><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">  a: <span class="number">1</span>,</span><br><span class="line">  b: <span class="literal">null</span></span><br><span class="line">&#125;; <span class="comment">// allocates memory for an object and its contained values</span></span><br><span class="line"><span class="keyword">var</span> a = [<span class="number">1</span>, <span class="literal">null</span>, <span class="string">"str"</span>]; <span class="comment">// (like object) allocates memory for the</span></span><br><span class="line"><span class="comment">// array and its contained values</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params">a</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> a + <span class="number">3</span>;</span><br><span class="line">&#125; <span class="comment">// allocates a function (which is a callable object)</span></span><br><span class="line"><span class="comment">// function expressions also allocate an object</span></span><br><span class="line">someElement.addEventListener(</span><br><span class="line">  <span class="string">"click"</span>,</span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    someElement.style.backgroundColor = <span class="string">"blue"</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="literal">false</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数调用触发的内存分配</span></span><br><span class="line"><span class="keyword">var</span> d = <span class="keyword">new</span> <span class="built_in">Date</span>(); <span class="comment">// allocates a Date object</span></span><br><span class="line"><span class="keyword">var</span> e = <span class="built_in">document</span>.createElement(<span class="string">"div"</span>); <span class="comment">// allocates a DOM element</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法的调用也可以触发</span></span><br><span class="line"><span class="keyword">var</span> s1 = <span class="string">"sessionstack"</span>;</span><br><span class="line"><span class="keyword">var</span> s2 = s1.substr(<span class="number">0</span>, <span class="number">3</span>); <span class="comment">// s2 is a new string</span></span><br><span class="line"><span class="comment">// Since strings are immutable,</span></span><br><span class="line"><span class="comment">// JavaScript may decide to not allocate memory,</span></span><br><span class="line"><span class="comment">// but just store the [0, 3] range.</span></span><br><span class="line"><span class="keyword">var</span> a1 = [<span class="string">"str1"</span>, <span class="string">"str2"</span>];</span><br><span class="line"><span class="keyword">var</span> a2 = [<span class="string">"str3"</span>, <span class="string">"str4"</span>];</span><br><span class="line"><span class="keyword">var</span> a3 = a1.concat(a2);</span><br><span class="line"><span class="comment">// new array with 4 elements being</span></span><br><span class="line"><span class="comment">// the concatenation of a1 and a2 elements</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>使用内存，变量完成内存分配之后我们的程序才可以使用它们，做一些读或写的操作。</li>
+<li>释放内存，当程序不需要再使用某些变量时，它们占用的内存就会进行释放，腾出空间。这里最大的问题是如何判定哪些变量是需要被回收的，对于像 javascript 这样的高级语言来说内存释放过程是由垃圾回收器完成的，它用于确定可回收内存的方法主要有两种：引用计数与标记清除。</li>
+</ol>
+<h4 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h4><p>在讨论该算法前，我们先来看下什么是引用（reference）。所谓引用是指一个对象与另一个对象的连接关系，如果对象 A 可以隐式或显式的访问对象 B，那么我们就可以说对象 A 拥有一个对对象 B 的引用，比如在 javascript 中一个 object 可以通过<strong>proto</strong>访问到其 prototype 对象（隐式），也可以直接访问其属性（显式）。</p>
+<p>对于引用计数算法来说，它判定一个目标是可以被回收的标志就是该目标不再存在与其他对象的引用关系，比如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o1 = &#123;</span><br><span class="line">  o2: &#123;</span><br><span class="line">    x: <span class="number">1</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 2 objects are created.</span></span><br><span class="line"><span class="comment">// 'o2' is referenced by 'o1' object as one of its properties.</span></span><br><span class="line"><span class="comment">// None can be garbage-collected</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> o3 = o1; <span class="comment">// the 'o3' variable is the second thing that</span></span><br><span class="line"><span class="comment">// has a reference to the object pointed by 'o1'.</span></span><br><span class="line"></span><br><span class="line">o1 = <span class="number">1</span>; <span class="comment">// now, the object that was originally in 'o1' has a</span></span><br><span class="line"><span class="comment">// single reference, embodied by the 'o3' variable</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> o4 = o3.o2; <span class="comment">// reference to 'o2' property of the object.</span></span><br><span class="line"><span class="comment">// This object has now 2 references: one as</span></span><br><span class="line"><span class="comment">// a property.</span></span><br><span class="line"><span class="comment">// The other as the 'o4' variable</span></span><br><span class="line"></span><br><span class="line">o3 = <span class="string">"374"</span>; <span class="comment">// The object that was originally in 'o1' has now zero</span></span><br><span class="line"><span class="comment">// references to it.</span></span><br><span class="line"><span class="comment">// It can be garbage-collected.</span></span><br><span class="line"><span class="comment">// However, what was its 'o2' property is still</span></span><br><span class="line"><span class="comment">// referenced by the 'o4' variable, so it cannot be</span></span><br><span class="line"><span class="comment">// freed.</span></span><br><span class="line"></span><br><span class="line">o4 = <span class="literal">null</span>; <span class="comment">// what was the 'o2' property of the object originally in</span></span><br><span class="line"><span class="comment">// 'o1' has zero references to it.</span></span><br><span class="line"><span class="comment">// It can be garbage collected.</span></span><br></pre></td></tr></table></figure>
+<p>在上述示例中，o4 就是可以被回收的，引用计数在大多数情况下都是没什么问题的，但是当我们遇到循环引用它就会遇到麻烦，比如:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> o1 = &#123;&#125;;</span><br><span class="line">  <span class="keyword">var</span> o2 = &#123;&#125;;</span><br><span class="line">  o1.p = o2; <span class="comment">// o1 references o2</span></span><br><span class="line">  o2.p = o1; <span class="comment">// o2 references o1. This creates a cycle.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f();</span><br></pre></td></tr></table></figure>
+<p>在上述示例中，o1,o2 互相引用，使得彼此都不能被释放。</p>
+<h4 id="标记清除"><a href="#标记清除" class="headerlink" title="标记清除"></a>标记清除</h4><p>标记清除判断某个对象是否可以被回收的标志是该对象不能再被访问到。其执行过程总共分为三步：</p>
+<ol>
+<li>确定根对象：在 javascript 中根对象主要是指全局对象，比如浏览器环境中的 window，node.js 中的 global。</li>
+<li>从根对象开始遍历子属性，并将这些属性变量标记为活跃类型，通过根对象不能访问到的就标记为可回收类型。</li>
+<li>根据第二步标记出来的结果进行内存回收。<br>标记清除的算法执行示意图如下所示：<br><img src="https://user-gold-cdn.xitu.io/2017/12/10/160402af04313fa6?imageslim" alt=""></li>
+</ol>
+<p>标记清除的算法比引用计数更优秀的地方在于它们对于可回收对象的判定方式上，一个对象不存在引用关系可以使该对象不能被访问到，而反过来则不一定成立，比如之前的循环引用问题，当函数执行完成之后，o1,o2 这两个变量都不能通过 window 查找到，在标记清除算法下会被当作可回收类型。<br><img src="https://user-gold-cdn.xitu.io/2017/12/10/1604038b27722486?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
+<h3 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h3><p>内存泄漏是指不再使用的内存区域没有被回收，导致这一块内存区域被白白浪费。虽然我们有前面提到的垃圾回收算法，但是我们在日常开发过程中仍然会时时遇到内存泄漏的问题，主要有以下三种类型：</p>
+<ol>
+<li>全局变量<br>考虑以下这段代码：</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">arg</span>) </span>&#123;</span><br><span class="line">  bar = <span class="string">"some text"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这段代码中我们在函数 foo 里给变量 bar 赋值了一个字符串，但是我们没有在该函数作用域内先声明它，在 javascript 执行过程中，bar 会被挂载到全局变量 window 中(假设当前是浏览器环境)，当作是 window 的属性。这带来的问题是即使函数 foo 执行完毕，该变量仍然是可访问到的，其占用的内存不会得到释放，从而导致内存泄漏。<br>我们在日常开发过程中要尽量避免使用全局变量，除了污染全局作用域的问题，内存泄漏也是一个不容忽视的因素。</p>
+<ol start="2">
+<li>闭包<br>内部函数可以访问其外部作用域内的变量，闭包为我们编写 javascript 代码带来前所未有的灵活性，但是闭包也有可能会带来内存泄漏的风险。比如下面这段代码:</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> theThing = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">var</span> replaceThing = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> originalThing = theThing;</span><br><span class="line">  <span class="keyword">var</span> unused = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (originalThing)</span><br><span class="line">      <span class="comment">// a reference to 'originalThing'</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"hi"</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">  theThing = &#123;</span><br><span class="line">    longStr: <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">1000000</span>).join(<span class="string">"*"</span>),</span><br><span class="line">    someMethod: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"message"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">setInterval(replaceThing, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+<p>在函数 replaceThing 中，函数 unused 会形成一个闭包并含有对 originalThing 的引用，一旦 replaceThing 执行，theThing 会被赋予一个对象作为新值，在该对象中也会定义一个新的闭包 someMethod, 这两个闭包是在相同的父级作用域中创建的，因此它们会共享外部作用域。由于 someMethod 方法可以通过 theThing 在 replaceThing 外部访问到，即使 unused 没有被调用，它对变量 originalThing 的引用会使该作用域不会被回收。因为每个闭包作用域都含有对 longstr 的间接引用，这种状态下会导致大量的内存泄漏。</p>
+<ol start="3">
+<li>dom 引用，先来看下面这一段代码:</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elements = &#123;</span><br><span class="line">  button: <span class="built_in">document</span>.getElementById(<span class="string">"button"</span>),</span><br><span class="line">  image: <span class="built_in">document</span>.getElementById(<span class="string">"image"</span>)</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">doStuff</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  elements.image.src = <span class="string">"http://example.com/image_name.png"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">removeImage</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// The image is a direct child of the body element.</span></span><br><span class="line">  <span class="built_in">document</span>.body.removeChild(<span class="built_in">document</span>.getElementById(<span class="string">"image"</span>));</span><br><span class="line">  <span class="comment">// At this point, we still have a reference to #button in the</span></span><br><span class="line">  <span class="comment">//global elements object. In other words, the button element is</span></span><br><span class="line">  <span class="comment">//still in memory and cannot be collected by the GC.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上述代码中我们在两个地方保存了对 image 元素的引用，当函数 removeImage 执行时尽管 image 元素被删除，但是全局变量 elements 中仍然存在对 button 元素的引用，内存回收时不会将该元素回收。<br>除此之外还有另一种情况也值得引起注意。如果你存在对某个 table cell(td 标签)的引用，当你在 dom 树中删除它所属的 table 但该引用并没有删除时也同样会发生内存泄漏，垃圾回收器并不会像你所想的那样回收所有只保留 cell，而是会将整个 table 都保存在内存中，因为该 table 是 cell 的父节点，该 cell 依然会保持对其父节点的引用。</p>
+<h3 id="调用栈-call-stack"><a href="#调用栈-call-stack" class="headerlink" title="调用栈(call stack)"></a>调用栈(call stack)</h3><p>调用栈是内存中的一块存储区域，它负责记录程序当前的执行位置，我们可以通过一个示例来看下调用栈的工作模式，先来看如下代码:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">multiply</span>(<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> x * y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">printSquare</span>(<span class="params">x</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> s = multiply(x, x);</span><br><span class="line">  <span class="built_in">console</span>.log(s);</span><br><span class="line">&#125;</span><br><span class="line">printSquare(<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+<p>当这段代码开始执行时，调用栈会随着函数的调用发生变化<br><img src="https://user-gold-cdn.xitu.io/2017/11/22/15fe349fad9be420?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
+<p>当 printSquare 被调用时它会先进栈，在函数执行过程中调用了函数 multiply，函数 multiply 被压入栈顶，执行完成之后出栈。再来看另外一个示例:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"SessionStack will help you resolve crashes :)"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  foo();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">start</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  bar();</span><br><span class="line">&#125;</span><br><span class="line">start();</span><br></pre></td></tr></table></figure>
+<p>当这段代码执行时报错提示如下所示:<br><img src="https://user-gold-cdn.xitu.io/2017/11/22/15fe34a06562522b?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
+<p>根据报错位置指示的函数名称，我们可以对整个调用栈的顺序一目了然。<br>调用栈的空间是有限的，当函数调用信息超过该空间大小，就会发生常见的堆栈溢出的错误，比如:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  foo();</span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
+<p>它会不断的调用自身，其调用栈存储示意图和执行报错如下所示:<br><img src="https://user-gold-cdn.xitu.io/2017/11/22/15fe34a06c23fb25?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/11/22/15fe34a0534c544f?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本篇文章主要探讨了 javascript 中的内存管理策略，介绍了内存的分配，内存的回收以及三种容易导致内存泄漏的场景还有代码执行用到的调用栈等等，属于 javascript 中比较基础但却容易忽视的知识点，希望对您有所帮助。</p>
+
+    </section>
+    <!-- Tags START -->
+    
+    <div class="tags">
+      <span>Tags:</span>
+      
+  <a href="/tags#javascript, memory manage" >
+    <span class="tag-code">javascript, memory manage</span>
+  </a>
+
+    </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/10/01/event-async/">
+        <span class="nav-arrow">← </span>
+        
+          深入理解事件循环和异步流程控制
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+    <!-- 二维码 END -->
+    
+    <!-- Gitment START -->
+    <div id="comment-container"></div>
+    <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#内存管理"><span class="toc-nav-text">内存管理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#内存是什么"><span class="toc-nav-text">内存是什么</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#内存生命周期"><span class="toc-nav-text">内存生命周期</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#引用计数"><span class="toc-nav-text">引用计数</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#标记清除"><span class="toc-nav-text">标记清除</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#内存泄漏"><span class="toc-nav-text">内存泄漏</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#调用栈-call-stack"><span class="toc-nav-text">调用栈(call stack)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#结语"><span class="toc-nav-text">结语</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://NealST.github.io/2018/10/01/memory-manage/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function () {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+    // zoom image
+    $(".markdown-content img").on('click', function () {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="' + src + '" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function () {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: window.location.href
+    });
+
+    new Valine({
+      el: '#comment-container',
+      appId: 'sumb6Ib2mGOKEx3xrY1t1QRa-gzGzoHsz',
+      appKey: 'fnx3pWTkzA728VlEoiwVSGou',
+      notify: false,
+      verify: false,
+      avatar: 'wavatar',
+      placeholder: '请填写评论'
+    });
+  })();
+</script>
+
+<script>
+  var disqus_shortname = '';
+  
+  var disqus_url = 'https://NealST.github.io/2018/10/01/memory-manage/';
+  
+    (function () {
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//go.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy;
+    2018 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/NealST">NealST</a>
+  </p>
+</footer>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function () {
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function () {
+    $('figure pre').each(function (i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+  window.addEventListener('load', function () {
+    console.log('hello')
+    if (document.getElementById("particles-js")) {
+      particlesJS("particles-js", {
+        particles: {
+          number: {
+            value: 80,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: "#ffffff"
+          },
+          shape: {
+            type: "circle",
+            stroke: {
+              width: 0,
+              color: "#000000"
+            },
+            polygon: {
+              nb_sides: 5
+            },
+            image: {
+              width: 100,
+              height: 100
+            }
+          },
+          opacity: {
+            value: 0.5,
+            random: false,
+            anim: {
+              enable: false,
+              speed: 1,
+              opacity_min: 0.1,
+              sync: false
+            }
+          },
+          size: {
+            value: 3,
+            random: true,
+            anim: {
+              enable: true,
+              speed: 1,
+              size_min: 0.1,
+              sync: false
+            }
+          },
+          line_linked: {
+            enable: true,
+            distance: 176.37479644244019,
+            color: "#ffffff",
+            opacity: 0.2805962670675185,
+            width: 1.4430665163472378
+          },
+          move: {
+            enable: true,
+            speed: 1,
+            direction: "none",
+            random: false,
+            straight: false,
+            out_mode: "out",
+            bounce: false,
+            attract: {
+              enable: true,
+              rotateX: 400.851810096455,
+              rotateY: 1200
+            }
+          }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: {
+              enable: true,
+              mode: "grab"
+            },
+            onclick: {
+              enable: true,
+              mode: "push"
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 400,
+              line_linked: {
+                opacity: 1
+              }
+            },
+            bubble: {
+              distance: 400,
+              size: 40,
+              duration: 2,
+              opacity: 8,
+              speed: 3
+            },
+            repulse: {
+              distance: 200,
+              duration: 0.4
+            },
+            push: {
+              particles_nb: 4
+            },
+            remove: {
+              particles_nb: 2
+            }
+          }
+        },
+        retina_detect: true
+      });
+    }
+  })
+</script>
+<script src="/js/script.js"></script>
+  </body>
+</html>
