@@ -17,40 +17,17 @@
   <link rel="preload" href="https://i.loli.net/2018/09/22/5ba634761474a.png" as="image" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://unpkg.com/nprogress@0.2.0/nprogress.css" rel="stylesheet">
+  <link href="https://unpkg.com/gitalk/dist/gitalk.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
   
-  
-    <!-- MathJax support START -->
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <!-- MathJax support END -->
-  
-
-
 </head>
 <div class="wechat-share">
   <img src="/css/images/logo.png" />
@@ -218,7 +195,7 @@
     <!-- 二维码 END -->
     
     <!-- Gitment START -->
-    <div id="comments"></div>
+    <div id="gitalk-container"></div>
     <!-- Gitment END -->
     
   </article>
@@ -291,31 +268,43 @@
     });
 
     // gitment
-    var gitmentConfig = "NealST";
-    if (gitmentConfig !== 'undefined') {
-      var gitment = new Gitment({
-        id: "mainsite",
-        owner: "NealST",
-        repo: "NealST.github.io",
-        oauth: {
-          client_id: "acdae25126f8a5ac0007",
-          client_secret: "370eba9573ba27db3920209df1b9b32ba8a92720"
-        },
-        theme: {
-          render(state, instance) {
-            const container = document.createElement('div')
-            container.lang = "en-US"
-            container.className = 'gitment-container gitment-root-container'
-            container.appendChild(instance.renderHeader(state, instance))
-            container.appendChild(instance.renderEditor(state, instance))
-            container.appendChild(instance.renderComments(state, instance))
-            container.appendChild(instance.renderFooter(state, instance))
-            return container;
-          }
-        }
-      })
-      gitment.render(document.getElementById('comments'))
-    }
+    // var gitmentConfig = "NealST";
+    // if (gitmentConfig !== 'undefined') {
+    //   var gitment = new Gitment({
+    //     id: "mainsite",
+    //     owner: "NealST",
+    //     repo: "NealST.github.io",
+    //     oauth: {
+    //       client_id: "acdae25126f8a5ac0007",
+    //       client_secret: "370eba9573ba27db3920209df1b9b32ba8a92720"
+    //     },
+    //     theme: {
+    //       render(state, instance) {
+    //         const container = document.createElement('div')
+    //         container.lang = "en-US"
+    //         container.className = 'gitment-container gitment-root-container'
+    //         container.appendChild(instance.renderHeader(state, instance))
+    //         container.appendChild(instance.renderEditor(state, instance))
+    //         container.appendChild(instance.renderComments(state, instance))
+    //         container.appendChild(instance.renderFooter(state, instance))
+    //         return container;
+    //       }
+    //     }
+    //   })
+    //   gitment.render(document.getElementById('comments'))
+    // }
+
+    // gitalk
+    const gitalk = new Gitalk({
+      clientID: 'acdae25126f8a5ac0007',
+      clientSecret: '370eba9573ba27db3920209df1b9b32ba8a92720',
+      repo: 'NealST.github.io',
+      owner: 'NealST',
+      admin: ['NealST'],
+      distractionFreeMode: false  // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
   })();
 </script>
 
