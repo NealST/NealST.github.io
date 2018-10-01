@@ -382,6 +382,7 @@ h2.article-head {
   width: 40px;
   height: 40px;
   margin-right: 10px;
+  border-radius: 20px;
 }
 .home-link {
   display: flex;
