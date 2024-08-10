@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, workshop, life enjoying">
+  
+    <link rel="shortcut icon" type="image/ico" href="https://cdn-images-1.medium.com/fit/c/32/32/0*AtTPSoS2h31j5-Ca."/>
+  
+  <title>
+    
+      深入理解事件循环和异步流程控制 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>深入理解事件循环和异步流程控制</h2>
+  <p class="post-date">2018-10-01</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>javascript 的执行分为三个部分：运行时，事件循环，js 引擎。运行时提供了诸如注入全局 API（dom, setTimeout 之类）这样的功能。js 引擎负责代码编译执行，包括内存管理。之前写了一篇关于 javascript 内存管理的文章,具体可见 <a href="https://nealst.github.io/2018/10/01/memory-manage/">javascript 内存管理以及三种常见的内存泄漏</a><br>javascript 执行示意图如下所示:<br><img src="https://user-gold-cdn.xitu.io/2017/12/10/1603eac4434ce4c4?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"><br>事件循环与回调队列相对应，负责处理我们的异步逻辑。本篇文章将会从事件循环的诞生背景(解决什么问题), 处理异步执行问题的思路(怎样解决的问题)以及 javascript 语言层面对于异步逻辑编写的封装</p>
+<h2 id="事件循环-event-loop"><a href="#事件循环-event-loop" class="headerlink" title="事件循环(event loop)"></a>事件循环(event loop)</h2><h3 id="为什么我们需要事件循环"><a href="#为什么我们需要事件循环" class="headerlink" title="为什么我们需要事件循环"></a>为什么我们需要事件循环</h3><p>作为前端工程师，我们都知道 javascript 是单线程的。所谓单线程，就是在同一时间我们只能响应一个操作，这带来的问题是如果某个操作极为耗时，比如处理复杂的图像运算或者等待服务器返回数据的过程，典型的场景如下所示:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This is assuming that you&#x27;re using jQuery</span></span><br><span class="line">jQuery.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">  <span class="attr">url</span>: <span class="string">&quot;https://api.example.com/endpoint&quot;</span>,</span><br><span class="line">  <span class="attr">success</span>: <span class="keyword">function</span>(<span class="params">response</span>) &#123;</span><br><span class="line">    <span class="comment">// This is your callback.</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">async</span>: <span class="literal">false</span> <span class="comment">// And this is a terrible idea</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这个 ajax 请求以同步的方式进行调用，在接口返回数据之前 javascript 线程都会处于被占用的状态，会导致当前页面在 success 函数执行完成前不能响应用户的任何操作。如果这个过程持续时间过长，就会直接造成页面处于假死状态<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/1601543248c01c17?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"><br>如果有一种机制可以实现代码执行过程中无阻塞的响应用户操作，那么世界将更加美好。事件循环就是为此而生的，它的作用是监控调用栈和回调队列，调用栈负责处理 javascript 执行线程中的任务，遇到像 ajax 请求或者 setTimeout 这些异步逻辑时会执行它们，但不会阻塞后续任务的执行，当 ajax 请求或者定时器完成时其指定的回调会被放进回调队列中，等到调用栈空间没有正在执行的函数，事件循环就会从回调队列中提取回调函数压入调用栈执行。</p>
+<h3 id="事件循环的执行机制"><a href="#事件循环的执行机制" class="headerlink" title="事件循环的执行机制"></a>事件循环的执行机制</h3><p>让我们来看如下这段代码:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hi&quot;</span>);</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="keyword">function</span> <span class="title function_">cb1</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;cb1&quot;</span>);</span><br><span class="line">&#125;, <span class="number">5000</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Bye&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>执行这段代码，我们可以看下调用栈和任务队列中都发生了什么</p>
+<ol>
+<li><p>初始状态，调用栈和任务队列均空白<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/1601543249419657?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>添加 console.log(‘Hi’)至调用栈<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/160154324e9052b1?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>console.log(‘Hi’)被执行<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/16015432508aedd2?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>console.log(‘Hi’)被移除出调用栈<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/160154330894b215?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>添加 setTimeout(function cb1() { … })至调用栈<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/160154331199b438?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>setTimeout(function cb1() { … })被执行，浏览器会根据 web API 创建一个定时器<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/160154330e09555a?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>setTimeout(function cb1() { … })执行完成并被移除出调用栈<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/160154330a8d8b62?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>添加 console.log(‘Bye’)到调用栈<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/1601543317ebdc27?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>执行 console.log(‘Bye’)<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/160154331ec53e5a?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>console.log(‘Bye’)被移除出调用栈，调用栈再度为空<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/16015433d4609c45?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>至少 5000ms 后，定时器执行完成，此时它会将 cb1 回调函数加入到回调队列中<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/16015433c2729f6b?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>事件循环检测到此时调用栈为空，将 cb1 取出压入到调用栈中<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/16015433e131faca?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>cb1 被执行,console.log(‘cb1’)被压入调用栈<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/16015433db565749?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>console.log(‘cb1’)被执行<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/16015433f205eedd?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>console.log(‘cb1’)被移除出调用栈<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/16015433efd85463?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+<li><p>cb1 被移除出调用栈<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/1601543486371c57?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+</li>
+</ol>
+<p>整个流程的快速动画展示如下所示:</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/2/16015434824d2066?imageslim"><br>通过上述示例的执行流程示意图我们可以很清楚的知道在代码执行过程中事件循环，调用栈，回调任务队列的合作机制。同时我们也可以注意到对于像 setTimeout 这一类的方法，其回调函数并不会像我们想象的那样是在我们指定的时刻执行，而是在该时刻它会被加入到回调队列中，等待调用栈没有在执行中的任务时才会由事件循环去读取它将其放到调用栈中执行，如果调用栈一直有任务在执行，那么该回调函数就会一直被阻塞，即使你传给 setTimeout 方法的时间参数为 0ms 也是一样。由此可见，异步任务的执行时机是不可预测的，可是我们要如何才能使不同的异步回调任务按照我们想要的顺序去执行呢，这就需要用到异步流程控制的解决方案了</p>
+<h2 id="异步流程控制"><a href="#异步流程控制" class="headerlink" title="异步流程控制"></a>异步流程控制</h2><p>随着 javascript 语言的发展，针对异步流程控制也有了越来越多的解决方案，依照历史发展的车辙，主要有四种：</p>
+<ol>
+<li>回调函数<br>比如我们希望 xx2 的请求发生在 xx1 的请求完成之后，来看下面这段代码：</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以jquery中的请求为例</span></span><br><span class="line">$.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">  <span class="attr">url</span>: <span class="string">&quot;xx1&quot;</span>,</span><br><span class="line">  <span class="attr">success</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">    $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">      <span class="attr">url</span>: <span class="string">&quot;xx2&quot;</span>,</span><br><span class="line">      <span class="attr">success</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;2&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>在上述代码中我们通过在 xx1 请求完成的回调函数中发起 xx2 的请求这种回调嵌套的方式来实现两个异步任务的执行顺序控制。这种回调函数的方式在 es6 出现之前是应用最为广泛的实现方案，但是其缺点也很明显，如果我们有多个异步任务需要依次执行，那么就会导致非常深的嵌套层次，造成回调地狱，降低代码可读性。</p>
+<ol start="2">
+<li>Promise<br>es6 中提供了 promise 的语法糖对异步流程控制做了更好的封装处理，它提供了更加优雅的方式管理异步任务的执行，可以让我们以一种接近于同步的方式来编写异步代码。还是以上述的两个请求处理作为示例:</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ajax1 = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span>(<span class="params">resolve, reject</span>) &#123;</span><br><span class="line">    $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">      <span class="attr">url</span>: <span class="string">&quot;xx1&quot;</span>,</span><br><span class="line">      <span class="attr">success</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">        <span class="title function_">resolve</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_">ajax1</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">    <span class="attr">url</span>: <span class="string">&quot;xx1&quot;</span>,</span><br><span class="line">    <span class="attr">success</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>promise 通过 then 方法的链式调用将需要按顺序执行的异步任务串起来，在代码可读性方面有很大提升。<br>究其实现原理，Promise 是一个构造函数，它有三个状态，分别是 pending, fullfilled,rejected，构造函数接受一个回调作为参数，在该回调函数中执行异步任务，然后通过 resolve 或者 reject 将 promise 的状态由 pending 置为 fullfilled 或者 rejected。<br>Promise 的原型对象上定义了 then 方法，该方法的作用是将传递给它的函数压入到 resolve 或者 reject 状态对应的任务数组中，当 promise 的状态发生改变时依次执行与状态相对应的数组中的回调函数，此外，promise 在其原型上还提供了 catch 方法来处理执行过程中遇到的异常。<br>Promise 函数本身也有两个属性 race,all。race,all 都接受一个 promise 实例数组作为参数，两者的区别在于前者只要数组中的某个 promise 任务率先执行完成就会直接调用回调数组中的函数，后者则需要等待全部 promise 任务执行完成。<br>一个 mini 的 promise 代码实现示例如下所示:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Promise</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">status</span> = <span class="string">&quot;pending&quot;</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">resolveCallbacks</span> = [];</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">rejectCallbacks</span> = [];</span><br><span class="line">  <span class="keyword">let</span> _this = <span class="variable language_">this</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">resolve</span>(<span class="params">data</span>) &#123;</span><br><span class="line">    _this.<span class="property">status</span> = <span class="string">&quot;fullfilled&quot;</span>;</span><br><span class="line">    _this.<span class="property">resolveCallbacks</span>.<span class="title function_">forEach</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> item === <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">        item.<span class="title function_">call</span>(<span class="variable language_">this</span>, data);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">reject</span>(<span class="params">error</span>) &#123;</span><br><span class="line">    _this.<span class="property">status</span> = <span class="string">&quot;rejected&quot;</span>;</span><br><span class="line">    _this.<span class="property">rejectCallbacks</span>.<span class="title function_">forEach</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> item === <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">        item.<span class="title function_">call</span>(<span class="variable language_">this</span>, error);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  fn.<span class="title function_">call</span>(<span class="variable language_">this</span>, resolve, reject);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Promise</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">then</span> = <span class="keyword">function</span>(<span class="params">resolveCb, rejectCb</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">resolveCallbacks</span>.<span class="title function_">push</span>(resolveCb);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">rejectCallbacks</span>.<span class="title function_">push</span>(rejectCb);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title class_">Promise</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">catch</span> = <span class="keyword">function</span>(<span class="params">rejectCb</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">rejectCallbacks</span>.<span class="title function_">push</span>(rejectCb);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title class_">Promise</span>.<span class="property">race</span> = <span class="keyword">function</span>(<span class="params">promiseArrays</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> cbs = [],</span><br><span class="line">    theIndex;</span><br><span class="line">  <span class="keyword">if</span> (</span><br><span class="line">    promiseArrays.<span class="title function_">some</span>(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> (theIndex = index &amp;&amp; item.<span class="property">status</span> === <span class="string">&quot;fullfilled&quot;</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">  ) &#123;</span><br><span class="line">    cbs.<span class="title function_">forEach</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">      item.<span class="title function_">call</span>(<span class="variable language_">this</span>, promiseArrays[theIndex]);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">then</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">      cbs.<span class="title function_">push</span>(fn);</span><br><span class="line">      <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title class_">Promise</span>.<span class="property">all</span> = <span class="keyword">function</span>(<span class="params">promiseArrays</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> cbs = [];</span><br><span class="line">  <span class="keyword">if</span> (</span><br><span class="line">    promiseArrays.<span class="title function_">every</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> item.<span class="property">status</span> === <span class="string">&quot;fullfilled&quot;</span>;</span><br><span class="line">    &#125;)</span><br><span class="line">  ) &#123;</span><br><span class="line">    cbs.<span class="title function_">forEach</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">      item.<span class="title function_">call</span>(<span class="variable language_">this</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="title function_">then</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">      cbs.<span class="title function_">push</span>(fn);</span><br><span class="line">      <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>以上是我对 promise 的一个非常简短的实现，主要是为了说明 promise 的封装运行原理，它对异步任务的管理是如何实现的。</p>
+<ol start="3">
+<li>Generator 函数<br>generator 也是 es6 中新增的一种语法糖，它是一种特殊的函数，可以被用来做异步流程管理。依旧以之前的 ajax 请求作为示例, 来看看用 generator 函数如何做到流程控制:</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span>* <span class="title function_">ajaxManage</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">yield</span> $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">    <span class="attr">url</span>: <span class="string">&quot;xx1&quot;</span>,</span><br><span class="line">    <span class="attr">success</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">yield</span> $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">    <span class="attr">url</span>: <span class="string">&quot;xx2&quot;</span>,</span><br><span class="line">    <span class="attr">success</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;ending&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> manage = <span class="title function_">ajaxManage</span>();</span><br><span class="line">manage.<span class="title function_">next</span>();</span><br><span class="line">manage.<span class="title function_">next</span>();</span><br><span class="line">manage.<span class="title function_">next</span>(); <span class="comment">// return &#123;value: &#x27;ending&#x27;, done: true&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在上述示例中我们定义了 ajaxManage 这个 generator 函数，但是当我们调用该函数时他并没有真正的执行其内部逻辑，而是会返回一个迭代器对象，generator 函数的执行与普通函数不同，只有调用迭代器对象的 next 方法时才会去真正执行我们在函数体内编写的业务逻辑，且 next 方法的调用只会执行单个通过 yield 或 return 关键字所定义的状态，该方法的返回值是一个含有 value 以及 done 这两个属性的对象，value 属性值为当前状态值，done 属性值为 false 表示当前不是最终状态。<br>我们可以通过将异步任务定义为多个状态的方式，用 generator 函数的迭代器机制去管理这些异步任务的执行。这种方式虽然也是一种异步流程控制的解决方案，但是其缺陷在于我们需要手动管理 generator 函数的迭代器执行，如果我们需要控制的异步任务数量众多，那么我们就需要多次调用 next 方法，这显然也是一种不太好的开发体验。<br>为了解决这个问题，也有很多开发者写过一些 generator 函数的自动执行器，其中比较广为人知的就是著名程序员 TJ Holowaychuk 开发的<a target="_blank" rel="noopener" href="https://github.com/tj/co">co 模块</a>，有兴趣的同学可以多了解下。</p>
+<ol start="4">
+<li>async&#x2F;await<br>async&#x2F;await 是 es8 中引入的一种处理异步流程控制的方案，它是 generator 函数的语法糖，可以使异步操作更加简洁方便，还是用之前的示例来演示下 async&#x2F;await 这种方式是如何使用的：</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">ajaxManage</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">await</span> $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">    <span class="attr">url</span>: <span class="string">&quot;xx1&quot;</span>,</span><br><span class="line">    <span class="attr">success</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">await</span> $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">    <span class="attr">url</span>: <span class="string">&quot;xx2&quot;</span>,</span><br><span class="line">    <span class="attr">success</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">ajaxManage</span>();</span><br></pre></td></tr></table></figure>
+
+<p>通过代码示例可以看出，async&#x2F;await 在写法上与 generator 函数是极为相近的，仅仅只是将*号替换为 async，将 yield 替换为 await，但是 async&#x2F;await 相比 generator，它自带执行器，像普通函数那样调用即可。另一方面它更加语义化，可读性更高，它也已经得到大多数主流浏览器的支持<br><img src="https://user-gold-cdn.xitu.io/2017/12/2/16015434c93e1b49?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"><br> async&#x2F;await 相比 promise 可以在很多方面优化我们的代码，比如： - 代码更精简清晰，比如多个异步任务执行时，使用 promise 需要写很多的 then 调用，且每个 then 方法中都要用一个 function 包裹异步任务。而 async&#x2F;await 就不会有这个烦恼。此外，在异常处理，异步条件判断方面，async&#x2F;await 都可以节省很多代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// `rp` is a request-promise function.</span></span><br><span class="line"><span class="title function_">rp</span>(‘<span class="attr">https</span>:<span class="comment">//api.example.com/endpoint1&#x27;).then(function(data) &#123;</span></span><br><span class="line"> <span class="comment">// …</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 使用await模式</span></span><br><span class="line"><span class="keyword">var</span> response = <span class="keyword">await</span> <span class="title function_">rp</span>(‘<span class="attr">https</span>:<span class="comment">//api.example.com/endpoint1&#x27;);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误处理</span></span><br><span class="line"><span class="comment">// promise的写法</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">loadData</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123; <span class="comment">// Catches synchronous errors.</span></span><br><span class="line">        <span class="title function_">getJSON</span>().<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">response</span>) &#123;</span><br><span class="line">            <span class="keyword">var</span> parsed = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(response);</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(parsed);</span><br><span class="line">        &#125;).<span class="title function_">catch</span>(<span class="keyword">function</span>(<span class="params">e</span>) &#123; <span class="comment">// Catches asynchronous errors</span></span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(e);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// async/await处理</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">loadData</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> data = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="keyword">await</span> <span class="title function_">getJSON</span>());</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 异步条件判断</span></span><br><span class="line"><span class="comment">// promise处理</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">loadData</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">getJSON</span>()</span><br><span class="line">    .<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">response</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (response.<span class="property">needsAnotherRequest</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">makeAnotherRequest</span>(response)</span><br><span class="line">          .<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">anotherResponse</span>) &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(anotherResponse)</span><br><span class="line">            <span class="keyword">return</span> anotherResponse</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(response)</span><br><span class="line">        <span class="keyword">return</span> response</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// async/await改造</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">loadData</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> response = <span class="keyword">await</span> <span class="title function_">getJSON</span>();</span><br><span class="line">  <span class="keyword">if</span> (response.<span class="property">needsAnotherRequest</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> anotherResponse = <span class="keyword">await</span> <span class="title function_">makeAnotherRequest</span>(response);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(anotherResponse)</span><br><span class="line">    <span class="keyword">return</span> anotherResponse</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(response);</span><br><span class="line">    <span class="keyword">return</span> response;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>报错定位更加准确</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// promise</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">loadData</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">callAPromise</span>()</span><br><span class="line">    .<span class="title function_">then</span>(callback1)</span><br><span class="line">    .<span class="title function_">then</span>(callback2)</span><br><span class="line">    .<span class="title function_">then</span>(callback3)</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;boom&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">loadData</span>().<span class="title function_">catch</span>(<span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">  <span class="comment">// Error: boom at callAPromise.then.then.then.then (index.js:8:13)</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// async/await</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">loadData</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">callAPromise1</span>();</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">callAPromise2</span>();</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">callAPromise3</span>();</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">callAPromise4</span>();</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">callAPromise5</span>();</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;boom&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">loadData</span>().<span class="title function_">catch</span>(<span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">  <span class="comment">// output</span></span><br><span class="line">  <span class="comment">// Error: boom at loadData (index.js:7:9)</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>debug 调试问题<br>如果你在 promise 中使用过断点调试你就会知道这是件多么痛苦的事，当你在 then 方法中设置了一个断点，然后 debug 执行时此时如果你想使用 step over 跳过这段代码，你会发现在 promise 中无法做到这点, 因为 debugger 只能跳过同步代码。而在 async&#x2F;await 中就不会有这个问题，await 的调用可以像同步逻辑那样被跳过。</li>
+</ul>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>事件循环是宿主环境处理 javascript 单线程带来的执行阻塞问题的解决方案，所谓异步，就是当事件发生时将指定的回调加入到任务队列中，等待调用栈空闲时由事件循环将其取出压入到调用栈中执行，从而达到不阻塞主线程的目的。因为异步回调的执行时机是不可预测的，所以我们需要一种解决方案可以帮助我们实现异步执行流程控制，本篇文章也针对这一问题分析了当前处理异步流程控制的几种方案的优缺点和实现原理。希望能对大家有所帮助。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#javascript, browser, async control" >
+    <span class="tag-code">javascript, browser, async control</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/10/01/render-engine/">
+        <span class="nav-arrow">← </span>
+        
+          彻底了解渲染引擎以及几点关于性能优化的建议
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2018/10/01/memory-manage/">
+        
+          javascript的内存管理以及3种常见的内存泄漏
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF-event-loop"><span class="toc-nav-text">事件循环(event loop)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF"><span class="toc-nav-text">为什么我们需要事件循环</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E7%9A%84%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="toc-nav-text">事件循环的执行机制</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%BC%82%E6%AD%A5%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6"><span class="toc-nav-text">异步流程控制</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-nav-text">结语</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2018/10/01/event-async/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "NealST";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "深入理解事件循环和异步流程控制",
+        owner: "NealST",
+        repo: "NealST.github.io",
+        oauth: {
+          client_id: "Ov23li81IYrRq2BzNPav",
+          client_secret: "f3f5bde87bf682826155e7c20b5f274c71fd9db4"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2024 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

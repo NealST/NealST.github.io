@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, workshop, life enjoying">
+  
+    <link rel="shortcut icon" type="image/ico" href="https://cdn-images-1.medium.com/fit/c/32/32/0*AtTPSoS2h31j5-Ca."/>
+  
+  <title>
+    
+      rust 的 ownership 是什么 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>rust 的 ownership 是什么</h2>
+  <p class="post-date">2018-11-01</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>rust 是 mozilla 公司出品的一门系统级编程语言，其主要特点是性能良好 ( 号称不输 c++)，运行安全以及文档与工具链完善。 rust 在前端方面也有很多应用，它是目前 webassembly 生态支持度最高的编程语言，这个可能也跟历史原因有关， webassembly 的前身 asm.js 也是 mozilla 公司出品，有兴趣的同学可以自行查找相关资料。此外，大名鼎鼎的 deno 其底层实现也是基于 rust 编写。本文主要介绍令很多初学者感到懵圈，对编写 rust 代码产生人生怀疑的杀手 -ownership</p>
+<h2 id="Ownership-是什么"><a href="#Ownership-是什么" class="headerlink" title="Ownership 是什么"></a>Ownership 是什么</h2><p>Ownership，中文翻译是所有权，它是 rust 程序的一套内存管理策略。对于编程语言来说，内存管理是一个永恒的话题，有的编程语言自带垃圾回收（ GC）， GC 会负责追踪和清除不再使用的内存变量，比如我们常写的 js。对于没有 GC 的编程语言来说，就需要开发者在编码中自行确定哪些变量不再使用并手动清除它，这对于开发者来说显然是一个比较大的负担，如果操作不当极易导致内存泄露或者空指针之类的异常，典型的比如 c&#x2F;c++。在内存管理策略上 rust 属于另辟蹊径，它会在编译阶段按照 ownership 规则检查你程序中的内存隐患，从而保证程序在运行时的安全稳定。 ownership 规则可以简约的概括为以下三点：</p>
+<ol>
+<li>在 rust 程序中每一个被赋值的变量是该值的所有者</li>
+<li>对于一个值来说，同一时间只能存在一个所有者</li>
+<li>当所有者所属作用域结束时，所有者的值也会被销毁</li>
+</ol>
+<p>这三点先不做深入介绍，可以先在脑子里留个印象，后续会讲到。目前我们需要知道的是为什么 rust 会有 ownership 机制，它具体解决什么问题。</p>
+<h2 id="Ownership-解决什么问题"><a href="#Ownership-解决什么问题" class="headerlink" title="Ownership 解决什么问题"></a>Ownership 解决什么问题</h2><p>ownership 主要解决的是堆上数据内存的管理问题。相信有过编程经验的同学都知道，基本上不论是强类型还是弱类型编程语言都存在简单数据类型，诸如 string， int， float,boolean 和复杂数据类型，诸如 struct， object 等等。不同的数据类型占用的内存区域是不同的。对于简单数据类型来说，在强类型语言中，它们在声明的时候可使用的内存大小是固定已知的，这部分数据存放在内存中的栈（ stack）区。对于复杂数据类型来说，由于其数据值会动态变化，因此其所占内存大小无法在编译阶段确定，其在内存中存储时使用的是堆（ heap）区。一个典型场景是在开发命令行应用时，你需要将用户的输入赋值给一个变量，因为用户输入是不可预知的，所以也只能在运行时才能确定该变量需要的内存空间大小。  </p>
+<p>不论是简单类型还是复杂类型，当其所在作用域结束时 rust 内部会自动调用 drop 方法清除其所占内存，但问题是如果有多个变量同时指向同一块内存区域时如果这些变量都被销毁，会导致同一块内存区域被释放多次，这同样会导致内存崩溃，带来安全隐患。而 ownership 就是 rust 对于这个问题的解法，那么它是如何在代码层面来体现的呢？且看如下分解</p>
+<h2 id="Ownership-的代码体现"><a href="#Ownership-的代码体现" class="headerlink" title="Ownership 的代码体现"></a>Ownership 的代码体现</h2><p>首先来看一组代码与执行结果演示：  </p>
+<ul>
+<li>简单类型：<br><img src="https://img.alicdn.com/tfs/TB1X_yXGuT2gK0jSZFvXXXnFXXa-1210-554.png"><br>执行结果：<br><img src="https://img.alicdn.com/tfs/TB1ibieGuL2gK0jSZFmXXc7iXXa-745-67.png"></li>
+<li>复杂类型：<br><img src="https://img.alicdn.com/tfs/TB1aKPtGAL0gK0jSZFtXXXQCXXa-1246-554.png"><br>执行结果：<br><img src="https://img.alicdn.com/tfs/TB1OHKbGrr1gK0jSZR0XXbP8XXa-748-323.png"></li>
+</ul>
+<p>上面两组代码的执行逻辑基本一致，但是所得结果却完全不同。在示例一中， x 变量的值绑定到 y 后，打印 x 和 y 的值可以正常显示想要的结果。但在示例二中， s1 值绑定到 s2 后，当打印 s1 和 s2 值时 rust 却在编译阶段就直接报错了，这是为什么呢？。简单类型与复杂类型在通过变量赋值时的内部逻辑难道有所差异？没错，确实是存在巨大差异，我会用几张示意图来进行演示说明。<br>在示例一种因为变量 x 是简单类型，因此其值是存放在栈上的，当赋值给变量 y 时执行的其实是值拷贝的过程，其结果是会在栈内存上新建一个空间存放 y 的值，示意图如下：<br><img src="https://img.alicdn.com/tfs/TB12tjhGAL0gK0jSZFxXXXWHVXa-392-408.png"><br>因为 x 和 y 分别指向不同的内存区域，在 main 函数结束释放内存时也就不存在内存所有权冲突问题，因此在 main 函数末尾打印 x 和 y 变量的值可以正常展示。</p>
+<p>在示例二中 String 是复杂类型（此处不要带入 js 的概念，在 rust 中 String 用于存储动态变化的字符串，属于复杂类型），变量 s1 的值复制到 s2 时执行的其实是指针的复制，示意图如下：<br><img src="https://img.alicdn.com/tfs/TB194zoGrj1gK0jSZFuXXcrHpXa-697-491.png">  </p>
+<p>从 s1 到 s2 ，其指针指向的都是堆区的同一个内存空间，在这种情况下当 s1 和 s2 所在作用域结束需要销毁变量释放内存时如果不加处理就会发生同一块内存区域被释放多次的问题，为了避免这个问题， rust 采用了 ownership 机制，回顾前面我们介绍 ownership 时提到的三点概括，对于一个值来说，同一时间只能存在一个所有者。当 s1 赋值到 s2 时因为这两个所有者指向的是同一个内存空间，因此在赋值完成后 s1 会被销毁， s2 接过该内存空间的所有权，这样导致的结果就是我们在示例二程序的执行结果中看到的那样，变量 s1 不能继续访问。示意图如下：<br><img src="https://img.alicdn.com/tfs/TB19__lGEY1gK0jSZFMXXaWcVXa-697-491.png"> </p>
+<p>除了显式的变量赋值以外，常见的函数参数传递也是大型 ownership 交接现场。示例代码如下所示：<br><img src="https://img.alicdn.com/tfs/TB1iL6vGpP7gK0jSZFjXXc5aXXa-2034-1058.png"></p>
+<p>顺道再多扯一句，这种指针的复制与 js 中复杂类型的引用传递比较类似，但 js 中引用传递时并不会像 rust 这样销毁 s1, 而是 s1,s2 同时存在，且一旦 s2 的值有所变更， s1 的值也会更新，这也给 js 开发者在运行时追踪数据变更相关的 bug 增加了困难，这也是为什么 js 会有各种各样的 immutable 库。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>相信到这里大家已经对 rust 的 ownership 机制有了比较直观的认识。 ownership 的核心点在于同一时间同一内存只能存在一个所有者，在变量作用域结束时 rust 会释放该变量占有的内存空间。 ownership 对于 rust 的代码编写方式也产生了很大的影响，刚开始可能会很不适应，但随着更多的编写 rust 代码，最终也会变得得心应手。如果有对 rust 感兴趣的胖友也欢迎与我交流探讨。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#rust" >
+    <span class="tag-code">rust</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/10/01/memory-manage/">
+        <span class="nav-arrow">← </span>
+        
+          javascript的内存管理以及3种常见的内存泄漏
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2018/11/12/koa-share/">
+        
+          koa源码中的promise
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Ownership-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-nav-text">Ownership 是什么</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Ownership-%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-nav-text">Ownership 解决什么问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Ownership-%E7%9A%84%E4%BB%A3%E7%A0%81%E4%BD%93%E7%8E%B0"><span class="toc-nav-text">Ownership 的代码体现</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-nav-text">结语</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2018/11/01/rust-ownership/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "NealST";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "rust 的 ownership 是什么",
+        owner: "NealST",
+        repo: "NealST.github.io",
+        oauth: {
+          client_id: "Ov23li81IYrRq2BzNPav",
+          client_secret: "f3f5bde87bf682826155e7c20b5f274c71fd9db4"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2024 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

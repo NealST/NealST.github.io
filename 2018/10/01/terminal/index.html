@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, workshop, life enjoying">
+  
+    <link rel="shortcut icon" type="image/ico" href="https://cdn-images-1.medium.com/fit/c/32/32/0*AtTPSoS2h31j5-Ca."/>
+  
+  <title>
+    
+      狂拽酷炫的terminal，你值得拥有 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>狂拽酷炫的terminal，你值得拥有</h2>
+  <p class="post-date">2018-10-01</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e0b8ec4885875?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+<p>命令行是程序员日常工作中的重要组成部分，一个优秀的命令行环境不仅要功能强大，其外观更要造化钟神秀，这样才能让程序员有一个更加轻松愉悦的工作心情。或许你目前的命令行是长下面这样:</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e0bf83be9651d?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+<p>你是否幻想过拥有一个如黑客帝国一般的命令行:</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e0c1002fc6cc6?imageslim"></p>
+<p>当然这是不现实的，但我们至少可以让我们的命令行拥有如下所示的颜值:</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e0c39d8006d6e?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+<p>下面我们就来看看要怎么配置才能实现这样的效果，友情提示，本文所提到的配置都是针对 mac terminal 哦。</p>
+<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><h3 id="升级你的-terminal"><a href="#升级你的-terminal" class="headerlink" title="升级你的 terminal"></a>升级你的 terminal</h3><p>请安装<a target="_blank" rel="noopener" href="https://www.iterm2.com/features.html">iterm</a>,<a target="_blank" rel="noopener" href="https://ohmyz.sh/">oh-my-zsh</a></p>
+<h3 id="下载，安装，并使用字体色"><a href="#下载，安装，并使用字体色" class="headerlink" title="下载，安装，并使用字体色"></a>下载，安装，并使用字体色</h3><ol>
+<li>进入<a target="_blank" rel="noopener" href="https://gist.github.com/rdempsey/596193b8ede69767719c#file-matrix_color_scheme_iterm2">gist</a>后，点击‘download zip’，可以先在你的桌面创建一个目录 itermThemes,解压之前下载好的 zip 文件后，将解压目录中的文件(注意，仅需要目标文件，不要整个文件夹)移至 itermThemes 中.打开 terminal，进入 itermThemes 目录(cd Desktop&#x2F;itermThemes)，然后 copy 下面的代码到命令行中，按回车执行, 这段代码会遍历该目录下的 color codes,然后将结果命名为‘matrix_color_scheme_2’并存储在 iterm 的自定义 colors 中</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> f <span class="keyword">in</span> *; <span class="keyword">do</span></span><br><span class="line"> THEME=$(<span class="built_in">basename</span> <span class="string">&quot;<span class="variable">$f</span>&quot;</span>)</span><br><span class="line"> defaults write -app iTerm <span class="string">&#x27;Custom Color Presets&#x27;</span> -dict-add <span class="string">&quot;<span class="variable">$THEME</span>&quot;</span> <span class="string">&quot;<span class="subst">$(cat <span class="string">&quot;<span class="variable">$f</span>&quot;</span>)</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在 terminal 的 preferences 中配置使用该 color,具体路径是 iTerm2, Preferences, Profiles, Colors, Color Presets，“matrix_color_scheme_iterm2”，如下图所示:<br><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e10fb15268f36?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"><br> 字体色配置完成后，现在你的 terminal 将会达到初步的酷炫效果：<br><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e110ca534c481?imageslim"><br> 要实现我们之前设定的效果，还有更重要的一步要做。</li>
+</ol>
+<h3 id="安装主题－Powerlevel9k，以及-powerline-字体"><a href="#安装主题－Powerlevel9k，以及-powerline-字体" class="headerlink" title="安装主题－Powerlevel9k，以及 powerline 字体"></a>安装主题－Powerlevel9k，以及 powerline 字体</h3><p>Powerlevel9k 是一个强大的主题，可以实时展示你当前所处的目录，你的当前 git 分支以及你输入指令的执行耗时：<br> <img src="https://user-gold-cdn.xitu.io/2018/4/20/162e1174e80931de?imageslim"></p>
+<ol>
+<li>在你的 terminal 中执行以下命令,该命令会将 Powerlevel9k 的仓库 clone 下来到你的 oh-my-zsh 自定义主题文件夹中</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>用你熟悉的编辑器打来你的 zsh 配置，然后替换 zsh 主题。比如：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.zshrc</span><br><span class="line">ZSH_THEME=<span class="string">&quot;powerlevel9k/powerlevel9k&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>通过如下指令安装 powerline 字体:</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># clone</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/powerline/fonts.git --depth=1</span><br><span class="line"><span class="comment"># install</span></span><br><span class="line"><span class="built_in">cd</span> fonts</span><br><span class="line">./install.sh</span><br><span class="line"><span class="comment"># clean-up a bit</span></span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="built_in">rm</span> -rf fonts</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>在 iterm preferences 中选择 powerline 字体并使用它，操作路径是 iTerm, Preferences, Profiles, Text, Change Font, Select Meslo LG M for Powerline。如下图所示:<br><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e1200a73d690b?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"><br>现在你将拥有一个狂拽酷炫的 terminal,这会让你的工作环境更加赏心悦目<br><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e122ab07fce3c?imageslim"></li>
+</ol>
+<h2 id="节语"><a href="#节语" class="headerlink" title="节语"></a>节语</h2><p>配置完成其实只是个开始，关于 iTerm，oh-my-zsh,以及 Powerlevel9k 还有更多有趣的特性和自定义配置以及插件可以去深入玩耍，比如我可以在 zshrc 中添加下面的配置来缩短每行命令中展示的文件路径，从而给你输入的指令腾出更多的空间：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Shorten directory shown</span></span><br><span class="line">POWERLEVEL9K_SHORTEN_DIR_LENGTH=1</span><br><span class="line">POWERLEVEL9K_SHORTEN_DELIMITER=””</span><br><span class="line">POWERLEVEL9K_SHORTEN_STRATEGY=”truncate_from_right”</span><br><span class="line"><span class="comment">#Set default user to avoid showing &#x27;user&#x27; on every line</span></span><br><span class="line">DEFAULT_USER=”<span class="built_in">whoami</span>”</span><br></pre></td></tr></table></figure>
+
+<p>诚然，每个人有每个人的审美，你也可以选择使用其他的颜色或字体，重要的是你开心就好。<br><img src="https://user-gold-cdn.xitu.io/2018/4/20/162e12b5c36bbad5?imageslim"></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#iterm,zsh,terminal" >
+    <span class="tag-code">iterm,zsh,terminal</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/2018/10/01/render-engine/">
+        
+          彻底了解渲染引擎以及几点关于性能优化的建议
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%BC%80%E5%A7%8B"><span class="toc-nav-text">开始</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%8D%87%E7%BA%A7%E4%BD%A0%E7%9A%84-terminal"><span class="toc-nav-text">升级你的 terminal</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%8B%E8%BD%BD%EF%BC%8C%E5%AE%89%E8%A3%85%EF%BC%8C%E5%B9%B6%E4%BD%BF%E7%94%A8%E5%AD%97%E4%BD%93%E8%89%B2"><span class="toc-nav-text">下载，安装，并使用字体色</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98%EF%BC%8DPowerlevel9k%EF%BC%8C%E4%BB%A5%E5%8F%8A-powerline-%E5%AD%97%E4%BD%93"><span class="toc-nav-text">安装主题－Powerlevel9k，以及 powerline 字体</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%8A%82%E8%AF%AD"><span class="toc-nav-text">节语</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2018/10/01/terminal/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "NealST";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "狂拽酷炫的terminal，你值得拥有",
+        owner: "NealST",
+        repo: "NealST.github.io",
+        oauth: {
+          client_id: "Ov23li81IYrRq2BzNPav",
+          client_secret: "f3f5bde87bf682826155e7c20b5f274c71fd9db4"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2024 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>
