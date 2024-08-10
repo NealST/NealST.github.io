@@ -22,6 +22,15 @@ body {
     font-size: 15px;
   }
 }
+.particles-js {
+  width: 100vw;
+  height: 80vh;
+  background-image: url("https://i.loli.net/2018/09/22/5ba634761474a.png");
+  background-color: #2fa7dc;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+}
 ol,
 ul,
 form,
@@ -1121,45 +1130,6 @@ mobile()
 }
 .search-popup input.search-input::-webkit-search-cancel-button {
   display: none;
-}
-.search-popup .search-input-container {
-  flex-grow: 1;
-  padding: 2px;
-}
-.search-popup ul.search-result-list {
-  margin: 0 5px;
-  padding: 0;
-  width: 100%;
-}
-.search-popup li.search-result-element {
-  padding: 10px 0px 10px 0px;
-}
-.search-popup p.search-result {
-  border-bottom: 1px;
-  padding: 3px 0px 0px 0px;
-  color: #34495e;
-}
-.search-popup a.search-result-title {
-  font-weight: bold;
-  color: #34495e;
-}
-.search-popup .search-keyword {
-  border-bottom: 1px dashed #ff2a2a;
-  color: #ff2a2a;
-  font-weight: bold;
-}
-.search-popup #search-result {
-  display: flex;
-  height: calc(100% - 55px);
-  overflow: auto;
-  padding: 5px 25px;
-}
-.search-popup #no-result {
-  color: #ccc;
-  margin: auto;
-}
-li.menu-item.menu-item-search.right-list {
-  padding: 10px;
 }
 @-moz-keyframes shine {
   0%, 100% {
