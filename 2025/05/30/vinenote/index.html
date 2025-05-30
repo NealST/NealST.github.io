@@ -177,17 +177,15 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><img src="https://img.alicdn.com/imgextra/i1/O1CN01kT9jMJ27VpYqXreD2_!!6000000007803-1-tps-2600-1600.gif" style="border-radius:6px;" alt="demo" />
+    <section class="markdown-content"><img src="https://img.alicdn.com/imgextra/i1/O1CN01kT9jMJ27VpYqXreD2_!!6000000007803-1-tps-2600-1600.gif" style="border-radius:6px;box-shadow:0 1px 3px 0 var(--tw-shadow-color, #0000001a)" alt="demo" />
 
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a target="_blank" rel="noopener" href="https://github.com/NealST/VineNote/README.md">英文介绍</a>    <a target="_blank" rel="noopener" href="https://github.com/NealST/VineNote">Github 地址</a></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a target="_blank" rel="noopener" href="https://github.com/NealST/VineNote/README.md">英文介绍</a>     <a target="_blank" rel="noopener" href="https://github.com/NealST/VineNote">Github 地址</a></p>
 <p>VineNote 是一款基于 Tauri、React、shadcn&#x2F;ui、TailwindCSS、Zustand 等优秀技术栈构建的轻量化跨平台笔记软件，兼具强大的编辑功能与卓越性能</p>
 <h2 id="我为什么要写-VineNote"><a href="#我为什么要写-VineNote" class="headerlink" title="我为什么要写 VineNote"></a>我为什么要写 VineNote</h2><p>作为深度文字创作者，我长期受困于现有笔记软件的局限性。传统基于 Electron 框架的应用存在安装包臃肿（普遍超过 150MB）、内存占用过高等问题，常触发系统内存警报，严重影响创作体验。部分原生应用（如 Swift 开发的 macOS 应用）虽性能优化较好，但编辑功能薄弱，难以满足专业写作需求。</p>
 <p>这部分原生应用主打 “Markdown 优先”，但往往存在两个核心缺陷：</p>
 <ul>
-<li><p>缺乏实时语法格式化能力，必须依赖预览窗口校验内容，挤压写作空间</p>
-</li>
-<li><p>没有工具栏或工具栏功能简陋，需用户死记硬背 Markdown 语法，在插入表格等复杂模块结构时需要中断思维查阅语法规范，极大拖慢创作效率</p>
-</li>
+<li>缺乏实时语法格式化能力，必须依赖预览窗口校验内容，挤压写作空间</li>
+<li>没有工具栏或工具栏功能简陋，需用户死记硬背 Markdown 语法，在插入表格等复杂模块结构时需要中断思维查阅语法规范，极大拖慢创作效率</li>
 </ul>
 <p>更令人困扰的是，多数产品捆绑云存储服务，将用户数据置于不可控的云端，并叠加大量与核心写作无关的冗余功能。这些设计不仅分散注意力，更引发数据可持续性的焦虑，同时在线服务的不稳定性也带来使用风险。</p>
 <p>这就是为什么我要写 VineNote，我希望给自己打造一个完美的写作应用，现在我也想将这个产品分享给你，相信你也会喜欢上它。</p>
@@ -211,6 +209,13 @@
 <li>简约的基于文件夹，文件列表和编辑器的 3 栏布局，交互浏览一目了然</li>
 <li>基于 shadcn&#x2F;ui 提供的基础组件，搭配统一的图标设计，在 UI 呈现和交互上尽显细腻</li>
 <li>中文字体默认采用苍耳今楷，让文字也尽显优美</li>
+</ul>
+</li>
+<li><p>安全</p>
+<ul>
+<li>所有文件均存储在本地，保障你数据资产的安全和归属</li>
+<li>应用完全在本地运行，离线可用，无需担心服务稳定问题</li>
+<li>不会上传任何用户信息，项目开源透明</li>
 </ul>
 </li>
 </ul>
