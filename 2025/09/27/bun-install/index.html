@@ -178,6 +178,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>Bun install</code> 命令安装依赖包的速度堪称极致，平均而言，它比 npm 快 7 倍，比 pnpm 快 4 倍，比 yarn 快 17 倍。这种速度优势在依赖众多的大型前端工程中会体现的非常明显，其安装耗时直接从分钟级干到毫秒级。</p>
+<p><img src="https://bun.com/images/blog/bun-install/Group1.svg" alt="Image 1: Timeline showing shift from I/O wait to syscall overhead"></p>
 <p>它能达到这个效果的核心原因在于它针对安装过程中的每个环节都做了极致性的设计和实现，包括优化系统调用，消除 javascript 开销，异步 dns 解析，二进制 Manifest 缓存，优化 tarball 提取，利于缓存的数据结构设计，锁文件格式的优化，文件复制过程的优化以及多核利用的并行化处理等，笔者读完之后叹为观止，感受到了其做底层基建的匠心，特意翻译并分享出来。</p>
 <p>在正式介绍优化手段前，需要先介绍一个概念 - 系统调用</p>
 <h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="什么是系统调用"><a href="#什么是系统调用" class="headerlink" title="什么是系统调用"></a>什么是系统调用</h3><p>软件程序无法直接与计算机的硬盘，网络等打交道，我们的代码每次在执行一些操作（诸如文件读写，网络连接，分配内存）时都需要调用操作系统的能力来实现，这称之为系统调用。</p>
