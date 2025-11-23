@@ -177,7 +177,8 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>全球领先的网络基础设施服务提供商 Cloudflare 于 2025 年 11 月 18 日（UTC 时间）发生了一次持续数小时的重大服务中断，导致全球大量网站和在线服务出现访问故障，包括 X（原 Twitter）、ChatGPT、Spotify、Roblox、Grindr、Canva 等热门平台均受到波及。尝试访问其服务网站的用户会看到一个错误页面，提示 Cloudflare 网络异常：</p>
+    <section class="markdown-content"><p><img src="https://img.alicdn.com/imgextra/i1/O1CN01vwKXZh1EtpUeB2ZjW_!!6000000000410-2-tps-1408-768.png"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>全球领先的网络基础设施服务提供商 Cloudflare 于 2025 年 11 月 18 日（UTC 时间）发生了一次持续数小时的重大服务中断，导致全球大量网站和在线服务出现访问故障，包括 X（原 Twitter）、ChatGPT、Spotify、Roblox、Grindr、Canva 等热门平台均受到波及。尝试访问其服务网站的用户会看到一个错误页面，提示 Cloudflare 网络异常：</p>
 <p><img src="https://cf-assets.www.cloudflare.com/zkvhlag99gkb/3ony9XsTIteX8DNEFJDddJ/7da2edd5abca755e9088002a0f5d1758/BLOG-3079_2.png"></p>
 <p>根据 Cloudflare 官方披露的故障全过程，引发该事故的核心原因并非外部 DDos 攻击或者恶意行为，而是内部一次常规数据库权限调整引发的连锁反应。故障详情与过程整理如下：</p>
 <h2 id="故障描述"><a href="#故障描述" class="headerlink" title="故障描述"></a>故障描述</h2><p>根据 Cloudflare 官方披露博客以及多家监测机构的数据，中断于 UTC 时间 11:20（北京时间 19:20 左右）开始显现，用户大量报告出现 HTTP 500&#x2F;5xx 错误、页面加载失败或“内部服务器错误”。高峰期，Downdetector 等故障监测网站本身也因依赖 Cloudflare 而短暂下线，进一步放大了混乱。</p>
@@ -217,7 +218,7 @@
 <p>在故障发生之前，当 ClickHouse 用户查询系统表（如 system.tables 或 system.columns）以获取表元数据时，他们只能看到 default 数据库中的表。<br>切换查询账户之后，用户实际上已经隐式拥有了访问 r0 中底层表的权限，Cloudflare 团队在 11:05 做了一个变更，将这种访问权限显性化。这意味着用户现在也能看到底层表的元数据。这个操作主要是为了确保所有分布式子查询都能在初始用户下运行，从而更精细地评估查询限制和权限，避免某个用户的恶意子查询影响到其他人。</p>
 <p>上述变更让所有用户都能准确获取他们有权访问的所有表的元数据。但不幸的是，过去的代码中存在一个假设，认为执行像下面这样的查询时，返回的列列表只会包含 default 数据库：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  name,</span><br><span class="line">  type</span><br><span class="line"><span class="keyword">FROM</span> system.columns</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">  <span class="keyword">table</span> <span class="operator">=</span> <span class="string">&#x27;http_requests_features&#x27;</span></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> name;</span><br></pre></td></tr></table></figure>
-<p>由于这个查询并没有过滤数据库名称。随着我们逐步向集群用户推出显性权限，在 11:05 的变更后，上述查询开始返回“重复”的列，因为结果中不仅包含了 default 数据库的列，还包含了存储在 r0 数据库中底层表的列。</p>
+<p>由于这个查询并没有过滤数据库名称。随着逐步向集群用户推出显性权限，在 11:05 的变更后，上述查询开始返回“重复”的列，因为结果中不仅包含了 default 数据库的列，还包含了存储在 r0 数据库中底层表的列。</p>
 <p><img src="https://cf-assets.www.cloudflare.com/zkvhlag99gkb/ZIC5X8vMM7ifbJc0vxgLD/49dd33e7267bdb03b265ee0acccf381d/Screenshot_2025-11-18_at_2.51.24%C3%A2__PM.png"></p>
 <p>机器人管理模块特征文件的生成逻辑刚好使用了这类查询来构建文件所需的每一个输入“特征（feature）”，查询响应现在包含了 r0 模式的所有元数据，实际上导致响应行数翻倍，于是最终输出的特征文件也直接翻倍膨胀了。</p>
 <h3 id="为什么特征文件超出会引发故障"><a href="#为什么特征文件超出会引发故障" class="headerlink" title="为什么特征文件超出会引发故障"></a>为什么特征文件超出会引发故障</h3><p>Cloudflare 代理服务上运行的每个模块都设有一系列限制以避免无限制的内存消耗。具体到本次事件，机器人管理模块对运行时可使用的机器学习特征设定了 200 的数量上限。当那个翻倍膨胀后超出 200 个特征的问题文件分发到服务器时，系统发生如下 Panic（崩溃）报错，进而引发了 5xx 错误：</p>
@@ -260,17 +261,17 @@
 <tr>
 <td>13:05</td>
 <td>实施了 Workers KV 和 Cloudflare Access 绕过措施 - 已减轻影响。</td>
-<td>在调查过程中，我们针对 Workers KV 和 Cloudflare Access 使用了内部系统绕过措施，使二者回退到我们核心代理的先前版本。虽然我们代理的先前版本中也存在这个问题，但如下文所述，其影响较小。</td>
+<td>在调查过程中，针对 Workers KV 和 Cloudflare Access 使用了内部系统绕过措施，使二者回退到核心代理的先前版本。虽然代理的先前版本中也存在这个问题，但如下文所述，其影响较小。</td>
 </tr>
 <tr>
 <td>13:37</td>
 <td>工作重点是将机器人管理配置文件回滚至最近的已知合适版本。</td>
-<td>我们确信，机器人管理配置文件是此次事件的触发因素。团队通过多个工作流程研究了补救服务的方法，其中最快的方法是恢复该文件之前的版本。</td>
+<td>确认机器人管理配置文件是此次事件的触发因素。团队通过多个工作流程研究了补救服务的方法，其中最快的方法是恢复该文件之前的版本。</td>
 </tr>
 <tr>
 <td>14:24</td>
 <td>已停止创建和传播新的机器人管理配置文件。</td>
-<td>确定机器人管理模块是 500 错误的根源，而问题是由一个错误的配置文件引起。我们停止了自动部署新的机器人管理配置文件。</td>
+<td>确定机器人管理模块是 500 错误的根源，而问题是由一个错误的配置文件引起，停止自动部署新的机器人管理配置文件。</td>
 </tr>
 <tr>
 <td>14:24</td>
