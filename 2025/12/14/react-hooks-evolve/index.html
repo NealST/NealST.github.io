@@ -177,9 +177,10 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>React Hooks 问世已有数年，但在日常很多场景和代码库中仍然充斥着最原始的那套写法：各种 useState 搭配沉重繁杂的 useEffect，以及各种无脑复制粘贴的代码。</p>
+    <section class="markdown-content"><p><img src="https://img.alicdn.com/imgextra/i3/O1CN01YHNW8O1m9kaPW3tga_!!6000000004912-2-tps-1344-768.png"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>React Hooks 问世已有数年，但在日常很多场景和代码库中仍然充斥着最原始的那套写法：各种 useState 搭配沉重繁杂的 useEffect，以及各种无脑复制粘贴的代码。</p>
 <p><strong>Hooks 的初衷不仅仅是生命周期方法的简单替代品，它本质上是一套设计系统，旨在构建更具表现力、更模块化的架构。</strong></p>
-<p>随着 Concurrent React（即 React 18&#x2F;19 版本推出的并发模式）的出现，React 的渲染机制也发生了很大变化，并带来了很多新的 API。本文结合一些实际示例，根据 React 官方所推崇的开发范式，整理了现代化 React Hooks 的最佳编写实践。</p>
+<p>随着 Concurrent React（即 React 18&#x2F;19 版本推出的并发模式）的出现，React 的渲染机制也发生了很大变化，并带来了很多新的 API。本文结合一些实际示例和 React 官方所推崇的开发范式，整理了现代化 React Hooks 的最佳编写实践。</p>
 <h2 id="useEffect-的滥用"><a href="#useEffect-的滥用" class="headerlink" title="useEffect 的滥用"></a>useEffect 的滥用</h2><p>useEffect 可能是最被滥用的 Hook，很多开发者会把它当瑞士军刀一样用来实现各种逻辑，比如获取数据、计算派生值，甚至是简单的状态切换等，组件会因此出现各种奇怪的行为，比如会在奇怪的时间点重新渲染，或者渲染次数远超预期等。</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">fetchData</span>();</span><br><span class="line">&#125;, [query]); </span><br><span class="line"><span class="comment">// 如果 query 是一个引用类型，即使 query 的新值在逻辑上等同于旧值，这里也会重新运行</span></span><br></pre></td></tr></table></figure>
 
