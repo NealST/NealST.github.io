@@ -360,7 +360,7 @@ h2.article-head {
   }
 }
 .logo {
-  background: url("images/logo.png");
+  background: url("https://nealst.github.io/css/images/logo.jpg");
   background-size: contain;
   width: 40px;
   height: 40px;
