@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      编写现代化 React Hooks 的最佳实践 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>编写现代化 React Hooks 的最佳实践</h2>
+  <p class="post-date">2025-12-14</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://img.alicdn.com/imgextra/i3/O1CN01YHNW8O1m9kaPW3tga_!!6000000004912-2-tps-1344-768.png"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>React Hooks 问世已有数年，但在日常很多场景和代码库中仍然充斥着最原始的那套写法：各种 useState 搭配沉重繁杂的 useEffect，以及各种无脑复制粘贴的代码。</p>
+<p><strong>Hooks 的初衷不仅仅是生命周期方法的简单替代品，它本质上是一套设计系统，旨在构建更具表现力、更模块化的架构。</strong></p>
+<p>随着 Concurrent React（即 React 18&#x2F;19 版本推出的并发模式）的出现，React 的渲染机制也发生了很大变化，并带来了很多新的 API。本文结合一些实际示例和 React 官方所推崇的开发范式，整理了现代化 React Hooks 的最佳编写实践。</p>
+<h2 id="useEffect-的滥用"><a href="#useEffect-的滥用" class="headerlink" title="useEffect 的滥用"></a>useEffect 的滥用</h2><p>useEffect 可能是最被滥用的 Hook，很多开发者会把它当瑞士军刀一样用来实现各种逻辑，比如获取数据、计算派生值，甚至是简单的状态切换等，组件会因此出现各种奇怪的行为，比如会在奇怪的时间点重新渲染，或者渲染次数远超预期等。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">fetchData</span>();</span><br><span class="line">&#125;, [query]); </span><br><span class="line"><span class="comment">// 如果 query 是一个引用类型，即使 query 的新值在逻辑上等同于旧值，这里也会重新运行</span></span><br></pre></td></tr></table></figure>
+
+<p>这种滥用主要是混淆了“派生状态”与“副作用”的使用，在 React 的推荐范式中，这两者的处理方式截然不同。</p>
+<h2 id="正确的-useEffect"><a href="#正确的-useEffect" class="headerlink" title="正确的 useEffect"></a>正确的 useEffect</h2><p>React 的推荐用法是：</p>
+<blockquote>
+<p>只在处理真正的副作用（即与外部世界交互）时使用 Effect。</p>
+</blockquote>
+<p>其他所有逻辑，都应在渲染期间（Render Phase）通过派生计算完成。</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> filteredData = <span class="title function_">useMemo</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> data.<span class="title function_">filter</span>(<span class="function"><span class="params">item</span> =&gt;</span> item.<span class="title function_">includes</span>(query));</span><br><span class="line">&#125;, [data, query]);</span><br></pre></td></tr></table></figure>
+
+<p>在使用 useEffect 时，可以利用 useEffectEvent（React 19 中提供支持）来避免一些不必要的 effect 触发。</p>
+<p>以一个典型的聊天室场景为🌰：</p>
+<ul>
+<li>当 roomId 变化时，需要重新连接服务器</li>
+<li>当服务器连接成功时，需要打印一条日志，日志中包含当前的 theme。</li>
+</ul>
+<p>很多开发者可能会写出如下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">ChatRoom</span>(<span class="params">&#123; roomId, theme &#125;</span>) &#123;</span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> connection = <span class="title function_">createConnection</span>(roomId);</span><br><span class="line">    connection.<span class="title function_">connect</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 问题在这里：</span></span><br><span class="line">    <span class="comment">// 我们想访问 theme，就必须把它加到依赖数组里。</span></span><br><span class="line">    <span class="comment">// 结果：每次 theme 切换（比如由亮变暗），聊天室都会断开并重新连接！</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Connected to <span class="subst">$&#123;roomId&#125;</span> with <span class="subst">$&#123;theme&#125;</span> theme`</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> connection.<span class="title function_">disconnect</span>();</span><br><span class="line">  &#125;, [roomId, theme]); <span class="comment">// 依赖了 theme，导致不必要的重连</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上代码虽然也能实现，但每次 theme 值的变更都会导致 effect 的重复触发。这其实是不符合逻辑预期的，我们只是想在 effect 中拿到 theme 的最新值而已。而 useEffectEvent 就可以解决这个问题，它可以在 effect 内部访问最新的 props 或 state，搭配 useEffectEvent 的实现代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">ChatRoom</span>(<span class="params">&#123; roomId, theme &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> onConnected = <span class="title function_">useEffectEvent</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 这里总是能拿到最新的 theme</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Connected to <span class="subst">$&#123;roomId&#125;</span> with <span class="subst">$&#123;theme&#125;</span> theme`</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> connection = <span class="title function_">createConnection</span>(roomId);</span><br><span class="line">    connection.<span class="title function_">connect</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 在 Effect 中调用它</span></span><br><span class="line">    <span class="title function_">onConnected</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> connection.<span class="title function_">disconnect</span>();</span><br><span class="line">  &#125;, [roomId]); <span class="comment">// ✅ 依赖数组只有 roomId！切换 theme 不会触发重连。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>当你需要在 effect 中获取到一些变量的最新值但又不想把这个变量加到 effect 依赖数组中使其可以触发 effect 执行时就非常适合引入 <code>useEffectEvent</code></strong></p>
+<p>在权衡是否使用 useEffect 时，建议的做法是确认这个行为是由外部因素（网络、DOM、订阅）驱动还是可以仅在渲染过程中计算出这个结果。如果是后者，使用 useMemo、useCallback 等 hook 即可，组件行为会更具可预测性。</p>
+<blockquote>
+<p>🙋🏻‍♂️ 提示<br>不要把 useEffectEvent 当作是规避依赖数组检查的“作弊码”。它是专门为了优化 Effect 内部的逻辑执行而设计。</p>
+</blockquote>
+<h2 id="自定义-Hooks：不止于复用，更在于封装"><a href="#自定义-Hooks：不止于复用，更在于封装" class="headerlink" title="自定义 Hooks：不止于复用，更在于封装"></a>自定义 Hooks：不止于复用，更在于封装</h2><p>自定义 Hooks 的价值不仅仅在于减少代码重复，更在于将一些领域逻辑从组件中剥离，让你的 UI 组件专注于它们的核心职责 - UI 展示。<br>例如，与其在组件中堆砌如下的设置代码：</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">listener</span> = (<span class="params"></span>) =&gt; <span class="title function_">setWidth</span>(<span class="variable language_">window</span>.<span class="property">innerWidth</span>);</span><br><span class="line">  <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;resize&#x27;</span>, listener);</span><br><span class="line">  <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="variable language_">window</span>.<span class="title function_">removeEventListener</span>(<span class="string">&#x27;resize&#x27;</span>, listener);</span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure>
+
+<p>不如将其提取到一个 Hook 中：</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">useWindowWidth</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [width, setWidth] = <span class="title function_">useState</span>(</span><br><span class="line">    <span class="keyword">typeof</span> <span class="variable language_">window</span> !== <span class="string">&#x27;undefined&#x27;</span> ? <span class="variable language_">window</span>.<span class="property">innerWidth</span> : <span class="number">0</span></span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">listener</span> = (<span class="params"></span>) =&gt; <span class="title function_">setWidth</span>(<span class="variable language_">window</span>.<span class="property">innerWidth</span>);</span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;resize&#x27;</span>, listener);</span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="variable language_">window</span>.<span class="title function_">removeEventListener</span>(<span class="string">&#x27;change&#x27;</span>, listener);</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> width;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码更整洁，更易于测试，且组件可以屏蔽具体的实现细节，更易于接入使用。</p>
+<blockquote>
+<p>👉🏻 SSR 技巧<br>在设置初始状态时，始终提供一个确定性的回退值（fallback value），以避免服务端渲染与客户端水合（Hydration）时 dom 不匹配的问题。</p>
+</blockquote>
+<h2 id="使用-useSyncExternalStore-管理订阅式状态"><a href="#使用-useSyncExternalStore-管理订阅式状态" class="headerlink" title="使用 useSyncExternalStore 管理订阅式状态"></a>使用 useSyncExternalStore 管理订阅式状态</h2><p>React 18 引入了 useSyncExternalStore，悄然解决了一大类与订阅、UI 撕裂（在同一次渲染结果中，不同的组件对于相同数据源显示不同的值）和高频更新相关的棘手 Bug。</p>
+<h3 id="什么是-UI-撕裂"><a href="#什么是-UI-撕裂" class="headerlink" title="什么是 UI 撕裂"></a>什么是 UI 撕裂</h3><p>假设你有一个外部 Store（比如 state.count &#x3D; 0），并且页面上有两个组件都依赖这个值：</p>
+<ul>
+<li>组件 A（顶部）：显示 Count: 0</li>
+<li>组件 B（底部）：显示 Count: 0</li>
+</ul>
+<p>React 17（及以前）的处理方式：渲染是同步且不可中断的。一旦 React 开始渲染，它会一口气把组件 A 和组件 B 都计算完。在这个过程中，外部的 count 即使变了，React 也看不到（或者被阻塞了），所以 A 和 B 永远显示一样的值。</p>
+<p>React 18（并发模式）的处理方式：渲染是可中断的。为了保持页面流畅，React 可能会先渲染组件 A，然后暂停一下去处理更紧急的任务（比如用户点击），然后再回来渲染组件 B。这就可能会出现如下问题：</p>
+<ol>
+<li>开始渲染：React 渲染 组件 A，读取 Store，拿到 count &#x3D; 0。</li>
+<li>中断（Yield）：React 暂停渲染，把主线程让出来处理用户点击。</li>
+<li>外部更新发生：就在这个空档期，用户点击导致 Store 变成了 count &#x3D; 1。</li>
+<li>恢复渲染：React 回来继续渲染 组件 B，再次读取 Store，拿到 count &#x3D; 1。</li>
+<li>提交（Commit）：React 把结果画到屏幕上。</li>
+</ol>
+<p>结果（UI 撕裂）：</p>
+<ul>
+<li>用户看到顶部写着：Count: 0</li>
+<li>用户看到底部写着：Count: 1</li>
+</ul>
+<p>对于用户来说，界面处于一种“自相矛盾”的错误状态。</p>
+<h3 id="为什么高频更新会有问题"><a href="#为什么高频更新会有问题" class="headerlink" title="为什么高频更新会有问题"></a>为什么高频更新会有问题</h3><p>在处理高频数据（如 window.onresize、滚动位置）时如果我们用老办法（useEffect 监听变化 -&gt; setState 更新），可能会出现如下问题：</p>
+<ol>
+<li><p>滞后：由于 React 18 可能会把 setState 视为低优先级更新（Transition），在你拖动窗口时，React 内部状态更新得可能会比浏览器慢，导致 UI 反应迟钝。</p>
+</li>
+<li><p>闪烁：并发特性可能会导致视觉上的回退或闪烁。</p>
+</li>
+</ol>
+<h3 id="useSyncExternalStore-是如何解决的"><a href="#useSyncExternalStore-是如何解决的" class="headerlink" title="useSyncExternalStore 是如何解决的"></a>useSyncExternalStore 是如何解决的</h3><p><code>useSyncExternalStore</code> 的工作原理非常 tough。它告诉 React：</p>
+<p><strong>“我正在读取一个外部数据源。这个数据源随时可能变。对于依赖这个数据的组件，请不要使用并发特性（不要中断渲染）。 如果你在渲染过程中发现这个数据变了，立刻作废当前渲染，强制重来。”</strong></p>
+<p>它通过以下方式解决问题：</p>
+<ul>
+<li>强制同步读取：在渲染期间（Render Phase），它会立即读取当前 Store 的值。</li>
+<li>订阅变更：它会自动建立订阅。</li>
+<li>防止撕裂：如果它检测到在渲染过程中 Store 的值发生了变化，它会触发同步更新（Synchronous Update），这本质上是退回到了 React 17 的行为，从而保证了数据的一致性。</li>
+</ul>
+<p><code>useSyncExternalStore</code> 适用于以下场景：</p>
+<ul>
+<li>浏览器 API（matchMedia、页面可见性、滚动位置等信息）的状态订阅</li>
+<li>外部状态（Redux、Zustand 或自定义订阅系统）的订阅</li>
+<li>任何对性能敏感或事件驱动的数据源状态订阅</li>
+</ul>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">useMediaQuery</span>(<span class="params">query</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">useSyncExternalStore</span>(</span><br><span class="line">    <span class="function">(<span class="params">callback</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> mql = <span class="variable language_">window</span>.<span class="title function_">matchMedia</span>(query);</span><br><span class="line">      mql.<span class="title function_">addEventListener</span>(<span class="string">&#x27;change&#x27;</span>, callback);</span><br><span class="line">      <span class="keyword">return</span> <span class="function">() =&gt;</span> mql.<span class="title function_">removeEventListener</span>(<span class="string">&#x27;change&#x27;</span>, callback);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="variable language_">window</span>.<span class="title function_">matchMedia</span>(query).<span class="property">matches</span>,</span><br><span class="line">    <span class="function">() =&gt;</span> <span class="literal">false</span> <span class="comment">// SSR 回退值</span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="利用-Transitions-和-Deferred-Values-打造丝滑-UI"><a href="#利用-Transitions-和-Deferred-Values-打造丝滑-UI" class="headerlink" title="利用 Transitions 和 Deferred Values 打造丝滑 UI"></a>利用 Transitions 和 Deferred Values 打造丝滑 UI</h2><p>当用户输入或筛选数据时，如果感觉卡顿，可以使用 Transitions 和 Deferred Values 等方法，它们并非银弹，主要用于告知 React 区分任务优先级：优先处理紧急更新（如输入），延后处理昂贵更新（如列表过滤）。</p>
+<h3 id="举个🌰"><a href="#举个🌰" class="headerlink" title="举个🌰"></a>举个🌰</h3><p>假设你有你有一个搜索框，下面展示 10,000 条数据。你每打一个字，React 都要做两件事：</p>
+<ol>
+<li>更新输入框：让 Input 里显示你刚刚打的字（比如从 “A” 变成 “AB”）。</li>
+<li>筛选列表：遍历 10,000 条数据，找出包含 “AB” 的项并渲染。</li>
+</ol>
+<p>在 React 17及以前，这是一条单行道。React 会先把 10,000 条数据筛选完、渲染完，再把输入框里的字更新出来。结果就是你打字飞快，但屏幕上的字出不来，感觉键盘“粘手”或延迟，体验极差，这叫阻塞渲染（Blocking Rendering）。</p>
+<p>React 18 引入了并发工具，允许把更新分为两类：</p>
+<ul>
+<li>紧急更新 (Urgent updates)：<ul>
+<li>例子：打字、点击、鼠标悬停。</li>
+<li>特点：必须立即响应，否则用户会有卡顿感</li>
+<li>待遇：优先执行。</li>
+</ul>
+</li>
+<li>过渡更新&#x2F;昂贵更新 (Transition updates)：<ul>
+<li>例子：根据搜索词筛选列表、渲染图表。</li>
+<li>特点：用户可以忍受微小的延迟（比如 100ms），甚至延迟还是符合用户心理预期的。</li>
+<li>待遇：可以被打断。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Transitions-和-Deferred-Values-是如何工作的？"><a href="#Transitions-和-Deferred-Values-是如何工作的？" class="headerlink" title="Transitions 和 Deferred Values 是如何工作的？"></a>Transitions 和 Deferred Values 是如何工作的？</h3><h4 id="startTransition"><a href="#startTransition" class="headerlink" title="startTransition"></a>startTransition</h4><p>当使用 startTransition 时，本质是在告诉 React：“这个状态更新不急，你可以稍后处理。”</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 紧急：立刻让输入框显示 value</span></span><br><span class="line"><span class="title function_">setInputValue</span>(e.<span class="property">target</span>.<span class="property">value</span>); </span><br><span class="line"></span><br><span class="line"><span class="title function_">startTransition</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 不急：这个更新会导致列表重绘，可以慢一点</span></span><br><span class="line">  <span class="title function_">setSearchQuery</span>(e.<span class="property">target</span>.<span class="property">value</span>); </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>效果：React 会先更新输入框，保证打字流畅。然后在后台悄悄计算列表。如果计算过程中用户又打了一个字，React 会放弃当前的计算，优先去处理新打的字。</p>
+<h4 id="useDeferredValue"><a href="#useDeferredValue" class="headerlink" title="useDeferredValue"></a>useDeferredValue</h4><p>当无法控制 State 的设置过程（比如值是从父组件作为 props 传下来的），可以用这个 Hook。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// component 接收到了最新的 query，比如 &quot;ABC&quot;</span></span><br><span class="line"><span class="keyword">const</span> deferredQuery = <span class="title function_">useDeferredValue</span>(query); </span><br><span class="line"><span class="comment">// React 的逻辑：</span></span><br><span class="line"><span class="comment">// query 现在是 &quot;ABC&quot;（紧急，用于输入框回显）</span></span><br><span class="line"><span class="comment">// deferredQuery 暂时还是 &quot;AB&quot;（旧值，用于列表渲染）</span></span><br><span class="line"><span class="comment">// 等 CPU 空闲了，我再把 deferredQuery 变成 &quot;ABC&quot;</span></span><br></pre></td></tr></table></figure>
+<p>效果：输入框立刻变成了 “ABC”，但下方的列表可能在短时间内还显示 “AB” 的搜索结果，直到 React 处理完繁重的筛选任务。</p>
+<p>这样，用户的打字体验保持流畅，而繁重的过滤计算则会被推迟执行。</p>
+<p>简易心智模型：</p>
+<ul>
+<li>startTransition(() &#x3D;&gt; setState()) → 推迟状态更新</li>
+<li>useDeferredValue(value) → 推迟派生值的计算</li>
+</ul>
+<p>Transitions 和 Deferred Values 只是通过设置任务优先级来确保用户的体验流畅，但并不会真正带来性能上的提升，比如说如果筛选 10,000 条数据需要 500ms，用了这些方法，它依然需要 500ms（甚至略多一点点开销）。</p>
+<h2 id="编写可测试、可调试的-Hooks"><a href="#编写可测试、可调试的-Hooks" class="headerlink" title="编写可测试、可调试的 Hooks"></a>编写可测试、可调试的 Hooks</h2><p>现代 React DevTools 让调试自定义 Hooks 变得极其简单。如果你合理编写 Hooks，大部分逻辑甚至可以在不渲染实际组件的情况下进行测试，推荐的做法是：</p>
+<ul>
+<li>将领域逻辑与 UI 分离</li>
+<li>将 Provider 逻辑提取到独立的 Hook 中以提高可测试性</li>
+</ul>
+<h3 id="传统的大多数写法（逻辑耦合在组件中）"><a href="#传统的大多数写法（逻辑耦合在组件中）" class="headerlink" title="传统的大多数写法（逻辑耦合在组件中）"></a>传统的大多数写法（逻辑耦合在组件中）</h3><p>通常写 Context 时，我们习惯把所有逻辑直接写在 Provider 组件里：</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AuthProvider.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">AuthProvider</span>(<span class="params">&#123; children &#125;</span>) &#123;</span><br><span class="line">  <span class="comment">// 逻辑和 UI 混杂在一起</span></span><br><span class="line">  <span class="keyword">const</span> [user, setUser] = <span class="title function_">useState</span>(<span class="literal">null</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 复杂的初始化逻辑...</span></span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">login</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123; ... &#125;; <span class="comment">// 复杂的登录逻辑</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 最后返回 JSX</span></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">AuthContext.Provider</span> <span class="attr">value</span>=<span class="string">&#123;&#123;</span> <span class="attr">user</span>, <span class="attr">login</span> &#125;&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">AuthContext.Provider</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种写法的问题是：</p>
+<ul>
+<li>测试成本高：想测试 login 函数就必须把 <AuthProvider> 渲染到虚拟 DOM 里，甚至还得在里面塞一个假组件来触发登录按钮，这种集成测试很重很费劲。</li>
+<li>调试困难：在 React DevTools 中，你只能看到一个巨大的 AuthProvider，里面混杂了一堆 State 和 Effect，很难一眼看出哪个是核心逻辑。</li>
+</ul>
+<h3 id="更优雅的做法（逻辑与-UI-分离）"><a href="#更优雅的做法（逻辑与-UI-分离）" class="headerlink" title="更优雅的做法（逻辑与 UI 分离）"></a>更优雅的做法（逻辑与 UI 分离）</h3><figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这是一个纯逻辑 Hook，不涉及任何 JSX 渲染</span></span><br><span class="line"><span class="comment">// 我们可以叫它 &quot;Engine&quot; (引擎)</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">useAuthProvider</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [user, setUser] = <span class="title function_">useState</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">login</span> = <span class="keyword">async</span> (<span class="params">credentials</span>) =&gt; &#123; </span><br><span class="line">    <span class="keyword">const</span> result = <span class="keyword">await</span> api.<span class="title function_">login</span>(credentials);</span><br><span class="line">    <span class="title function_">setUser</span>(result.<span class="property">user</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">logout</span> = (<span class="params"></span>) =&gt; &#123; <span class="title function_">setUser</span>(<span class="literal">null</span>); &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回的是数据和方法，不是 JSX</span></span><br><span class="line">  <span class="keyword">return</span> &#123; user, login, logout &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 仅是一个 UI 包装器</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">AuthProvider</span>(<span class="params">&#123; children &#125;</span>) &#123;</span><br><span class="line">  <span class="comment">// 1. 启动引擎</span></span><br><span class="line">  <span class="keyword">const</span> auth = <span class="title function_">useAuthProvider</span>(); </span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 2. 把引擎提供的返回通过 Context 传下去</span></span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">AuthContext.Provider</span> <span class="attr">value</span>=<span class="string">&#123;auth&#125;</span>&gt;</span>&#123;children&#125;<span class="tag">&lt;/<span class="name">AuthContext.Provider</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，测试会变得异常简单，由于 useAuthProvider 只是一个 Hook，可以直接用 <code>@testing-library/react-hooks</code> 对它进行单元测试，完全不需要渲染 AuthProvider 组件，也不需要 Context。测试代码示例(伪代码)：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 测试 useAuthProvider，完全不用管 Context 和组件</span></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&#x27;should login user successfully&#x27;</span>, <span class="title function_">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="comment">// 直接运行 Hook</span></span><br><span class="line">  <span class="keyword">const</span> &#123; result &#125; = <span class="title function_">renderHook</span>(<span class="function">() =&gt;</span> <span class="title function_">useAuthProvider</span>());</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 此时 user 应该是 null</span></span><br><span class="line">  <span class="title function_">expect</span>(result.<span class="property">current</span>.<span class="property">user</span>).<span class="title function_">toBe</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 直接调用 login 方法</span></span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">act</span>(<span class="title function_">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="keyword">await</span> result.<span class="property">current</span>.<span class="title function_">login</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;admin&#x27;</span> &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 此时 user 应该有值了</span></span><br><span class="line">  <span class="title function_">expect</span>(result.<span class="property">current</span>.<span class="property">user</span>).<span class="title function_">toEqual</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;admin&#x27;</span> &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>同时，当你打开 React DevTools 插件时，你会清晰地看到一个名为 Hooks 的部分，里面有一个 <code>useAuthProvider</code>。</p>
+<ul>
+<li><code>State: &#123; user: ... &#125;</code></li>
+<li>可以清楚地看到是这个 Hook 的状态在变，而不是那个巨大的组件在变。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>React 的演进方向正在从单纯的客户端视图库，向着 <strong>数据优先（Data-First）</strong> 的全栈架构迈进。</p>
+<p>对比追求 Solid.js 那样的细粒度响应式，React 选择了另一条路：深耕异步数据流与服务器驱动 UI。随着 Server Components 的成熟以及 use()、useActionState 等新 API 的加入，官方意图非常明显：不要再把 useEffect 当瑞士军刀，而是拥抱更清晰的更职责分明的控制方式。</p>
+<p><strong>Hooks 不止是语法，更是架构</strong></p>
+<p>现代化的 Hooks 不再是简单的代码复用，而是一种架构模式。一个健壮且体验良好的现代 React 应用，应当遵循以下设计准则：</p>
+<ul>
+<li>派生优先：能通过渲染逻辑计算得出的，不要引入新的 State 或 Effect。</li>
+<li>边界清晰：仅将 Effect 用于真正的外部副作用，其余逻辑封装进小而美的自定义 Hook 中。</li>
+<li>拥抱并发：利用 useDeferredValue 和 Transitions 平滑异步任务，区分轻重缓急。</li>
+<li>全栈思维：不再局限于客户端，而是跨越 Client&#x2F;Server 边界来设计数据流向。</li>
+</ul>
+<p>React 在不断演进，Hooks 的编写也需要跟上节奏。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#React" >
+    <span class="tag-code">React</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2025/11/30/sandbox-ai-tools/">
+        <span class="nav-arrow">← </span>
+        
+          如何沙盒化运行你的 AI 工具
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2026/01/11/claude-code-customization/">
+        
+          Claude Code 定制化指南：详解 CLAUDE.md、Skills 与 Subagents
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#useEffect-%E7%9A%84%E6%BB%A5%E7%94%A8"><span class="toc-nav-text">useEffect 的滥用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%AD%A3%E7%A1%AE%E7%9A%84-useEffect"><span class="toc-nav-text">正确的 useEffect</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89-Hooks%EF%BC%9A%E4%B8%8D%E6%AD%A2%E4%BA%8E%E5%A4%8D%E7%94%A8%EF%BC%8C%E6%9B%B4%E5%9C%A8%E4%BA%8E%E5%B0%81%E8%A3%85"><span class="toc-nav-text">自定义 Hooks：不止于复用，更在于封装</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8-useSyncExternalStore-%E7%AE%A1%E7%90%86%E8%AE%A2%E9%98%85%E5%BC%8F%E7%8A%B6%E6%80%81"><span class="toc-nav-text">使用 useSyncExternalStore 管理订阅式状态</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-UI-%E6%92%95%E8%A3%82"><span class="toc-nav-text">什么是 UI 撕裂</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%AB%98%E9%A2%91%E6%9B%B4%E6%96%B0%E4%BC%9A%E6%9C%89%E9%97%AE%E9%A2%98"><span class="toc-nav-text">为什么高频更新会有问题</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#useSyncExternalStore-%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%9A%84"><span class="toc-nav-text">useSyncExternalStore 是如何解决的</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%88%A9%E7%94%A8-Transitions-%E5%92%8C-Deferred-Values-%E6%89%93%E9%80%A0%E4%B8%9D%E6%BB%91-UI"><span class="toc-nav-text">利用 Transitions 和 Deferred Values 打造丝滑 UI</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%BE%E4%B8%AA%F0%9F%8C%B0"><span class="toc-nav-text">举个🌰</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Transitions-%E5%92%8C-Deferred-Values-%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84%EF%BC%9F"><span class="toc-nav-text">Transitions 和 Deferred Values 是如何工作的？</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#startTransition"><span class="toc-nav-text">startTransition</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#useDeferredValue"><span class="toc-nav-text">useDeferredValue</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BC%96%E5%86%99%E5%8F%AF%E6%B5%8B%E8%AF%95%E3%80%81%E5%8F%AF%E8%B0%83%E8%AF%95%E7%9A%84-Hooks"><span class="toc-nav-text">编写可测试、可调试的 Hooks</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%9A%84%E5%A4%A7%E5%A4%9A%E6%95%B0%E5%86%99%E6%B3%95%EF%BC%88%E9%80%BB%E8%BE%91%E8%80%A6%E5%90%88%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%AD%EF%BC%89"><span class="toc-nav-text">传统的大多数写法（逻辑耦合在组件中）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%9B%B4%E4%BC%98%E9%9B%85%E7%9A%84%E5%81%9A%E6%B3%95%EF%BC%88%E9%80%BB%E8%BE%91%E4%B8%8E-UI-%E5%88%86%E7%A6%BB%EF%BC%89"><span class="toc-nav-text">更优雅的做法（逻辑与 UI 分离）</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2025/12/14/react-hooks-evolve/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

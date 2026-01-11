@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      一些不错的生产力工具 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>一些不错的生产力工具</h2>
+  <p class="post-date">2024-08-11</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>主要记录一些比较不错的小工具。</p>
+<h2 id="Web-Check"><a href="#Web-Check" class="headerlink" title="Web Check"></a>Web Check</h2><p><a target="_blank" rel="noopener" href="https://web-check.as93.net/">https://web-check.as93.net/</a>, 可以快速查看某个网站的一些技术信息，比如 ip 地址, ssl 证书等等。</p>
+<h2 id="Spectacle"><a href="#Spectacle" class="headerlink" title="Spectacle"></a>Spectacle</h2><p><a target="_blank" rel="noopener" href="https://commerce.nearform.com/open-source/spectacle/">https://commerce.nearform.com/open-source/spectacle/</a>, 这是一个 React 库，可以用它来创建漂亮的 PPT 展示，并且你还可以现场演示代码</p>
+<h2 id="mkcert"><a href="#mkcert" class="headerlink" title="mkcert"></a>mkcert</h2><p><a target="_blank" rel="noopener" href="https://github.com/FiloSottile/mkcert">https://github.com/FiloSottile/mkcert</a>, 可以帮助你在本地研发时创建 https 证书，开箱即用。<a target="_blank" rel="noopener" href="https://web.dev/articles/how-to-use-local-https?hl=zh-cn">This article</a> 这篇文章介绍了如何使用它</p>
+<h2 id="Tinybench"><a href="#Tinybench" class="headerlink" title="Tinybench"></a>Tinybench</h2><p><a target="_blank" rel="noopener" href="https://github.com/tinylibs/tinybench">https://github.com/tinylibs/tinybench</a>, 简单，轻量的基准测试库</p>
+<h2 id="Preview-js"><a href="#Preview-js" class="headerlink" title="Preview.js"></a>Preview.js</h2><p><a target="_blank" rel="noopener" href="https://previewjs.com/">https://previewjs.com/</a>, 组件快速预览工具，支持集成到 vscode，jetBrain 等 IDE 中，并支持多种框架的组件，包括 Preact, React, SolidJs, Svelte 和 Vue。</p>
+<h2 id="Sequel-Ace"><a href="#Sequel-Ace" class="headerlink" title="Sequel Ace"></a>Sequel Ace</h2><p><a target="_blank" rel="noopener" href="https://apps.apple.com/cn/app/sequel-ace/id1518036000?l=en-GB&mt=12">https://apps.apple.com/cn/app/sequel-ace/id1518036000?l=en-GB&amp;mt=12</a>, Mac 上一款快速，免费，易用的 MySQL 管理工具</p>
+<h2 id="OpenTelemetry"><a href="#OpenTelemetry" class="headerlink" title="OpenTelemetry"></a>OpenTelemetry</h2><p><a target="_blank" rel="noopener" href="https://opentelemetry.io/">https://opentelemetry.io/</a>, 高效收集和分析应用的性能和用户行为的工具。</p>
+<h2 id="Madge"><a href="#Madge" class="headerlink" title="Madge"></a>Madge</h2><p><a target="_blank" rel="noopener" href="https://github.com/pahen/madge">https://github.com/pahen/madge</a>, 可视化分析应用的模块依赖关系。</p>
+<h2 id="SST-for-AWS"><a href="#SST-for-AWS" class="headerlink" title="SST for AWS"></a>SST for AWS</h2><p><a target="_blank" rel="noopener" href="https://github.com/sst/sst">https://github.com/sst/sst</a>, 在 AWS 上构建现代的全栈应用</p>
+<h2 id="Wish-for-SSH"><a href="#Wish-for-SSH" class="headerlink" title="Wish for SSH"></a>Wish for SSH</h2><p><a target="_blank" rel="noopener" href="https://github.com/charmbracelet/wish">https://github.com/charmbracelet/wish</a>, 一个整合了最佳实践和中间件的 ssh server，能够帮助你快速的构建 ssh 应用</p>
+<h2 id="Sherlock-for-Social-Media"><a href="#Sherlock-for-Social-Media" class="headerlink" title="Sherlock for Social Media"></a>Sherlock for Social Media</h2><p><a target="_blank" rel="noopener" href="https://github.com/sherlock-project/sherlock">https://github.com/sherlock-project/sherlock</a>, 可以通过用户名进行人肉搜索</p>
+<h2 id="Shields-for-Badges"><a href="#Shields-for-Badges" class="headerlink" title="Shields for Badges"></a>Shields for Badges</h2><p><a target="_blank" rel="noopener" href="https://github.com/badges/shields?tab=readme-ov-file">https://github.com/badges/shields?tab=readme-ov-file</a>, 徽章制作工具</p>
+<h2 id="Responsive-app-devtools"><a href="#Responsive-app-devtools" class="headerlink" title="Responsive-app devtools"></a>Responsive-app devtools</h2><p><a target="_blank" rel="noopener" href="https://github.com/responsively-org/responsively-app">https://github.com/responsively-org/responsively-app</a>, 用于测试 web 响应式的浏览器</p>
+<h2 id="QuickRecorder"><a href="#QuickRecorder" class="headerlink" title="QuickRecorder"></a>QuickRecorder</h2><p><a target="_blank" rel="noopener" href="https://github.com/lihaoyun6/QuickRecorder">https://github.com/lihaoyun6/QuickRecorder</a>, 轻量的屏幕录制工具</p>
+<h2 id="Chrome-Extension-Cli"><a href="#Chrome-Extension-Cli" class="headerlink" title="Chrome-Extension-Cli"></a>Chrome-Extension-Cli</h2><p><a target="_blank" rel="noopener" href="https://github.com/dutiyesh/chrome-extension-cli">https://github.com/dutiyesh/chrome-extension-cli</a>, chrome 插件研发脚手架</p>
+<h2 id="Eslint-plugin-perfectionist"><a href="#Eslint-plugin-perfectionist" class="headerlink" title="Eslint-plugin-perfectionist"></a>Eslint-plugin-perfectionist</h2><p><a target="_blank" rel="noopener" href="https://github.com/azat-io/eslint-plugin-perfectionist">https://github.com/azat-io/eslint-plugin-perfectionist</a>, 强迫症的福音，这是一个 eslint 插件，可以帮助你对多种数据类型进行强制排序，包括 objects, imports, types, enums, jsx props 等。</p>
+<h2 id="NpmPackage-info"><a href="#NpmPackage-info" class="headerlink" title="NpmPackage.info"></a>NpmPackage.info</h2><p><a target="_blank" rel="noopener" href="https://npmpackage.info/">https://npmpackage.info/</a>, 提供查询某个 npm 包详细信息的网站，在判断是否要使用某个 npm 包时可以先用这个工具查看一下相关信息。</p>
+<h2 id="Dependency-cruiser"><a href="#Dependency-cruiser" class="headerlink" title="Dependency-cruiser"></a>Dependency-cruiser</h2><p><a target="_blank" rel="noopener" href="https://github.com/sverweij/dependency-cruiser">https://github.com/sverweij/dependency-cruiser</a>, 依赖校验和可视化工具</p>
+<h2 id="Fuite"><a href="#Fuite" class="headerlink" title="Fuite"></a>Fuite</h2><p><a target="_blank" rel="noopener" href="https://github.com/nolanlawson/fuite">https://github.com/nolanlawson/fuite</a>, 一个命令行工具，可以帮助开发者查找 web 页面中的内存泄露</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#production tools" >
+    <span class="tag-code">production tools</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2020/08/20/esm-hmr/">
+        <span class="nav-arrow">← </span>
+        
+          如何实现 esm 模块的热更新 HMR
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2024/08/11/useful-libraries/">
+        
+          一些优质的三方库
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Web-Check"><span class="toc-nav-text">Web Check</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Spectacle"><span class="toc-nav-text">Spectacle</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#mkcert"><span class="toc-nav-text">mkcert</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Tinybench"><span class="toc-nav-text">Tinybench</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Preview-js"><span class="toc-nav-text">Preview.js</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Sequel-Ace"><span class="toc-nav-text">Sequel Ace</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#OpenTelemetry"><span class="toc-nav-text">OpenTelemetry</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Madge"><span class="toc-nav-text">Madge</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#SST-for-AWS"><span class="toc-nav-text">SST for AWS</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Wish-for-SSH"><span class="toc-nav-text">Wish for SSH</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Sherlock-for-Social-Media"><span class="toc-nav-text">Sherlock for Social Media</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Shields-for-Badges"><span class="toc-nav-text">Shields for Badges</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Responsive-app-devtools"><span class="toc-nav-text">Responsive-app devtools</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#QuickRecorder"><span class="toc-nav-text">QuickRecorder</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Chrome-Extension-Cli"><span class="toc-nav-text">Chrome-Extension-Cli</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Eslint-plugin-perfectionist"><span class="toc-nav-text">Eslint-plugin-perfectionist</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#NpmPackage-info"><span class="toc-nav-text">NpmPackage.info</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Dependency-cruiser"><span class="toc-nav-text">Dependency-cruiser</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Fuite"><span class="toc-nav-text">Fuite</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2024/08/11/production-tools/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

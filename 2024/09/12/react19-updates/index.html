@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      React 19 带来了什么 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>React 19 带来了什么</h2>
+  <p class="post-date">2024-09-12</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今年的 <code>React conf</code> 主要介绍了即将推出的 <code>React 19</code> 的诸多新特性，演讲视频合集可以看<a target="_blank" rel="noopener" href="https://conf.react.dev/talks">https://conf.react.dev/talks</a>，目前 <code>React 19</code> 已经正式进入到了 <code>RC</code> 阶段，意味着其离正式发布为期不远矣，笔者整理了演讲中的诸多内容，并根据自身实践和经验对 <code>React 19</code> 的新特性进行了梳理。</p>
+<h2 id="新的-hook-和-API"><a href="#新的-hook-和-API" class="headerlink" title="新的 hook 和 API"></a>新的 hook 和 API</h2><h3 id="预加载相关"><a href="#预加载相关" class="headerlink" title="预加载相关"></a>预加载相关</h3><p><code>React 19</code> 提供了一组用于资源预加载的 <code>API</code>，包括 <code>prefetchDNS</code>, <code>preconnect</code>, <code>preload</code>, <code>preinit</code> 等等。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; prefetchDNS, preconnect, preload, preinit &#125; <span class="keyword">from</span> <span class="string">&#x27;react-dom&#x27;</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">MyComponent</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">preinit</span>(<span class="string">&#x27;https://.../path/to/some/script.js&#x27;</span>, &#123;<span class="attr">as</span>: <span class="string">&#x27;script&#x27;</span> &#125;)</span><br><span class="line">  <span class="title function_">preload</span>(<span class="string">&#x27;https://.../path/to/font.woff&#x27;</span>, &#123; <span class="attr">as</span>: <span class="string">&#x27;font&#x27;</span> &#125;)</span><br><span class="line">  <span class="title function_">preload</span>(<span class="string">&#x27;https://.../path/to/stylesheet.css&#x27;</span>, &#123; <span class="attr">as</span>: <span class="string">&#x27;style&#x27;</span> &#125;)</span><br><span class="line">  <span class="title function_">prefetchDNS</span>(<span class="string">&#x27;https://...&#x27;</span>)</span><br><span class="line">  <span class="title function_">preconnect</span>(<span class="string">&#x27;https://...&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其本质是对使用 <code>link</code> 元素进行预加载能力的封装，上述代码最终会生成下面的 <code>html</code> 结构：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- the above would result <span class="keyword">in</span> the following <span class="variable constant_">DOM</span>/<span class="variable constant_">HTML</span> --&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;link rel=&quot;prefetch-dns&quot; href=&quot;https://...&quot;&gt;</span><br><span class="line">    &lt;link rel=&quot;preconnect&quot; href=&quot;https://...&quot;&gt;</span><br><span class="line">    &lt;link rel=&quot;preload&quot; as=&quot;font&quot; href=&quot;https://.../path/to/font.woff&quot;&gt;</span><br><span class="line">    &lt;link rel=&quot;preload&quot; as=&quot;style&quot; href=&quot;https://.../path/to/stylesheet.css&quot;&gt;</span><br><span class="line">    &lt;script async=&quot;&quot; src=&quot;https://.../path/to/some/script.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    ...</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="useActionState"><a href="#useActionState" class="headerlink" title="useActionState"></a>useActionState</h3><p><code>useActionState</code> 是一个新的 <code>hook</code>, 主要解决表单状态管理的问题，可以大量减少我们的冗余代码，并提供更好的代码抽象能力，比如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Demo</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> [title, setTitle] = <span class="title function_">useState</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> [subtitle, setSubtitle] = <span class="title function_">useState</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">onTitleChange</span>(<span class="params">newVal</span>) &#123;</span><br><span class="line">    <span class="title function_">setTitle</span>(newVal);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">onSubtitleChange</span>(<span class="params">newVal</span>) &#123;</span><br><span class="line">    <span class="title function_">setSubtitle</span>(newVal);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleSubmit</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">fetch</span>(<span class="string">&#x27;https://update-info&#x27;</span>, &#123;title, subtitle&#125;).<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> res.<span class="title function_">json</span>()).<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">setTitle</span>(res.<span class="property">modifiedTitle</span>);</span><br><span class="line">      <span class="title function_">setSubtitle</span>(res.<span class="property">modifiedSubtitle</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">form</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;title&#125;</span></span><br><span class="line"><span class="language-xml">      &#123;subtitle&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">&quot;title&quot;</span> <span class="attr">onChange</span>=<span class="string">&#123;onTitleChange&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">&quot;subtitle&quot;</span> <span class="attr">onChange</span>=<span class="string">&#123;onSubTitleChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleSubmit&#125;</span>&gt;</span>提交<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有了 <code>useActionState</code> 之后，我们可以这样来写代码：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useActionState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">submitAction</span>(<span class="params">prevState, queryData</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> title = queryData.<span class="title function_">get</span>(<span class="string">&#x27;title&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> subtitle = queryData.<span class="title function_">get</span>(<span class="string">&#x27;subtitle&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://update-info&#x27;</span>, &#123;title, subtitle&#125;).<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> res.<span class="title function_">json</span>());</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">title</span>: res.<span class="property">modifiedTitle</span>,</span><br><span class="line">    <span class="attr">subtitle</span>: res.<span class="property">modifiedSubtitle</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Demo</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [state, action] = <span class="title function_">useActionState</span>(submitAction, &#123;</span><br><span class="line">    <span class="attr">title</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    <span class="attr">subtitle</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&#123;action&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;state.title&#125;</span></span><br><span class="line"><span class="language-xml">      &#123;state.subtitle&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">&quot;title&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">&quot;subtitle&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span>&gt;</span>提交<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出 <code>useActionState</code> 帮我们节省了大量的代码，当表单触发提交时会自动执行 <code>submitAction</code> 方法，而 <code>submitAction</code> 也支持了 <code>promise</code> 调用，并且内部可以直接获取到表单元素的值进行各种业务逻辑编写。另外一点我觉得比较重要的是，通过这种类似 <code>submitAction</code> 的方式，我们可以把很多业务逻辑抽离出组件，以实现 UI 与业务分离，从而带来代码可复用性以及可读性的提升。</p>
+<h3 id="useFormStatus"><a href="#useFormStatus" class="headerlink" title="useFormStatus"></a>useFormStatus</h3><p>这个新的 <code>hook</code> 是一个相对微小的优化，它带来一种更加轻量和简单的方式来获取其父表单元素 <code>form</code> 的状态，而不再需要通过传统的层层 <code>prop</code> 传递或者通过手动添加 <code>context</code> 的方式来实现。示例如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useFormStatus &#125; <span class="keyword">from</span> <span class="string">&#x27;react-dom&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">DesignButton</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// data 为表单提交的数据字段</span></span><br><span class="line">  <span class="keyword">const</span> &#123; pending, data &#125; = <span class="title function_">useFormStatus</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">disabled</span>=<span class="string">&#123;pending&#125;</span> /&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="useOptimistic"><a href="#useOptimistic" class="headerlink" title="useOptimistic"></a>useOptimistic</h3><p>这个新 <code>hook</code> 的能力与它的名称相对应，主要的作用是给开发者提供开箱即用的实现乐观更新的能力，即在一些异步处理的结果返回之前先将 <code>UI</code> 更新到预期状态，当异步结果返回后再做状态 <code>merge</code>，以提供给用户最即时的操作反馈。比如说在一些 <code>ugc</code> 内容发布的场景，如果完全等待接口返回之后再更新 <code>UI</code>，就很容易会让用户感知到操作不流畅甚至有卡顿感。以发表评论为例，来看如何使用该 <code>hook</code>。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState, useOptimistic &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Demo</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [comments, setComments] = <span class="title function_">useOptimistic</span>([]);</span><br><span class="line">  <span class="keyword">const</span> [newComment, setNewComment] = <span class="title function_">useState</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> [error, setError] = <span class="title function_">useState</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">handleCommentSubmit</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setError</span>(<span class="string">&#x27;&#x27;</span>); <span class="comment">// Clear any previous errors</span></span><br><span class="line">    <span class="keyword">const</span> optimisticNewComment = &#123; <span class="attr">id</span>: <span class="title class_">Date</span>.<span class="title function_">now</span>(), <span class="attr">text</span>: newComment, <span class="attr">status</span>: <span class="string">&#x27;sending&#x27;</span> &#125;;</span><br><span class="line">    <span class="title function_">setComments</span>([...comments, optimisticNewComment]);  <span class="comment">// Optimistically update the comments list</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> response = <span class="keyword">await</span> api.<span class="title function_">postComment</span>(postId, newComment);</span><br><span class="line">      <span class="keyword">const</span> updatedComments = comments.<span class="title function_">map</span>(<span class="function"><span class="params">comment</span> =&gt;</span></span><br><span class="line">        comment.<span class="property">id</span> === optimisticNewComment.<span class="property">id</span> ? &#123; ...comment, <span class="attr">status</span>: <span class="string">&#x27;sent&#x27;</span> &#125; : comment</span><br><span class="line">      );</span><br><span class="line">      <span class="title function_">setComments</span>(updatedComments); <span class="comment">// Update comment status to &#x27;sent&#x27;</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">      <span class="keyword">const</span> filteredComments = comments.<span class="title function_">filter</span>(<span class="function"><span class="params">comment</span> =&gt;</span> comment.<span class="property">id</span> !== optimisticNewComment.<span class="property">id</span>);</span><br><span class="line">      <span class="title function_">setComments</span>(filteredComments);</span><br><span class="line">      <span class="title function_">setError</span>(<span class="string">&#x27;Failed to post comment. Please try again.&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">value</span>=<span class="string">&#123;newComment&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onChange</span>=<span class="string">&#123;(e)</span> =&gt;</span> setNewComment(e.target.value)&#125;</span></span><br><span class="line"><span class="language-xml">        placeholder=&quot;Write a comment...&quot;</span></span><br><span class="line"><span class="language-xml">      /&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleCommentSubmit&#125;</span> <span class="attr">disabled</span>=<span class="string">&#123;!newComment.trim()&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        Post Comment</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;comments.map(comment =&gt; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">key</span>=<span class="string">&#123;comment.id&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;comment.text&#125; &#123;comment.status === &#x27;sending&#x27; &amp;&amp; <span class="tag">&lt;<span class="name">span</span>&gt;</span>(Sending...)<span class="tag">&lt;/<span class="name">span</span>&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      ))&#125;</span></span><br><span class="line"><span class="language-xml">      &#123;error &amp;&amp; <span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">color:</span> &#x27;<span class="attr">red</span>&#x27; &#125;&#125;&gt;</span>&#123;error&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>useOptimistic</code> 除了接收一个初始化状态作为入参，还可以接收一个自定义函数作为第二个入参，该函数可以用来编写乐观状态的生成逻辑。比如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, setOptimisticState] = <span class="title function_">useOptimistic</span>([], <span class="function">(<span class="params">currentState, optimisticVal</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 编写自定义状态转换逻辑，该函数会在 setOptimisticState 调用时执行</span></span><br><span class="line">  <span class="comment">// optimisticVal 为 setOptimisticState 调用时的入参</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="use"><a href="#use" class="headerlink" title="use"></a>use</h3><p>这个新增 <code>api</code> 的主要作用也是简化代码写法，它提供了简易的读取两类资源的值的方式，包括 <code>context</code> 和 <code>promise</code>。</p>
+<p>以 <code>context</code> 为例，比如我有一个需要全局消费的主题色字段,为了避免 <code>props</code> 的层层传递，通常的实现手段是使用一个 <code>context</code> 进行全局透传, 传统的写法如下所示：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createContext, useContext &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">ThemeContext</span> = <span class="title function_">createContext</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">MyApp</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ThemeContext.Provider</span> <span class="attr">value</span>=<span class="string">&quot;dark&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Form</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ThemeContext.Provider</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Form</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Panel</span> <span class="attr">title</span>=<span class="string">&quot;Welcome&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">show</span>=<span class="string">&#123;true&#125;</span>&gt;</span>Sign up<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">show</span>=<span class="string">&#123;false&#125;</span>&gt;</span>Log in<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Panel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Panel</span>(<span class="params">&#123; title, children &#125;</span>) &#123;  </span><br><span class="line">  <span class="keyword">const</span> theme = <span class="title function_">useContext</span>(<span class="title class_">ThemeContext</span>);</span><br><span class="line">  <span class="keyword">const</span> className = <span class="string">&#x27;panel-&#x27;</span> + theme;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">section</span> <span class="attr">className</span>=<span class="string">&#123;className&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;title&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">section</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Button</span>(<span class="params">&#123; show, children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> theme = <span class="title function_">useContext</span>(<span class="title class_">ThemeContext</span>);</span><br><span class="line">  <span class="keyword">if</span> (show) &#123;</span><br><span class="line">    <span class="keyword">const</span> className = <span class="string">&#x27;button-&#x27;</span> + theme;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&#123;className&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>use api</code>，也可以直接读取 <code>context</code> 的值，但 <code>use</code> 的一个优势是它不像传统的 <code>React hook</code>, 它可以放在条件语句中执行。其代码如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createContext, use &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">ThemeContext</span> = <span class="title function_">createContext</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">MyApp</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ThemeContext.Provider</span> <span class="attr">value</span>=<span class="string">&quot;dark&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Form</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ThemeContext.Provider</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Form</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Panel</span> <span class="attr">title</span>=<span class="string">&quot;Welcome&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">show</span>=<span class="string">&#123;true&#125;</span>&gt;</span>Sign up<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">show</span>=<span class="string">&#123;false&#125;</span>&gt;</span>Log in<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Panel</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Panel</span>(<span class="params">&#123; title, children &#125;</span>) &#123;  </span><br><span class="line">  <span class="keyword">const</span> theme = <span class="title function_">use</span>(<span class="title class_">ThemeContext</span>);</span><br><span class="line">  <span class="keyword">const</span> className = <span class="string">&#x27;panel-&#x27;</span> + theme;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">section</span> <span class="attr">className</span>=<span class="string">&#123;className&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;title&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">section</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Button</span>(<span class="params">&#123; show, children &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (show) &#123;</span><br><span class="line">    <span class="keyword">const</span> theme = <span class="title function_">use</span>(<span class="title class_">ThemeContext</span>);</span><br><span class="line">    <span class="keyword">const</span> className = <span class="string">&#x27;button-&#x27;</span> + theme;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&#123;className&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于 <code>promise</code> 的状态值读取也是异常简洁，如下所示：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; use &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> fetchMessage = <span class="title function_">fetch</span>(<span class="string">&#x27;https://getmessage&#x27;</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> res.<span class="title function_">json</span>());</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Suspense</span> <span class="attr">fallback</span>=<span class="string">&#123;</span>&lt;<span class="attr">p</span>&gt;</span>waiting for response<span class="tag">&lt;/<span class="name">p</span>&gt;</span>&#125;&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Message</span> <span class="attr">fetchMessage</span>=<span class="string">&#123;fetchMessage&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Suspense</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Message</span>(<span class="params">&#123; fetchMessage &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> messageRes = <span class="title function_">use</span>(fetchMessage);</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>get message result: &#123;messageRes&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述示例中，通过 <code>use</code> 方法包裹了 <code>fetchMessage</code> 这个 <code>promise</code>，当该 <code>promise resolve</code> 时，<code>use</code> 方法可以直接读取到该值，同时 <code>Message</code> 组件也会替换外部 <code>suspense</code> 的 <code>fallback</code>。可以看出，<code>use API</code> 可以极大帮我们减少一些 <code>promise</code> 异步状态管理的模板代码。</p>
+<p>针对 <code>promise reject</code> 的场景，使用 <code>use API</code> 有两种处理方式，如果你需要将错误信息展示给用户，可以结合使用 <code>error-boundary</code> 一起使用。示例如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; use, <span class="title class_">Suspense</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ErrorBoundary</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react-error-boundary&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">MessageContainer</span>(<span class="params">&#123; messagePromise &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ErrorBoundary</span> <span class="attr">fallback</span>=<span class="string">&#123;</span>&lt;<span class="attr">p</span>&gt;</span>⚠️Something went wrong<span class="tag">&lt;/<span class="name">p</span>&gt;</span>&#125;&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Suspense</span> <span class="attr">fallback</span>=<span class="string">&#123;</span>&lt;<span class="attr">p</span>&gt;</span>⌛fetching message...<span class="tag">&lt;/<span class="name">p</span>&gt;</span>&#125;&gt;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Message</span> <span class="attr">messagePromise</span>=<span class="string">&#123;messagePromise&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Suspense</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ErrorBoundary</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Message</span>(<span class="params">&#123; messagePromise &#125;</span>) &#123;</span><br><span class="line">  <span class="comment">// promise reject 时，错误信息会传递到 error-boundary</span></span><br><span class="line">  <span class="keyword">const</span> content = <span class="title function_">use</span>(messagePromise);</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Here is the message: &#123;content&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外一种处理方式是通过 <code>promise</code> 的 <code>catch</code> 方法将错误信息传递给 <code>use api</code> 读取，示例如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; use, <span class="title class_">Suspense</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">MessageContainer</span>(<span class="params"></span>) &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">const</span> messagePromise = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">reject</span>();</span><br><span class="line">  &#125;).<span class="title function_">catch</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// catch 的回调函数中返回的值会跟 resolve 一样传递给 use</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;no new message found.&quot;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Suspense</span> <span class="attr">fallback</span>=<span class="string">&#123;</span>&lt;<span class="attr">p</span>&gt;</span>⌛fetching message...<span class="tag">&lt;/<span class="name">p</span>&gt;</span>&#125;&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Message</span> <span class="attr">messagePromise</span>=<span class="string">&#123;messagePromise&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Suspense</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Message</span>(<span class="params">&#123; messagePromise &#125;</span>) &#123;</span><br><span class="line">  <span class="comment">// 读取到 catch 回调函数中的返回值</span></span><br><span class="line">  <span class="keyword">const</span> content = <span class="title function_">use</span>(messagePromise);</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Here is the message: &#123;content&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>use API</code> 另一个比较隐性的好处，我觉得也是很好的一点，就是它可以让组件侧的代码更加简洁，更加有利于业务进行逻辑抽象。过往在使用 <code>hook</code> 的过程中，由于 <code>hook</code> 必须在组件内部使用且不能放在循环或条件语句中，导致很多业务逻辑必须写在组件内部，无法做到逻辑与 <code>UI</code> 分离。但是像 <code>use</code> 这种 <code>api</code> ,它提供了一种将逻辑外化的能力，比如说我可以将业务逻辑单独抽离成一个文件，与 <code>UI</code> 组件代码进行隔离，这就为更简洁的组件代码和更好的业务抽象提供了可能。</p>
+<h3 id="React-Server-Components"><a href="#React-Server-Components" class="headerlink" title="React Server Components"></a>React Server Components</h3><h4 id="它是什么"><a href="#它是什么" class="headerlink" title="它是什么"></a>它是什么</h4><p><code>React server component</code> 是 <code>React</code> 新定义的一种组件类型，仅运行在 <code>server</code> 环境中，这个 <code>server</code> 并不是狭义的 <code>node.js ssr server</code>, 而是一个泛指，既可以指你本地启动的 <code>server</code> 环境，也可以是 <code>ci/cd</code> 的 <code>server</code>。</p>
+<p>它不是一种新的渲染架构，独立于 <code>SSR</code>，可以跟 <code>SSR</code> 结合在一起使用，提供更好的页面体验。</p>
+<h4 id="它想解决什么问题"><a href="#它想解决什么问题" class="headerlink" title="它想解决什么问题"></a>它想解决什么问题</h4><p>传统的 <code>SSR</code> 架构一直面临的一个问题是页面需要依赖大量的 <code>js</code> 资源的加载和执行才能进入可交互状态，大量的 <code>js</code> 会严重拖慢页面的加载性能和可交互性。为了解决这个问题，<code>React</code> 团队提出了 <code>server component</code> 的概念，其主要的卖点就是号称 <code>zero-bundle-size</code>, 通过 <code>server component</code> 渲染的 <code>UI</code> 不会打包生成 <code>js bundle</code>.</p>
+<h4 id="它的基本原理"><a href="#它的基本原理" class="headerlink" title="它的基本原理"></a>它的基本原理</h4><p>可以用一张图来展示一下它的整体运行流程：</p>
+<p><img src="https://img.alicdn.com/imgextra/i2/O1CN01jqgfWg1LKHxBfKaJS_!!6000000001280-2-tps-2481-1701.png"></p>
+<p>它与普通 <code>SSR</code> 不同的是，它在 <code>server</code> 上渲染生成的结果是一段序列化的 <code>json</code> 数据，然后通过 <code>React runtime</code> 来消费这些数据后生成真实 <code>dom</code> 结构。</p>
+<p>在代码写法上，<code>server component</code> 与传统的 <code>React</code> 组件有所差别，它可以支持 <code>async await</code>, 如下所示：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> db <span class="keyword">from</span> <span class="string">&#x27;./database&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">UserInfo</span>(<span class="params">&#123;id&#125;</span>) &#123;</span><br><span class="line">  <span class="comment">// 查询用户信息</span></span><br><span class="line">  <span class="keyword">const</span> userInfo = <span class="keyword">await</span> db.<span class="title function_">get</span>(id);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;userInfo.name&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;userInfo.avatar&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在有了 <code>server component</code> 之后，未来传统的 <code>React</code> 组件必须要添加指令来单独声明和区分</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 需要使用该指令进行声明</span></span><br><span class="line"><span class="string">&#x27;use client&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">UserInfo</span>(<span class="params">&#123;id&#125;</span>)&#123;</span><br><span class="line">  <span class="keyword">const</span> [userInfo, setUserInfo] = <span class="title function_">useState</span>(&#123;&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">fetch</span>(<span class="string">&#x27;https://get-user-info&#x27;</span>, id).<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> res.<span class="title function_">json</span>()).<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">setUserInfo</span>(res);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;, []);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;userInfo.name&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;userInfo.avatar&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="其局限性和负担"><a href="#其局限性和负担" class="headerlink" title="其局限性和负担"></a>其局限性和负担</h4><ul>
+<li>由于不能使用 <code>useState</code> 等状态管理 <code>hook</code>,它比较适用于无状态交互的组件，即静态展示类型的场景</li>
+<li>在开发 <code>server component</code> 时需要注意不能使用不可被 <code>json</code> 序列化的数据格式。</li>
+<li>给开发者带来了更高的心智负担，由于需要将 <code>server component</code> 的概念与以往的 <code>React</code> 组件概念进行区分，<code>React</code> 团队将传统的组件重新定义为 <code>client component</code>, 并需要在代码中进行手动声明。对于开发者来说，就需要更加关注不同的场景下使用不同类型的组件。</li>
+</ul>
+<h2 id="研发体验改进"><a href="#研发体验改进" class="headerlink" title="研发体验改进"></a>研发体验改进</h2><h3 id="React-Compiler"><a href="#React-Compiler" class="headerlink" title="React Compiler"></a>React Compiler</h3><p>过往我们对 <code>React</code> 组件进行性能优化的时候，为了避免组件发生没有必要的 <code>re-render</code>, 需要开发者手动通过 <code>memo</code>, <code>useMemo</code>, <code>useCallback</code> 等手段进行计算缓存，但这些 <code>API</code> 的使用在提升性能的同时也给开发者带来比较大的心智负担，对于初阶开发者来说尤为不友好。<code>React</code> 团队为了解决这个问题，在 <code>React 19</code> 中推出了 <code>React compiler</code>，与其他更新内容不同的是，<code>React compiler</code> 是一个代码编译阶段的工程化工具，具体来说就是一个 <code>babel</code> 插件 - <code>babel-plugin-react-compiler</code>，它会对你的源代码进行自动检测和优化，生成包含计算缓存能力的代码。以下面这个组件为例：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Heading</span> = (<span class="params">&#123; heading, totalProducts &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">nav</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span> <span class="attr">className</span>=<span class="string">&quot;text-2xl&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;heading&#125;(&#123;totalProducts&#125;)</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">nav</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个组件可以缓存的数据有 3 个部分，分别是 <code>heading</code>, <code>totalProducts</code> 以及 <code>jsx</code>, 经过 <code>React compiler</code> 的编译，上述组件代码会被优化成如下形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">anonymous_1</span>(<span class="params">t0</span>) &#123;</span><br><span class="line">  <span class="comment">// _c 为一个 hook, 会生成长度为 3 的缓存数组</span></span><br><span class="line">  <span class="keyword">const</span> $ = <span class="title function_">_c</span>(<span class="number">3</span>);</span><br><span class="line">  <span class="keyword">const</span> &#123; heading, totalProducts &#125; = t0;</span><br><span class="line">  <span class="keyword">let</span> t1;</span><br><span class="line">  <span class="comment">// 首次渲染或 props 发生变化时，更新 jsx 和缓存数组</span></span><br><span class="line">  <span class="keyword">if</span> ($[<span class="number">0</span>] !== heading || $[<span class="number">1</span>] !== totalProducts) &#123;</span><br><span class="line">    t1 = (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">nav</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h1</span> <span class="attr">className</span>=<span class="string">&quot;text-2xl&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;heading&#125;(&#123;totalProducts&#125;)</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">nav</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">    $[<span class="number">0</span>] = heading;</span><br><span class="line">    $[<span class="number">1</span>] = totalProducts;</span><br><span class="line">    $[<span class="number">2</span>] = t1;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 否则直接读取缓存结果</span></span><br><span class="line">    t1 = $[<span class="number">2</span>];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> t1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出，经过 <code>React compiler</code> 优化后的代码自动具备了 <code>memo</code> 的能力。但是需要注意的是由于其数据对比采用的是严格等于，我们在做数据变更的时候必须注意采用 <code>immutable</code> 的手法，否则可能会产生不符合预期的结果。如果对 <code>React compiler</code> 有更多兴趣，可以在 <a target="_blank" rel="noopener" href="https://playground.react.dev/#N4Igzg9grgTgxgUxALhHCA7MAXABACQQEMATASwwHNcBeXACmFwAtjyqAaXbCbIgGwAKMCCShxsYXAF8AlLQB8uYAB0MuXDATZY6+mo0aAPBiIA3BQcPHmARlxx+RMGAByRALYIaKkNgQAHtgAtABMAfy+lurWhsCspBSU0ow8fEIiYhJgclbWRgD0dtH5BaYWVrJq0mog0kA">Compiler Playground</a> 上做更多尝试。</p>
+<h3 id="Ref-as-a-prop"><a href="#Ref-as-a-prop" class="headerlink" title="Ref as a prop"></a>Ref as a prop</h3><p>在 <code>React 19</code> 中，<code>forwardRef</code> 终于迎来了终结，现在可以直接将 <code>ref</code> 作为 <code>props</code> 传递给子组件了。示例如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">MyInput</span>(<span class="params">&#123;placeholder, ref&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">placeholder</span>=<span class="string">&#123;placeholder&#125;</span> <span class="attr">ref</span>=<span class="string">&#123;ref&#125;</span> /&gt;</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">&lt;<span class="title class_">MyInput</span> ref=&#123;ref&#125; /&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Context-as-a-provider"><a href="#Context-as-a-provider" class="headerlink" title="Context as a provider"></a>Context as a provider</h3><p><code>React 19</code> 也简化了 <code>Context</code> 的用法，不再需要手动声明 <code>Context.Provider</code>，示例如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createContext &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">ThemeContext</span> = <span class="title function_">createContext</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params">&#123;children&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="comment">// 以前则需要使用 &lt;ThemeContext.Provider&gt;</span></span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ThemeContext</span> <span class="attr">value</span>=<span class="string">&quot;dark&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ThemeContext</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Document-Metadata-support"><a href="#Document-Metadata-support" class="headerlink" title="Document Metadata support"></a>Document Metadata support</h3><p><code>React 19</code> 也增加了对 <code>html head</code> 相关元素的写法支持，现在你可以直接在组件代码内编写 <code>title</code>,<code>meta</code>,<code>link</code>等标签了，无需再通过 <code>useEffect</code> 的脚本动态插入标签来实现，示例如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">BlogPost</span>(<span class="params">&#123;post&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">article</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;post.title&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">title</span>&gt;</span>&#123;post.title&#125;<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;author&quot;</span> <span class="attr">content</span>=<span class="string">&quot;Josh&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;author&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://twitter.com/joshcstory/&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;keywords&quot;</span> <span class="attr">content</span>=<span class="string">&#123;post.keywords&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        Eee equals em-see-squared...</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">article</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>React</code> 会自行识别 <code>title</code>,<code>meta</code>,<code>link</code> 等标签，并将其提升至 <code>html head</code> 中。这种能力支持也会让我们的业务代码更加精简，并具备更好的可读性。但需要额外注意的是 <code>link</code> 以及 <code>script</code> 等标签。</p>
+<p>当 <code>link</code> 标签被用于加载外部样式文件时，<code>React</code> 会默认按照组件渲染顺序来指定不同样式库的优先级，但是也可以通过指定特定属性 <code>precedence</code> 的值来确定优先级，当同时渲染的多个组件加载同一个样式资源时，<code>React</code> 会默认进行去重处理。示例如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">ComponentOne</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Suspense</span> <span class="attr">fallback</span>=<span class="string">&quot;loading...&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;foo&quot;</span> <span class="attr">precedence</span>=<span class="string">&quot;default&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;bar&quot;</span> <span class="attr">precedence</span>=<span class="string">&quot;high&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">article</span> <span class="attr">class</span>=<span class="string">&quot;foo-class bar-class&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;...&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">article</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">Suspense</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ComponentTwo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;...&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;baz&quot;</span> <span class="attr">precedence</span>=<span class="string">&quot;default&quot;</span> /&gt;</span>  &lt;-- 会被插入到 foo 与 bar 之间 --&gt;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  )</span></span><br><span class="line"><span class="language-xml">&#125;</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">function App() &#123;</span></span><br><span class="line"><span class="language-xml">  return <span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">ComponentOne</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    // foo 与 bar 的 link 只会存在一份</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">ComponentOne</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">ComponentTwo</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>React 19</code> 中，还可以在组件内部直接编写引入外部资源的 <code>script</code> 标签，<code>React</code> 也会自动进行 <code>hoist</code> 处理以及去重处理。如下所示：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">MyComponent</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span>=<span class="string">&#123;true&#125;</span> <span class="attr">src</span>=<span class="string">&quot;...&quot;</span> /&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"><span class="language-xml">      Hello World</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  &lt;html&gt;</span><br><span class="line">    &lt;body&gt;</span><br><span class="line">      &lt;MyComponent&gt;</span><br><span class="line">      // script 仅会加载和执行一次</span><br><span class="line">      &lt;MyComponent&gt;</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">  &lt;/html&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>React 19</code> 对于 <code>link</code> 和 <code>script</code> 标签的这种支持除了可以简化我们的代码写法以外，更重要的是强化了资源按需加载的概念和能力，每个组件可以通过这种标签的方式来声明和使用其依赖的外部资源，而不再像以前那样，需要统一在页面维度加载一个全量的样式库或 <code>js library</code>。但是也会带来一些隐患，比如说如果多个组件分别引用了同一个样式库或 <code>js library</code> 的不同版本，那么可能就会导致页面中存在多个版本的资源，从而导致一些异常情况，因此也需要视具体场景来合理使用。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>React 19</code> 中更新的诸多内容总体上主要还是在提升开发者体验方面，一系列新的 <code>API</code> 和新的 <code>hook</code> 都是想让开发者能够写更少的代码，做更多的事情，并试图通过编译器的方式来降低开发者的心智负担。但 <code>React server component</code> 的概念笔者始终觉得是给 <code>React</code> 架构带来了更多的复杂性和更高的心智负担，而且会造成应用链路过长，从而让整个页面变的更加脆弱，其带来的性能优化结果可能无法抵消其在其他方面带来的负担，未来很可能会是被诟病的一个败笔，</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#React" >
+    <span class="tag-code">React</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2024/08/11/useful-libraries/">
+        <span class="nav-arrow">← </span>
+        
+          一些优质的三方库
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2024/12/01/qwik/">
+        
+          追求极致性能的框架 - Qwik
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%96%B0%E7%9A%84-hook-%E5%92%8C-API"><span class="toc-nav-text">新的 hook 和 API</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%A2%84%E5%8A%A0%E8%BD%BD%E7%9B%B8%E5%85%B3"><span class="toc-nav-text">预加载相关</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#useActionState"><span class="toc-nav-text">useActionState</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#useFormStatus"><span class="toc-nav-text">useFormStatus</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#useOptimistic"><span class="toc-nav-text">useOptimistic</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#use"><span class="toc-nav-text">use</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#React-Server-Components"><span class="toc-nav-text">React Server Components</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%AE%83%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-nav-text">它是什么</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%AE%83%E6%83%B3%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-nav-text">它想解决什么问题</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%AE%83%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-nav-text">它的基本原理</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%85%B6%E5%B1%80%E9%99%90%E6%80%A7%E5%92%8C%E8%B4%9F%E6%8B%85"><span class="toc-nav-text">其局限性和负担</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%A0%94%E5%8F%91%E4%BD%93%E9%AA%8C%E6%94%B9%E8%BF%9B"><span class="toc-nav-text">研发体验改进</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#React-Compiler"><span class="toc-nav-text">React Compiler</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Ref-as-a-prop"><span class="toc-nav-text">Ref as a prop</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Context-as-a-provider"><span class="toc-nav-text">Context as a provider</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Document-Metadata-support"><span class="toc-nav-text">Document Metadata support</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2024/09/12/react19-updates/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

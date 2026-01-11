@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      追求极致性能的框架 - Qwik | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>追求极致性能的框架 - Qwik</h2>
+  <p class="post-date">2024-12-01</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="Qwik-是什么"><a href="#Qwik-是什么" class="headerlink" title="Qwik 是什么"></a>Qwik 是什么</h2><p><code>Qwik</code> 是来源于社区的一个新的 <code>SSR</code> 前端研发框架，作者即为原 <code>angularJs</code> 框架的作者，其核心理念是页面启动时通过 <code>HTML</code> 直出和尽可能少的 <code>js</code> 实现秒开的页面体验以及无 <code>hydrate</code>（水合）过程以达到最快的页面可交互时间（TTI）。</p>
+<h2 id="Qwik-核心想解决的问题是什么"><a href="#Qwik-核心想解决的问题是什么" class="headerlink" title="Qwik 核心想解决的问题是什么"></a>Qwik 核心想解决的问题是什么</h2><p>在当前的 <code>web</code> 世界中，前端页面主要有两类技术实现 - <code>CSR</code> 和 <code>SSR</code></p>
+<ul>
+<li><p><code>CSR</code> 即客户端渲染，页面的渲染过程为先请求页面的诸多 js 资源，当 js 资源加载完成后开始执行，在执行过程中拉取服务端数据再依据这些数据完成页面渲染。主要的缺陷是页面白屏时间长，在互联网前期主要关注业务扩张的时候大量业务采用该方案。在当下业务进入存量竞争，性能体验成为主要矛盾的当下，大部分大厂已经逐步开始废弃该方案，转而纷纷接入 SSR 架构。</p>
+</li>
+<li><p><code>SSR</code> 即服务端渲染，页面的渲染过程为先在服务器上完成页面 <code>HTML</code> 的生成，然后返回给浏览器去渲染，但为了同步组件树的结构以及执行事件绑定让页面具备可交互能力，诸多前端框架比如 <code>React</code>，<code>Vue</code> 等，都会在浏览器端再全量执行一次 js，该过程称之为 <code>hydrate</code>。该方案的优点是用户能更快的看到页面内容，但是由于有 <code>hydrate</code> 过程的存在，会导致 <code>TTI</code> 时间拉长以及如果 <code>hydrate</code> 过程与服务器渲染生成的 <code>html</code> 结构不一致还会有额外的重排和重绘的性能损耗。</p>
+</li>
+</ul>
+<p>但无论是上述哪个渲染方式，都不可避免的是在页面初始化时会大量依赖 js 资源的加载和执行。随着业务持续迭代，加上站点所依赖使用的其他 js sdk，整个站点的 js bundle 量会非常庞大，而这会严重拖慢整个 web 页面，对于 js 资源的执行成本，可以看这篇文章<a target="_blank" rel="noopener" href="https://medium.com/dev-channel/the-cost-of-javascript-84009f51e99e">the cost of js（需翻墙）</a>。</p>
+<p>此外，在 <code>SSR</code> 渲染架构下，为了减少页面可交互时间，提升页面的交互性，也需要解决 <code>hydrate</code> 的执行成本问题。</p>
+<h2 id="Qwik-是如何解决的"><a href="#Qwik-是如何解决的" class="headerlink" title="Qwik 是如何解决的"></a>Qwik 是如何解决的</h2><p><code>Qwik</code> 解决上述两个问题主要的策略是：</p>
+<ul>
+<li><p>对 js 资源采用尽可能的懒加载和执行，页面启动时仅需小于 1kb 的初始化 js 资源。</p>
+</li>
+<li><p>在服务器端渲染完成后，将页面的渲染状态信息（包括组件树，事件绑定等）序列化到 <code>HTML dom</code> 中一并返回给浏览器端。这样在浏览器端就可以直接消费这些信息，而不需要像传统的 SSR 框架一样需要依赖整个应用的 JS 资源的下载和执行，这个特性在 <code>Qwik</code> 中称之为 <code>Resumable</code>.</p>
+</li>
+</ul>
+<h3 id="关于懒加载"><a href="#关于懒加载" class="headerlink" title="关于懒加载"></a>关于懒加载</h3><p>在当前的诸多前端框架中，对于资源的代码分割和懒加载处理是需要占用开发者大量心智负担的。以 <code>React</code> 为例：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; lazy, <span class="title class_">Suspense</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">LazyComponent</span> = <span class="title function_">lazy</span>(<span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;../lazy-component&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Entry</span>(<span class="params"></span>) &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Suspense</span> <span class="attr">fallback</span>=<span class="string">&#123;</span>&lt;<span class="attr">div</span>&gt;</span>Loading...<span class="tag">&lt;/<span class="name">div</span>&gt;</span>&#125;&gt;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">LazyComponent</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Suspense</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>但是在 <code>Qwik</code> 框架中，因为懒加载是其核心的设计哲学之一，<code>Qwik</code> 提供了自动化的编译器来让开发者不必感知具体的懒加载实现，只需要对需要进行懒加载的组件或事件实现进行标记即可，代码如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过 $ 符号来标识该组件是一个懒加载组件</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title class_">Counter</span> = <span class="title function_">component$</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> count = <span class="title function_">useSignal</span>(<span class="number">0</span>);</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 通过 $ 符号来标识该事件实现需要懒加载和执行</span></span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>$=<span class="string">&#123;()</span> =&gt;</span> count.value++&#125;&gt;&#123;count.value&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上述代码经过 Qwik optimizer 转换之后，会生成如下代码：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Counter</span> = <span class="title function_">component</span>(<span class="title function_">qrl</span>(<span class="string">&#x27;./chunk-a.js&#x27;</span>, <span class="string">&#x27;Counter_onMount&#x27;</span>));</span><br></pre></td></tr></table></figure>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">Counter_onMount</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> count = <span class="title function_">useSignal</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">return</span> </span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>$=<span class="string">&#123;qrl(</span>&#x27;<span class="attr">.</span>/<span class="attr">chunk-b.js</span>&#x27;, &#x27;<span class="attr">Counter_onClick</span>&#x27;, [<span class="attr">count</span>])&#125;&gt;</span> </span></span><br><span class="line"><span class="language-xml">      &#123;count.value&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Counter_onClick</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> [count] = <span class="title function_">useLexicalScope</span>();</span><br><span class="line">  <span class="keyword">return</span> count.<span class="property">value</span>++;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>Qwik</code> 框架的运行时会识别其编译器的产物，然后完成上述子 <code>chunk</code> 资源的加载和执行。除了上述示例中的组件和事件的懒加载，<code>Qwik</code> 还支持了副作用函数（effect）和样式资源的懒加载，可谓是万物皆可懒加载，大饼卷万物。</p>
+<h3 id="关于-Resumable"><a href="#关于-Resumable" class="headerlink" title="关于 Resumable"></a>关于 Resumable</h3><p><code>Resumable</code> 的核心是 <code>Qwik</code> 会将服务器上的渲染信息序列化到 <code>Html dom</code> 中以方便端侧继续消费其渲染结果，从而避免 <code>hydrate</code> 的执行负担，极致化提升页面的响应性能，示意图如下：</p>
+<p><img src="https://img.alicdn.com/imgextra/i1/O1CN01zbrdyK1xbBzq8YGZQ_!!6000000006461-0-tps-945-426.jpg" alt="image"></p>
+<p><code>hydrate</code> 过程最重要的事情有两件，一是在 <code>dom</code> 元素上绑定事件使具备可交互的能力，二是在端侧建立组件树信息，并创建虚拟 dom, 这样当页面状态发生变化时才可以确定哪些组件需要 <code>re-render</code>。没有了 <code>hydrate</code> 过程之后，Qwik 是如何解决这两个关键问题的呢？</p>
+<h4 id="事件绑定的处理"><a href="#事件绑定的处理" class="headerlink" title="事件绑定的处理"></a>事件绑定的处理</h4><p>Qwik 在服务端渲染过程中会将元素的事件绑定序列化成固定的格式跟随 HTML 内容一起返回，以 button 元素的 click 事件为例，假设源码如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过 $ 符号来标识该组件是一个懒加载组件</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title class_">Counter</span> = <span class="title function_">component$</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> count = <span class="title function_">useSignal</span>(<span class="number">0</span>);</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 通过 $ 符号来标识该事件实现需要懒加载和执行</span></span><br><span class="line">  <span class="keyword">return</span> </span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>$=<span class="string">&#123;()</span> =&gt;</span> console.log(&#x27;hello, world&#x27;)&#125;&gt;click me<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>经过序列化后，button 的 html 最终会变成如下的形式:</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;button <span class="attr">on</span>:click=<span class="string">&quot;./chunk.js#handler_symbol&quot;</span>&gt;click me&lt;/button&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Qwik 通过事件代理在页面全局安装了一个事件监听器，当上述点击事件触发时，该监听器会解析元素的 <code>on:click</code> 属性获取到对应的 chunk 资源和方法名称，然后加载该资源和执行其方法以响应用户的点击。这便解决了 hydrate 中的元素事件绑定问题。</p>
+<h4 id="组件更新的实现"><a href="#组件更新的实现" class="headerlink" title="组件更新的实现"></a>组件更新的实现</h4><p>组件更新的本质是状态数据的响应，所以最主要的问题是建立状态与组件之间的绑定关系，当某个页面状态数据发生改变时对应消费了该状态数据的组件会重新渲染。Qwik 解决该问题的手段是 Proxy, 其执行流程如下：</p>
+<ul>
+<li><p>在服务端完成页面的初始化渲染时，通过 proxy 数据对象的 get 方法来确定状态与组件的绑定关系，并将该绑定关系通过 <code>JSON.stringify</code> 的方式序列化到 HTML 中返回给端侧</p>
+</li>
+<li><p>当端侧响应某个事件更改某个状态数据时，在 <code>Proxy</code> 对象的 <code>set</code> 方法中读取该序列化数据获取到绑定关系，然后依次重新渲染相关组件</p>
+</li>
+<li><p>当组件重新渲染时，组件内的状态绑定关系会重新创建，下次更新状态数据时则会依据最新的绑定关系来判断是否要刷新组件。</p>
+</li>
+</ul>
+<p>可以看个具体的例子：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title class_">ComplexCounter</span> = <span class="title function_">component$</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// useStore 返回的是一个 proxy 对象</span></span><br><span class="line">  <span class="keyword">const</span> store = <span class="title function_">useStore</span>(&#123; <span class="attr">count</span>: <span class="number">0</span>, <span class="attr">visible</span>: <span class="literal">true</span> &#125;);</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>$=<span class="string">&#123;()</span> =&gt;</span> (store.visible = !store.visible)&#125;&gt;</span></span><br><span class="line"><span class="language-xml">        &#123;store.visible ? &#x27;hide&#x27; : &#x27;show&#x27;&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>$=<span class="string">&#123;()</span> =&gt;</span> store.count++&#125;&gt;increment<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;store.visible ? <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;store.count&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span> : null&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>初始化渲染时，<code>visible</code> 的值为 true</p>
+</li>
+<li><p>当用户点击 <code>increment</code> 改变了 <code>count</code> 状态的值，由于最底部的 p 元素中读取了 count 字段，表示该组件绑定了 count, 此时 <code>ComplexCounter</code> 组件会重新渲染执行。</p>
+</li>
+<li><p>当用户点击了 hide 后，组件再次重新渲染，最底部的 p 元素会消失，组件内不再存在对 count 字段的读取，组件状态绑定关系会重新更新。</p>
+</li>
+<li><p>当用户再次点击 <code>increment</code> 改变 count 状态的值时，由于 count 字段的绑定关系不复存在，此时 <code>ComplexCounter</code> 组件不会重新渲染。</p>
+</li>
+<li><p>当用户点击了 show 后，底部的 p 元素恢复存在，组件与 count 状态的绑定关系也会重新建立，当用户再次点击 <code>increment</code> 时会重新执行步骤 2</p>
+</li>
+</ol>
+<p>至此，Qwik 便解决了 <code>hydrate</code> 中的两个难题。但技术没有银弹，Qwik 也必定有其存在局限性的地方。</p>
+<h2 id="Qwik-有哪些缺陷"><a href="#Qwik-有哪些缺陷" class="headerlink" title="Qwik 有哪些缺陷"></a>Qwik 有哪些缺陷</h2><p>首先，得于斯者毁于斯，因为使用了 <code>JSON.stringify</code> 来实现序列化，就必然会受限于 <code>JSON.stringify</code> 的限制，比如 <code>Date</code>, <code>Map</code>, <code>Set</code>, <code>URL</code> 等类型的对象就不支持。同时，流式数据的序列化也不支持。</p>
+<p>其次，因为整个应用的运行大量依赖于服务端渲染数据的序列化，也会给开发者带来比较大心智负担，在开发过程中需要时刻关注序列化的内容和方式。</p>
+<p>出于对其设计哲学的实现，<code>Qwik</code> 虽然形式上靠拢了 jsx 的编码方式，但是仍然是自定义了一套 dsl 和编译器，其组件生态并不能与社区的其他主流前端框架互通。</p>
+<p>最后一点，由于做了极致了懒加载策略，当响应事件时就需要先去加载事件的 chunk 资源然后再去执行该资源中的某个方法，可能会因为网络等因素造成响应延迟或卡顿，同时 cdn 的访问压力也会增大。</p>
+<h2 id="对我们的启发"><a href="#对我们的启发" class="headerlink" title="对我们的启发"></a>对我们的启发</h2><p>js 资源的加载和使用是有较大成本的，我们需要重新审视一下自己页面中的 js 资源加载状况。有一些没有用的 js 是不是可以逐步考虑做下线处理，以提升页面性能。同时，对于一些非重要组件或者非首屏可见的组件也可以考虑做更多的懒加载处理。</p>
+<p>之前在 medium 上看到一篇文章 <a target="_blank" rel="noopener" href="https://jonthanfielding.medium.com/the-web-unscripted-a-world-without-javascript-aa661a33e5a8">a world without javascript</a>, 也是非常有共鸣。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Framework,Front End" >
+    <span class="tag-code">Framework,Front End</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2024/09/12/react19-updates/">
+        <span class="nav-arrow">← </span>
+        
+          React 19 带来了什么
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2025/01/27/react-scan/">
+        
+          React-scan 是如何检测性能的
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Qwik-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-nav-text">Qwik 是什么</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Qwik-%E6%A0%B8%E5%BF%83%E6%83%B3%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-nav-text">Qwik 核心想解决的问题是什么</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Qwik-%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%9A%84"><span class="toc-nav-text">Qwik 是如何解决的</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%B3%E4%BA%8E%E6%87%92%E5%8A%A0%E8%BD%BD"><span class="toc-nav-text">关于懒加载</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%B3%E4%BA%8E-Resumable"><span class="toc-nav-text">关于 Resumable</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-nav-text">事件绑定的处理</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E7%BB%84%E4%BB%B6%E6%9B%B4%E6%96%B0%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-nav-text">组件更新的实现</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Qwik-%E6%9C%89%E5%93%AA%E4%BA%9B%E7%BC%BA%E9%99%B7"><span class="toc-nav-text">Qwik 有哪些缺陷</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%AF%B9%E6%88%91%E4%BB%AC%E7%9A%84%E5%90%AF%E5%8F%91"><span class="toc-nav-text">对我们的启发</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2024/12/01/qwik/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

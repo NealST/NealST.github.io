@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link active">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <main class="app-body">
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2018/11/01/rust-ownership/">rust 的 ownership 是什么</a>
+      </h2>
+      <p class="article-date">November 1, 2018</p>
+      
+        
+  <a href="/tags#rust" >
+    <span class="tag-code">rust</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          前言rust 是 mozilla 公司出品的一门系统级编程语言，其主要特点是性能良好 ( 号称不输 c++)，运行安全以及文档与工具链完善。 rust 在前端方面也有很多应用，它是目前 webassembly 生态支持度最高的编程语言，这个可能也跟历史原因有关， webassembly 的前 ...
+        
+      </div>
+      <a class="more" href="/2018/11/01/rust-ownership/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2018/10/01/memory-manage/">javascript的内存管理以及3种常见的内存泄漏</a>
+      </h2>
+      <p class="article-date">October 1, 2018</p>
+      
+        
+  <a href="/tags#javascript, memory manage" >
+    <span class="tag-code">javascript, memory manage</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          根据GitHut stats的统计数据显示，javascript 语言在 Github 中的活跃项目仓库数量和总的 push 数量已经登上了榜首的位置，而且在越来越多的领域里我们都能看 javascript 持续活跃的身影和不断前行的脚步
+尽管我们正在越来越多的编写 Javascript 代 ...
+        
+      </div>
+      <a class="more" href="/2018/10/01/memory-manage/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2018/10/01/event-async/">深入理解事件循环和异步流程控制</a>
+      </h2>
+      <p class="article-date">October 1, 2018</p>
+      
+        
+  <a href="/tags#javascript, browser, async control" >
+    <span class="tag-code">javascript, browser, async control</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          javascript 的执行分为三个部分：运行时，事件循环，js 引擎。运行时提供了诸如注入全局 API（dom, setTimeout 之类）这样的功能。js 引擎负责代码编译执行，包括内存管理。之前写了一篇关于 javascript 内存管理的文章,具体可见 javascript 内存管 ...
+        
+      </div>
+      <a class="more" href="/2018/10/01/event-async/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2018/10/01/render-engine/">彻底了解渲染引擎以及几点关于性能优化的建议</a>
+      </h2>
+      <p class="article-date">October 1, 2018</p>
+      
+        
+  <a href="/tags#html, css, dom, engine" >
+    <span class="tag-code">html, css, dom, engine</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          在日常开发过程中，要编写性能足够优秀的代码，构造更加稳定的应用，我们不仅要对 javascript 本身的执行机制有深入的了解，更要对其宿主环境有更加深刻的认识，理解其工作原理以及组成结构，它可以帮助我们对 web 世界的运转模式有更高层级的认知。这次想要介绍的是浏览器的渲染引擎。
+浏览器的 ...
+        
+      </div>
+      <a class="more" href="/2018/10/01/render-engine/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2018/10/01/terminal/">狂拽酷炫的terminal，你值得拥有</a>
+      </h2>
+      <p class="article-date">October 1, 2018</p>
+      
+        
+  <a href="/tags#iterm,zsh,terminal" >
+    <span class="tag-code">iterm,zsh,terminal</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+命令行是程序员日常工作中的重要组成部分，一个优秀的命令行环境不仅要功能强大，其外观更要造化钟神秀，这样才能让程序员有一个更加轻松愉悦的工作心情。或许你目前的命令行是长下面这样:
+
+你是否幻想过拥有一个如黑客帝国一般的命令行:
+
+当然这是不现实的，但我们至少可以让我们的命令行拥有如下所示的颜 ...
+        
+      </div>
+      <a class="more" href="/2018/10/01/terminal/">Read more</a>
+    </article>
+  
+
+  
+    <div class="guide-pager">
+  
+    <a href="/page/2/"><span class="page-arrow">← </span>Prev</a>
+  
+  
+    <a class="unvisible" href="/">Next <span class="page-arrow">→</span></a>
+  
+</div>
+  
+</main>
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

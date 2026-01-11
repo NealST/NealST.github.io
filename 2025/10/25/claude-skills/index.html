@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      简单聊聊 Claude 新推出的 Agent Skills | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>简单聊聊 Claude 新推出的 Agent Skills</h2>
+  <p class="post-date">2025-10-25</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://img.alicdn.com/imgextra/i3/O1CN01ltegmA1EjINQq9y3k_!!6000000000387-2-tps-1024-1024.png"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Claude 系列模型的母公司 Anthropic 近期新推出了一种为大模型赋予专业领域知识和任务执行能力的实现模式，即 agent skills，其核心思想是让大模型层次递进地读取结构化组织好的文档，脚本等资源以获取上下文。在笔者看来，这种 skills 的方案因其更好的简洁性和扩展性，相比 MCP 会更有潜力成为未来的通用方案。</p>
+<h2 id="Agent-Skills-是什么"><a href="#Agent-Skills-是什么" class="headerlink" title="Agent Skills 是什么"></a>Agent Skills 是什么</h2><p>简单来说，agent skills 是一个文件夹目录，该目录的入口为 SKILL.md 文件，SKILL.md 中需要有一个描述其元信息的 YAML 格式头，其中必须包括 name 和 description 两个字段，来描述其名称和内容与功能的简介。以一个告知大模型如何提取 pdf 内容的 skills 为例，其 skill.md 如下所示：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">name: pdf</span><br><span class="line"><span class="section">description: Comprehensize PDF toolkit for extracting text and tables, merging/splitting documents, and filling-out forms</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Overview</span></span><br><span class="line">This guide covers essential PDF processing operations using Python libraries and command-line tools</span><br></pre></td></tr></table></figure>
+
+<p>初始化时，agent 会提取 YAML 格式描述的元信息，将其内置到系统提示词中，当大模型收到任务指令且根据元信息判断该 skill 与当前任务有关时，agent 会进一步加载 skill.md 文件中的 markdown 内容主体部分并将其添加到上下文中。</p>
+<p>所以，Skills 的本质其实极其简单，它就是一个告诉大模型一些专业背景知识和 markdown 文档。</p>
+<h2 id="Skills-的工作机制"><a href="#Skills-的工作机制" class="headerlink" title="Skills 的工作机制"></a>Skills 的工作机制</h2><p>Skill.md 文件中的内容分为三级，各级对应的上下文加载策略以及 token 消耗如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>内容类型</th>
+<th>模型上下文</th>
+<th>Tokens</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>L1</td>
+<td>元数据（YAML metadata），包含名称和描述</td>
+<td>初始化时加载</td>
+<td>~100</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>内容主体（markdown body），包含专业知识等</td>
+<td>请求 skill 时加载</td>
+<td>&lt;5k</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>外链文件（markdown 引用）</td>
+<td>模型处理内容主体时按需加载</td>
+<td>无限制</td>
+</tr>
+</tbody></table>
+<p>初始化时，L1 的内容会被内置为系统提示词，当模型判断需要使用该 skills 时，L2 的内容会被加载到上下文中。除了这两种类型外，还有 L3 的外链文件。随着知识积累和迭代，skill.md 文档内容会逐渐膨胀，除了正常的文本内容，我们可能还会在文档中嵌入一些脚本内容以支持大模型执行实际任务。为了让 skill.md 文件整洁清晰易维护，我们需要将一些比较独立的内容拆成单独的文件，并通过外链的形式嵌入到 skill.md 中。还是以上述 pdf 的 skills 为例，假设我们把表单填写的专业知识和具体的执行脚本拆开为独立的文件，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pdf/</span><br><span class="line">├── SKILL.md (main instructions)</span><br><span class="line">├── FORMS.md (form-filling guide)</span><br><span class="line">├── REFERENCE.md (detailed API reference)</span><br><span class="line">└── scripts/</span><br><span class="line">    └── fill_form.py (utility script)</span><br></pre></td></tr></table></figure>
+<p>在 Skill.md 文件中引用 forms.md 文件的示例如下：</p>
+<p><img src="https://img.alicdn.com/imgextra/i1/O1CN01uKq0qs1cG1qXXZI1A_!!6000000003572-2-tps-1914-1238.png"></p>
+<p>当大模型处理 L2 内容主体时，模型会根据内容相关性的判断按需加载 L3 的外链文件。从 L1 到 L2 再到 L3，这种渐进式展开的加载策略就是 skills 的核心设计理念，下图可以帮助你更加具象化的理解这种设计，看看 skills 如何随着用户提问动态加载到模型上下文中：</p>
+<p><img src="https://img.alicdn.com/imgextra/i1/O1CN01npAehs1urjXJ9YhRe_!!6000000006091-2-tps-1894-1050.png"></p>
+<h2 id="如何编写-Skills"><a href="#如何编写-Skills" class="headerlink" title="如何编写 Skills"></a>如何编写 Skills</h2><p>Anthropic 官方也给出了一些编写 Skills 的实践建议，包括：</p>
+<ul>
+<li>始于评测：先定义清楚 agents 当前的能力缺陷，然后根据缺陷补充对应 skills。</li>
+<li>模块化设计：尽量将文档进行模块化拆分，即较为独立的内容拆成单独的文件，通过外链的方式进行引用，以保持 skills.md 文件的简洁些并减少 token 消耗。</li>
+<li>关注元信息：尽可能完整和严谨的编写 name 和 description，模块会根据元信息来判断是否要加载 skills。</li>
+<li>在使用模型的过程中逐步打磨：skills 的编写不太可能一蹴而就，而是需要在与模型的交互中逐步观察任务的完成质量，让模型自己反馈还需要哪些上下文信息，然后逐步打磨完善。</li>
+</ul>
+<h2 id="Skills-与-MCP-的比较"><a href="#Skills-与-MCP-的比较" class="headerlink" title="Skills 与 MCP 的比较"></a>Skills 与 MCP 的比较</h2><p>MCP 自从去年十一月份首次发布以来吸引力大量关注，目前业界已经有大量的 MCP server 存在，质量也是参差不齐。MCP 的缺陷在实际使用过程中也逐渐突显，最大的问题在于其对上下文 token 的占用和消耗，在添加一定数量的 MCP 工具后，留给上下文的剩余空间就会捉襟见肘，很多实际没有用到的工具其 MCP 描述都会在初始化时被加载到上下文中。</p>
+<p>而 Skills 的渐进加载策略则更具优势，初始化时仅加载最少量的 L1 元数据，可以做到 token 消耗最小化。同时，具体的工具执行脚本和命令调用可以通过外链脚本的方式插入到 skills 的 markdown 文档中，让大模型按需加载和执行。</p>
+<h2 id="Skills-的局限性与关键优势"><a href="#Skills-的局限性与关键优势" class="headerlink" title="Skills 的局限性与关键优势"></a>Skills 的局限性与关键优势</h2><p>先说局限性，Skills 的设计需要依赖于文件系统的能力支持（读写文件）和本地虚拟机（执行脚本），比较适用于像 Cursor, Claude Code, Codex CLI 和 Gemini Cli 等产品形态的 agent。</p>
+<p>再说其优势，笔者认为 Skills 最大的优势就在于其设计足够简单，它没有 MCP 那么复杂的协议设计，需要关注 hosts, clients, servers, resources, prompts, tools, sampling, roots 等。Skills 所需的只有一份 markdown 文件，简单直接又高效。此外，这种简洁性也使其可以快速应用到其他 agent 里，比如说你可以在 Gemini Cli 中输入指令 “读取 pdf&#x2F;SKILL.md 文件并按照其指导帮我给当前项目创建一份 pdf 格式的描述”，即使 Gemini Cli 当前还不像 Claude 那样支持 skills, 它也可以正常执行这项任务。</p>
+<p>不过需要注意的是针对 skills 中的外链脚本需要做好安全防护策略，尽量用沙盒环境来执行，避免出现 prompt 注入攻击，在使用 skills 时需要尽量选择可信的数据源。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在 MCP 之外，Skills 提供了另一种给大模型提供专业知识和任务执行能力的模式。这种基于 markdown 文本的设计足够简单高效且节省了上下文 token 的消耗，目前已经在 Claude Code, Claude.ai, Claude Agent SDK 中得到了支持。在笔者看来，skills 会有望超越 MCP，成为新的工具实现标准。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2025/10/12/shopify-ai-product-classify/">
+        <span class="nav-arrow">← </span>
+        
+          Shopify 如何利用 AI 来解决商品分类问题
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2025/11/05/vision-llm-grab/">
+        
+          Grab 自研视觉大模型提取图像信息
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Agent-Skills-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-nav-text">Agent Skills 是什么</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Skills-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="toc-nav-text">Skills 的工作机制</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A6%82%E4%BD%95%E7%BC%96%E5%86%99-Skills"><span class="toc-nav-text">如何编写 Skills</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Skills-%E4%B8%8E-MCP-%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-nav-text">Skills 与 MCP 的比较</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Skills-%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7%E4%B8%8E%E5%85%B3%E9%94%AE%E4%BC%98%E5%8A%BF"><span class="toc-nav-text">Skills 的局限性与关键优势</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2025/10/25/claude-skills/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

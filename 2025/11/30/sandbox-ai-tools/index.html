@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      如何沙盒化运行你的 AI 工具 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>如何沙盒化运行你的 AI 工具</h2>
+  <p class="post-date">2025-11-30</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>AI 编程助手、npm、pip 等诸多开发工具可以在机器上执行任意代码或脚本，这意味着，它们极易在用户没有察觉的情况下，窃取 SSH 密钥、API 令牌、数字钱包私钥、敏感凭证以及其他隐私数据。此外，像 npm&#x2F;yarn 和 pip 这类工具还允许依赖包在安装过程中执行任意脚本，并且可能会顺带安装一大堆具有潜在风险的关联依赖，这类攻击方式在现实中屡见不鲜。</p>
+<p>最好的做法是将整个开发环境（包括 AI 工具本身）都丢进沙盒里运行。这样不仅能安全地安装依赖和执行代码，还可以解锁了一些新能力：比如在运行那些看着就不靠谱的代码前先打个 Snapshot 快照，一旦玩脱了，可以随时一键回滚。</p>
+<p>本文是一篇实践指南，主要讲解如何利用 <a target="_blank" rel="noopener" href="https://lima-vm.io/">Lima</a> 将这些工具隔离在虚拟机（沙盒）中运行，以便你能无后顾之忧地自由尝试和开发，无需担心数据泄露等风险。</p>
+<p><img src="https://www.metachris.dev/images/posts/ai-sandbox/cover.jpg"></p>
+<h2 id="为什么选用虚拟机而不是-Docker"><a href="#为什么选用虚拟机而不是-Docker" class="headerlink" title="为什么选用虚拟机而不是 Docker"></a>为什么选用虚拟机而不是 Docker</h2><p>虚拟机（VM）和容器（如 Docker、Podman、containerd）是将开发工具与宿主操作系统隔离的两种最实用的方案。但总体而言，虚拟机提供了更强的防护能力和灵活性，也更适合用于与 AI 协同开发的场景。</p>
+<p>容器技术的核心在于共享宿主操作系统的内核。这意味着它们本质上依然运行在你的主力机器的同一套系统中，仅仅是通过隔离命名空间（Namespaces）和资源限制来划分边界。这种机制带来了一些不容忽视的安全隐患：</p>
+<ul>
+<li><strong>内核漏洞风险：</strong> 如果恶意代码发现了一个内核漏洞，它极有可能实现“容器逃逸”并直接访问宿主系统。这类漏洞被发现的频率并不低，使用容器相当于是在赌你的内核补丁已经打全了。</li>
+<li><strong>资源共享风险：</strong> 由于容器共享同一个内核，它们访问的是相同的系统调用、设备驱动和内核模块。这种扩大的攻击面，多年来已经导致了层出不穷的容器逃逸漏洞。</li>
+<li><strong>隔离能力有限：</strong> 虽然容器提供了进程和文件系统的隔离，但这种隔离更多是一种“为了便利的边界”，而非真正的“安全屏障”。诸如 <code>docker run --privileged</code> 这样的特权模式，或者直接挂载宿主目录，都会轻易削弱甚至绕过这些保护措施 — 而 AI 生成的代码可能会在你毫无察觉的情况下悄悄执行这些操作。</li>
+</ul>
+<p>相比之下，虚拟机运行着一套自带内核的完整操作系统。管理程序（Hypervisor，如 QEMU&#x2F;KVM）构建了一个更坚固的隔离边界。即使恶意代码彻底攻陷了虚拟机内部，想要触及你的宿主机器，它还得攻破管理程序本身——这可是一个难度呈指数级上升的攻击目标。</p>
+<p>此外，虚拟机还拥有更出色的并发处理能力。你可以在虚拟机里同时运行 Docker 容器、数据库、Web 服务器、各种构建进程以及后台服务。AI 工具可以像在普通开发机上一样，自然流畅地与这一切进行交互。</p>
+<h2 id="关于-Lima-虚拟机"><a href="#关于-Lima-虚拟机" class="headerlink" title="关于 Lima 虚拟机"></a>关于 Lima 虚拟机</h2><p>本文中，我使用 <a target="_blank" rel="noopener" href="https://lima-vm.io/">Lima VM</a> 来对 AI 和开发工具进行沙盒化隔离。Lima 是一款适用于 Linux 和 macOS 的轻量级虚拟机管理工具，它的使用体验极佳，能让你轻松快捷地创建和管理虚拟机。</p>
+<p>你可以通过 limactl 命令行工具来操作 Lima：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列举所有虚拟机实例</span></span><br><span class="line">limactl list</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用默认模板创建一个新的虚拟机 (Ubuntu 25.10 + home directory mount)</span></span><br><span class="line">limactl start --name dev template:default</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打开一个 shell</span></span><br><span class="line">limactl shell dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">打开一个带 ssh 的 shell</span></span><br><span class="line">ssh -F ~/.lima/dev/ssh.config lima-dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启虚拟机</span></span><br><span class="line">limactl restart dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除一个虚拟机实例</span></span><br><span class="line">limactl delete dev -f</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列举所有可用的模板</span></span><br><span class="line">limactl start --list-templates</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用其他模板创建并启动一个新的 vm 实例</span></span><br><span class="line">limactl start --name dev template:debian</span><br></pre></td></tr></table></figure>
+
+<p>注意事项：</p>
+<ul>
+<li><p>默认挂载风险： Lima 默认会将宿主机的整个用户主目录（Home directory）挂载到虚拟机中。为了保护私有文件安全，需要极力避免这种操作。下文将演示如何通过自定义 VM 模板来规避这一默认行为。</p>
+</li>
+<li><p>配置存储位置： Lima 会将所有与虚拟机相关的配置文件和数据存放在 <del>&#x2F;.lima 目录下（具体路径通常为 &#96;</del>&#x2F;.lima&#x2F;<vm_name>&#x2F;<code>和</code>~&#x2F;.lima&#x2F;_config&#x2F;&#96;）。</p>
+</li>
+</ul>
+<h3 id="安装-Lima"><a href="#安装-Lima" class="headerlink" title="安装 Lima"></a>安装 Lima</h3><p><a target="_blank" rel="noopener" href="https://lima-vm.io/docs/installation/">Lima VM docs</a> 官方文档给出了针对不同平台的安装指南。  </p>
+<p>在 macOS 下推荐采用 homebrew 来安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Install</span></span><br><span class="line">brew install lima</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Update</span></span><br><span class="line">brew upgrade lima</span><br></pre></td></tr></table></figure>
+
+<p>在 Linux 下安装方式：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VERSION=$(curl -fsSL https://api.github.com/repos/lima-vm/lima/releases/latest | jq -r .tag_name)</span><br><span class="line">curl -fsSL &quot;https://github.com/lima-vm/lima/releases/download/$&#123;VERSION&#125;/lima-$&#123;VERSION:1&#125;-$(uname -s)-$(uname -m).tar.gz&quot; | tar Cxzvm /usr/local</span><br><span class="line">curl -fsSL &quot;https://github.com/lima-vm/lima/releases/download/$&#123;VERSION&#125;/lima-additional-guestagents-$&#123;VERSION:1&#125;-$(uname -s)-$(uname -m).tar.gz&quot; | tar Cxzvm /usr/local</span><br></pre></td></tr></table></figure>
+
+<p>安装之后可以通过 version 指令来确认是否安装成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">limactl --version</span></span><br><span class="line">limactl version 2.0.1</span><br></pre></td></tr></table></figure>
+
+<h2 id="沙盒化启动"><a href="#沙盒化启动" class="headerlink" title="沙盒化启动"></a>沙盒化启动</h2><h3 id="准备共享目录"><a href="#准备共享目录" class="headerlink" title="准备共享目录"></a>准备共享目录</h3><p>出于安全考虑，我们只希望将宿主机上指定的目录共享给虚拟机，而非整个硬盘。</p>
+<p>首先，在宿主机上创建一个名为 <code>~/VM-Shared</code> 的目录。稍后，我们会将其以可写权限挂载到虚拟机的 <code>~/Shared</code> 路径下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/VM-Shared</span><br></pre></td></tr></table></figure>
+
+<p>利用这个目录，你可以轻松地在宿主机和虚拟机之间传输文件，或者将宿主机上的项目文件夹安全地共享给虚拟机使用。</p>
+<h3 id="配置-VM-默认设置"><a href="#配置-VM-默认设置" class="headerlink" title="配置 VM 默认设置"></a>配置 VM 默认设置</h3><p>通过 <code>~/.lima/_config/default.yaml</code> 文件，我们可以为所有虚拟机定义全局的默认配置。</p>
+<p>接下来启用以下功能：</p>
+<ul>
+<li><strong>挂载共享目录：</strong> 将宿主机的 <code>~/VM-Shared</code> 映射到虚拟机内部的 <code>~/Shared</code> 路径。</li>
+<li><strong>配置端口转发：</strong> 将虚拟机的端口转发到宿主机（例如 8000 到 9000 这一范围），以便在宿主机浏览器中访问虚拟机内的服务。</li>
+<li><strong>分配系统资源：</strong> 设定虚拟机允许使用的 CPU 核心数和内存大小（默认通常为：4 核 CPU、4 GiB 内存以及 100GiB 磁盘空间）。</li>
+</ul>
+<p>接下来，创建这个默认的 YAML 配置文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">~/.lima/_config/default.yaml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">mounts:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">location:</span> <span class="string">&quot;~/VM-Shared&quot;</span></span><br><span class="line">  <span class="attr">mountPoint:</span> <span class="string">&quot;<span class="template-variable">&#123;&#123;.Home&#125;&#125;</span>/Shared&quot;</span></span><br><span class="line">  <span class="attr">writable:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">portForwards:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">guestPortRange:</span> [<span class="number">8000</span>, <span class="number">9000</span>]</span><br><span class="line">  <span class="attr">hostPortRange:</span> [<span class="number">8000</span>, <span class="number">9000</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Adjust these based on your system and preferences</span></span><br><span class="line"><span class="attr">cpus:</span> <span class="number">6</span></span><br><span class="line"><span class="attr">memory:</span> <span class="string">16GiB</span></span><br><span class="line"></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意事项：</strong></p>
+<ul>
+<li><strong>单实例调整：</strong> 你完全可以针对每个虚拟机实例单独调整这些设置。既可以在启动虚拟机时直接编辑配置，也可以在虚拟机创建后修改 <code>~/.lima/&lt;vm_name&gt;/lima.yaml</code> 文件，修改完成后记得<strong>重启虚拟机</strong>以使配置生效。</li>
+<li><strong>休眠问题：</strong> 当宿主机进入休眠模式（Suspend）后，端口转发功能可能会失效，此时通常需要重启虚拟机才能恢复正常。</li>
+</ul>
+<h3 id="准备便捷的-SSH-访问"><a href="#准备便捷的-SSH-访问" class="headerlink" title="准备便捷的 SSH 访问"></a>准备便捷的 SSH 访问</h3><p>Lima 会非常贴心地为每个 VM 实例自动生成 SSH 配置文件，这让通过 SSH 登录变得异常简单（完美支持使用 VS Code 进行 Remote-SSH 远程开发）。</p>
+<p>推荐在宿主机上专门设立一个 <code>~/.ssh/config.d/</code> 目录，并配置 SSH 默认加载该目录下的所有配置。这样一来，我们只需要将 Lima 生成的配置文件软链接（Symlink）到这里，即可直接使用。</p>
+<p>首先，创建目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/.ssh/config.d</span><br></pre></td></tr></table></figure>
+
+<p>接着，将以下内容添加到你 <code>~/.ssh/config</code> 文件的<strong>第一行</strong>，让 SSH 自动包含该目录下的所有配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Include config.d/*</span><br></pre></td></tr></table></figure>
+
+<p>完美！以后每当创建一个新的 VM，我们只需为 Lima 生成的 SSH 配置做一个软链接，就能立刻通过 SSH 登录进去了。</p>
+<h3 id="启动虚拟机"><a href="#启动虚拟机" class="headerlink" title="启动虚拟机"></a>启动虚拟机</h3><p>接下来，我们将启动一个名为 <code>dev</code> 的 Ubuntu 25.10 虚拟机实例。这里我们特意选用内置的 <code>_images/ubuntu-25.10.yaml</code> 模板，关键原因在于它<strong>默认不包含</strong>自动挂载主目录的功能（这符合我们的安全隔离需求）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">limactl start --name dev -y template:_images/ubuntu-25.10.yaml</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意事项：</strong></p>
+<ul>
+<li><strong>跳过确认：</strong> 使用 <code>-y</code> 参数可以让 VM 自动启动，从而跳过询问“是否需要编辑实例配置”的交互步骤。</li>
+<li><strong>手动配置：</strong> 如果不使用上述特定模板，你也可以手动禁用主目录共享功能。方法有两种：一是在启动 VM 时的配置界面中进行修改；二是在 VM 创建完成后，编辑 <code>~/.lima/&lt;vm_name&gt;/lima.yaml</code> 配置文件。</li>
+</ul>
+<p>管理 VM 生命周期的一些常用命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启 VM</span></span><br><span class="line">limactl restart dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">停止 VM</span></span><br><span class="line">limactl stop dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动 VM</span></span><br><span class="line">limactl start dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除 VM</span></span><br><span class="line">limactl delete dev -f</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="共享项目专属目录"><a href="#共享项目专属目录" class="headerlink" title="共享项目专属目录"></a>共享项目专属目录</h3><p>除了默认的共享设置外，你还可以通过以下几种方式，灵活地在宿主机和虚拟机之间共享特定的项目目录：</p>
+<ul>
+<li><strong>启动前调整：</strong> 在启动虚拟机时不要使用 <code>-y</code> 参数，这样系统会进入交互模式允许你编辑配置，此时直接修改 <code>mounts</code> 部分即可。</li>
+<li><strong>启动后修改：</strong> 对于已经运行的实例，可以直接编辑 <code>~/.lima/&lt;vm_name&gt;/lima.yaml</code> 配置文件，修改完成后记得<strong>重启虚拟机</strong>以使更改生效。</li>
+<li><strong>创建自定义模板：</strong> 预先创建一个自定义模板，并基于该模板启动实例（这种方法虽然前期准备稍显复杂，但非常适合需要反复创建标准化环境的场景）。</li>
+</ul>
+<h3 id="SSH-登录虚拟机"><a href="#SSH-登录虚拟机" class="headerlink" title="SSH 登录虚拟机"></a>SSH 登录虚拟机</h3><p>现在，为生成的 SSH 配置文件创建一个软链接，然后就可以直接 SSH 连接进入虚拟机了：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">给 SSH 配置文件生成软链</span></span><br><span class="line">ln -s ~/.lima/dev/ssh.config ~/.ssh/config.d/lima-dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">登录虚拟机</span></span><br><span class="line">ssh lima-dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Once inside the VM, look around...</span></span><br><span class="line">metachris@lima-dev:~$ uname -m</span><br><span class="line">aarch64</span><br><span class="line"></span><br><span class="line">metachris@lima-dev:~$ uname -a</span><br><span class="line">Linux lima-dev 6.17.0-5-generic #5-Ubuntu SMP PREEMPT_DYNAMIC Mon Sep 22 09:50:31 UTC 2025 aarch64 GNU/Linux</span><br><span class="line"></span><br><span class="line">metachris@lima-dev:~$ ls -alh</span><br><span class="line">total 36K</span><br><span class="line">drwxr-xr-x 7 metachris root      4.0K Nov 19 12:32 .</span><br><span class="line">drwxr-xr-x 3 root      root      4.0K Nov 19 12:31 ..</span><br><span class="line">-rw-r--r-- 1 metachris root       116 Nov 19 12:31 .bashrc</span><br><span class="line">drwx------ 2 metachris metachris 4.0K Nov 19 12:32 .cache</span><br><span class="line">drwxr-xr-x 5 metachris root      4.0K Nov 19 12:32 .config</span><br><span class="line">drwxrwxr-x 3 metachris metachris 4.0K Nov 19 12:32 .local</span><br><span class="line">-rw-r--r-- 1 metachris root       116 Nov 19 12:31 .profile</span><br><span class="line">drwx------ 2 metachris metachris 4.0K Nov 19 12:31 .ssh</span><br><span class="line">-rw-r--r-- 1 metachris root       116 Nov 19 12:31 .zshrc</span><br><span class="line">drwxr-xr-x 3 metachris metachris   96 Nov 19 09:55 Shared</span><br></pre></td></tr></table></figure>
+<p>🎉 成功!</p>
+<h3 id="更新系统与配置-Bash"><a href="#更新系统与配置-Bash" class="headerlink" title="更新系统与配置 Bash"></a>更新系统与配置 Bash</h3><p>首先，更新实例内的系统服务，并配置好 Git：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Update the system</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get upgrade -y</span><br><span class="line">sudo apt-get install -y vim screen htop iotop sysstat smem ccze jq build-essential ca-certificates pkg-config libssl-dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Setup git author info</span></span><br><span class="line">git config --global user.name &quot;Your Name&quot;</span><br><span class="line">git config --global user.email &quot;you@domain.net&quot;</span><br><span class="line">git config --global core.untrackedCache false</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">git config --global core.editor <span class="string">&quot;vim&quot;</span>  <span class="comment"># optional</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Create a .bash_profile file that loads .bashrc (SSH sessions use it)</span></span><br><span class="line">echo &#x27;if [ -f ~/.bashrc ]; then . ~/.bashrc; fi&#x27; &gt;&gt; ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<p>我个人习惯在 <code>/etc/bash.bashrc</code> 中加入一些带有强烈个人偏好的实用配置（Goodies），这能极大地提升 Bash 的使用体验:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">sudo tee -a /etc/bash.bashrc &gt; /dev/null &lt;&lt; &#x27;EOF&#x27;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Long bash <span class="built_in">history</span>!</span></span><br><span class="line">export HISTSIZE=262144</span><br><span class="line">export HISTFILESIZE=262144</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Path and default editor</span></span><br><span class="line">export PATH=$PATH:/usr/local/go/bin:~/go/bin/:~/.local/bin</span><br><span class="line">export EDITOR=&quot;vim&quot;</span><br><span class="line">unset MAILCHECK</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">General aliases</span></span><br><span class="line">alias ll=&#x27;ls -alh&#x27;</span><br><span class="line">alias htop=&quot;htop --sort-key=PERCENT_CPU&quot;</span><br><span class="line">alias sr=&quot;screen -d -r&quot;</span><br><span class="line">alias as=&quot;apt search&quot;</span><br><span class="line">alias ai=&quot;sudo apt-get install&quot;</span><br><span class="line">alias s=&quot;systemctl status&quot;</span><br><span class="line">alias j=&quot;journalctl -o cat&quot;</span><br><span class="line">alias v=&quot;git describe --tags --always --dirty=-dev&quot;</span><br><span class="line">alias myip=&quot;curl -4 ifconfig.me/ip&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Git aliases</span></span><br><span class="line">alias g=&quot;git&quot;</span><br><span class="line">alias gs=&#x27;git status -sb&#x27;</span><br><span class="line">alias gd=&quot;git diff&quot;</span><br><span class="line">alias ga=&#x27;git add&#x27;</span><br><span class="line">alias gb=&#x27;git branch&#x27;</span><br><span class="line">alias gc=&#x27;git commit&#x27;</span><br><span class="line">alias gl=&#x27;git log --pretty=format:&quot;%h %ad | %s%d [%an]&quot; --graph --date=short&#x27;</span><br><span class="line">alias ggo=&quot;git checkout&quot;</span><br><span class="line">alias gds=&#x27;git diff --staged&#x27;</span><br><span class="line">alias gca=&quot;git commit -a --amend&quot;</span><br><span class="line"></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试端口转发"><a href="#测试端口转发" class="headerlink" title="测试端口转发"></a>测试端口转发</h3><p>最后，验证一下端口转发功能是否正常工作。</p>
+<p>我们可以在虚拟机内部运行一行 Python 命令来启动一个简单的 HTTP 服务器（监听 7777 端口），然后尝试从宿主机进行访问：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">In the VM, start the HTTP server</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">python3 -m http.server 7777</span></span><br><span class="line">Serving HTTP on 0.0.0.0 port 7777 (http://0.0.0.0:7777/) ...</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">On the host, make a HTTP request to the server</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">curl localhost:7777</span></span><br><span class="line">&lt;!DOCTYPE HTML&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>一切运行正常，完美！🎉</p>
+<h3 id="安装工具与语言"><a href="#安装工具与语言" class="headerlink" title="安装工具与语言"></a>安装工具与语言</h3><p>虚拟机开发环境需要安装编程语言与开发工具，常用的包括 Golang、Node.js、Python、Rust 以及 Docker 等。</p>
+<p>要搞定这些安装，你可以选择传统的“笨办法”——对照着每个工具的官方文档逐个手动安装，这种手法肯定不是我想推荐的，我们完全可以选择更高效的现代化方案：使用像 <a target="_blank" rel="noopener" href="https://github.com/jdx/mise?tab=readme-ov-file">mise</a> 这样的版本管理器（名字源于法式烹饪术语 “mise-en-place”，意为“各就各位”，目前在 GitHub 上已斩获 2.2 万星）。它能让你通过简洁的命令行界面，轻松管理和安装<a target="_blank" rel="noopener" href="https://mise.jdx.dev/registry.html#tools">数百种开发工具</a>。</p>
+<p>首先，安装 <strong>mise</strong>，并配置 Bash 环境以支持它：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Install mise</span></span><br><span class="line">curl https://mise.run | sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Make bash know about it</span></span><br><span class="line">echo &#x27;eval &quot;$(~/.local/bin/mise activate bash)&quot;&#x27; &gt;&gt; ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p>你可以使用 <code>mise latest &lt;tool&gt;</code> 命令，来查询 mise 当前收录的最新版本信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">mise latest node</span></span><br><span class="line">25.2.1</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">mise latest go</span></span><br><span class="line">1.25.4</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">mise latest rust</span></span><br><span class="line">1.91.1</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">mise latest python</span></span><br><span class="line">3.14.0</span><br></pre></td></tr></table></figure>
+
+<p>接下来，只需执行一条命令，就能一次性安装好所有你需要的工具：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mise use --global nodejs go rust cargo</span><br></pre></td></tr></table></figure>
+
+<h2 id="VSCode-Remote-SSH-远程开发"><a href="#VSCode-Remote-SSH-远程开发" class="headerlink" title="VSCode - Remote-SSH 远程开发"></a>VSCode - Remote-SSH 远程开发</h2><p>如果你更喜欢使用 VSCode，那么利用其 Remote-SSH 功能，可以直接在虚拟机实例内部开启远程开发会话：</p>
+<ol>
+<li>按下 <code>Shift + Cmd + P</code> 唤出命令面板（Command Palette）。</li>
+<li>输入 <code>ssh</code>，然后在列表中选择 **Remote-SSH: Connect to Host…**。<br><img src="https://www.metachris.dev/images/posts/ai-sandbox/vs-code-ssh1.png"></li>
+<li>选中 <code>lima-dev</code>（得益于之前的配置，你的 SSH 目标主机此时应该会自动出现在列表中）。<br><img src="https://www.metachris.dev/images/posts/ai-sandbox/vs-code-ssh2.png"></li>
+</ol>
+<p>此时，一个新的 VS Code 窗口将会弹出，并自动开始安装和配置 VS Code Server：<br><img src="https://www.metachris.dev/images/posts/ai-sandbox/vs-code-ssh3.png"></p>
+<p>配置完成后，点击“<strong>Open Folder</strong>”（打开文件夹），选择像 <code>Shared</code> 这样的目录即可开始工作：<br><img src="https://www.metachris.dev/images/posts/ai-sandbox/vs-code-ssh4.png"></p>
+<h2 id="Claude-Code-Codex-与-Gemini"><a href="#Claude-Code-Codex-与-Gemini" class="headerlink" title="Claude Code, Codex 与 Gemini"></a>Claude Code, Codex 与 Gemini</h2><p>在正式配置这些 AI 工具之前，先在 <code>Shared</code> 共享文件夹中创建一个 “Hello World” 目录，把它作为后续折腾和实验的“演练场”：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/Shared/HelloWorld</span><br><span class="line">cd ~/Shared/HelloWorld</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建一个空的 README.md</span></span><br><span class="line">touch README.md</span><br></pre></td></tr></table></figure>
+
+<h3 id="Claude-Code"><a href="#Claude-Code" class="headerlink" title="Claude Code"></a>Claude Code</h3><p>参照<a target="_blank" rel="noopener" href="https://code.claude.com/docs/en/setup">官方文档</a>，首先在虚拟机中安装 Claude Code：</p>
+<p><strong>安装 Claude Code CLI：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://claude.ai/install.sh | bash</span><br></pre></td></tr></table></figure>
+
+<p><strong>启动 Claude：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claude</span><br></pre></td></tr></table></figure>
+
+<p>首次启动时，Claude 会提示你进行授权。我选择了“Anthropic Console account”方式，在宿主机浏览器中打开链接完成授权，最后将获取的验证码粘贴回虚拟机的命令行界面即可。另外，你也可以选择通过设置 <code>ANTHROPIC_API_KEY</code> 环境变量（添加到 <code>.bashrc</code> 中）来完成认证。</p>
+<p>至此，Claude Code CLI 已经在虚拟机中成功运行了！🎉<br><img src="https://www.metachris.dev/images/posts/ai-sandbox/claude1.png"></p>
+<p><strong>进阶技巧：</strong></p>
+<p>既然我们是在隔离的虚拟机中运行 Claude，那么完全可以大胆一点，尝试开启“危险权限跳过模式”（dangerously skip permissions mode）。该模式会让 Claude 绕过所有的权限检查步骤，从而更流畅、更自动化地执行任务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claude --dangerously-skip-permissions</span><br></pre></td></tr></table></figure>
+
+<p>为了以后使用方便，你不妨直接为这个长命令创建一个别名（Alias），并将其添加到你的 <code>.bashrc</code> 文件中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias claude=&quot;claude --dangerously-skip-permissions&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Claude-Code-VS-Code-扩展"><a href="#Claude-Code-VS-Code-扩展" class="headerlink" title="Claude Code VS Code 扩展"></a>Claude Code VS Code 扩展</h3><p>Anthropic 不仅提供了在 VS Code 中使用 Claude 的官方文档，还专门推出了对应的 VS Code 扩展插件。</p>
+<p>你可以直接在 Remote-SSH 连接的窗口中，将 Claude 扩展安装到虚拟机里：<br><img src="https://www.metachris.dev/images/posts/ai-sandbox/vs-code-ssh5.jpg"></p>
+<p>如果通过这种 GUI 的认证流程跑不通，可以采用了一种变通方案绕过这个问题：手动获取 Claude API Key，并将其配置为虚拟机中的环境变量：</p>
+<ol>
+<li>前往 <a target="_blank" rel="noopener" href="https://console.anthropic.com/settings/keys">https://console.anthropic.com/settings/keys</a> 创建一个新的 API Key。</li>
+<li>编辑 <code>.bashrc</code> 文件并设置相应的环境变量：<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export ANTHROPIC_API_KEY=sk-ant-api03-x-y...</span><br></pre></td></tr></table></figure>
+设置完成后，需要重新加载 VS Code 窗口（按下 <code>Shift + Cmd + P</code> 打开命令面板，输入并选择 “<strong>Developer: Reload Window</strong>”）：<br><img src="https://www.metachris.dev/images/posts/ai-sandbox/vs-code-reload.png"></li>
+</ol>
+<p>现在，VS Code 中的 Claude 扩展应该就能正常工作了：<br><img src="https://www.metachris.dev/images/posts/ai-sandbox/vs-code-claude1.png"></p>
+<p><strong>进阶设置：</strong></p>
+<p>如果你想在 VS Code 扩展中也开启“危险权限跳过模式”（dangerously skip permissions mode），可以通过用户设置来实现。打开设置（快捷键 <code>Cmd + ,</code>），搜索 “claude”，然后勾选 “<strong>Claude Code: Allow Dangerously Skip Permissions</strong>” 选项：<br><img src="https://www.metachris.dev/images/posts/ai-sandbox/vs-code-claude-perms.png"></p>
+<p>至此，大功告成！</p>
+<h3 id="Gemini-CLI"><a href="#Gemini-CLI" class="headerlink" title="Gemini CLI"></a>Gemini CLI</h3><p>接下来，让我们安装 Google 的 Gemini CLI。</p>
+<p>官方文档建议通过 Node.js 的包管理器 <code>npm</code> 来进行安装。因此，你需要先确保环境中已经安装了 Node 和 npm（具体步骤可参考前文的 Node.js 设置指南）。</p>
+<p><strong>安装 Gemini CLI：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @google/gemini-cli</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行 Gemini CLI：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gemini</span><br></pre></td></tr></table></figure>
+
+<p>启动后，它会提示你进行身份验证：</p>
+<p><img src="https://www.metachris.dev/images/posts/ai-sandbox/gemini1.png"></p>
+<p>我选择了 “<strong>Login with Google</strong>”。有一点需要注意：如果第一次尝试时超时失败，你可能需要重新走一遍认证流程。</p>
+<p>授权完成后，Gemini CLI 就能正常使用了！</p>
+<p><img src="https://www.metachris.dev/images/posts/ai-sandbox/gemini3.png"></p>
+<p><strong>YOLO 模式：</strong></p>
+<p>你还可以开启“YOLO 模式”来运行 Gemini：</p>
+<blockquote>
+<p>所谓“YOLO 模式”（You Only Live Once），指的就是<strong>自动接受所有操作</strong>（关于这个模式的深层含义，你可以看看这个<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=xvFZjo5PgG0">详细视频</a> 🤣）。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gemini --yolo</span><br></pre></td></tr></table></figure>
+
+<p>同样的，你可以为了方便在 <code>.bashrc</code> 中定义一个别名：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias gemini=&quot;gemini --yolo&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Codex-CLI"><a href="#Codex-CLI" class="headerlink" title="Codex CLI"></a>Codex CLI</h3><p>Codex CLI 是来自 OpenAI&#x2F;ChatGPT 的 AI 开发工具。</p>
+<p>先安装它：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -g @openai/codex</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行 Codex CLI：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">codex</span><br></pre></td></tr></table></figure>
+
+<p>启动后，它会提示你进行登录，你可以选择通过 ChatGPT 账号登录，也可以直接提供 API Key：</p>
+<p><img src="https://www.metachris.dev/images/posts/ai-sandbox/codex1.png"></p>
+<p>完成上述步骤后，Codex CLI 就准备就绪，可以开始干活了！</p>
+<p><img src="https://www.metachris.dev/images/posts/ai-sandbox/codex4.png"></p>
+<p><strong>危险模式：</strong></p>
+<p>你同样可以在“危险模式”下运行 Codex：</p>
+<blockquote>
+<p>该模式将<strong>跳过所有确认提示</strong>并在无沙盒保护的情况下直接执行命令。<strong>极度危险（EXTREMELY DANGEROUS）</strong>。仅设计用于已经在外部进行了沙盒隔离的环境中运行（这正好符合我们当前的场景）。</p>
+</blockquote>
+<p>为了方便使用，可以添加到 <code>.bashrc</code> 的别名配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias codex=&quot;codex --dangerously-bypass-approvals-and-sandbox&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="其他工具"><a href="#其他工具" class="headerlink" title="其他工具"></a>其他工具</h3><p>除此之外，还有几款非常出色的工具：</p>
+<ul>
+<li><strong>Aider</strong> - 一款命令行 AI 结对编程工具，支持多种大模型（如 GPT-4, Claude 等）。它在 CLI AI 开发领域相当受欢迎。</li>
+<li><strong>GitHub Copilot CLI</strong> - 也是一款命令行 AI 结对编程工具，同样支持多种大模型，在 CLI AI 开发圈内人气很高。</li>
+<li><strong>Continue.dev</strong> - 一款 VS Code 扩展，支持接入多种不同的 LLM 后端。</li>
+<li><strong>Cline</strong> - 另一款 VS Code 扩展，同样支持多种 LLM 后端。</li>
+</ul>
+<h2 id="VM-克隆与快照"><a href="#VM-克隆与快照" class="headerlink" title="VM 克隆与快照"></a>VM 克隆与快照</h2><p>虚拟机的克隆和快照功能将为你带来极大的灵活性和更强的隔离性保障。你可以基于已经配置好的实例，快速且低成本地启动新的 VM，专门用于特定的实验或项目。</p>
+<p>Lima 提供了几种创建快照或克隆虚拟机的方法：</p>
+<ul>
+<li>使用 <code>limactl clone</code> 命令来完整克隆一个虚拟机。</li>
+<li>使用 <code>limactl snapshot</code> 命令（<strong>注意：</strong> 目前该功能在 macOS 上尚未实现）。</li>
+<li>手动备份 <code>~/.lima/&lt;vm_name&gt;/</code> 目录下的关键文件（主要是 <code>basedisk</code> 和 <code>diffdisk</code>）。</li>
+</ul>
+<h3 id="使用-limactl-clone"><a href="#使用-limactl-clone" class="headerlink" title="使用 limactl clone"></a>使用 limactl clone</h3><p>你可以利用 <code>limactl clone</code> 命令复制现有的 VM 实例。<strong>但前提是，必须先停止当前的实例。</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">终止实例</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">limactl stop dev</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建一个克隆的实例</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">limactl <span class="built_in">clone</span> dev dev2</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">展示 <span class="built_in">help</span> 信息</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">limactl <span class="built_in">clone</span> -h</span></span><br></pre></td></tr></table></figure>
+
+<p>完成了所有基础的 VM 环境配置后，可以先把它克隆一份，这既可以作为一种备份手段，也能作为未来快速创建新实例的“基础模板”：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建 <span class="string">&quot;dev-base&quot;</span> <span class="built_in">clone</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">limactl <span class="built_in">clone</span> dev dev-base --start=<span class="literal">false</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">注册一个新实例 <span class="string">&quot;experiment123&quot;</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">limactl <span class="built_in">clone</span> dev-base experiment123 --start=<span class="literal">true</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在启动这个新实例后，还需要将其 SSH 配置文件软链接到你的 <code>~/.ssh/config.d/</code> 目录下，这样 SSH 才能正确识别并连接它（具体步骤可回顾前文的“SSH 登录虚拟机”部分）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建 SSH symlink</span></span><br><span class="line">ln -s ~/.lima/experiment123/ssh.config ~/.ssh/config.d/experiment123</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">ssh 登录到新 vm 实例</span></span><br><span class="line">ssh lima-experiment123</span><br></pre></td></tr></table></figure>
+
+<h2 id="多虚拟机工作流"><a href="#多虚拟机工作流" class="headerlink" title="多虚拟机工作流"></a>多虚拟机工作流</h2><p>为了实现极致的安全性和灵活性，推荐的方式是根据不同的用途和信任级别来部署多个虚拟机。这种策略不仅能提供更严密的隔离，还能针对具体需求量身定制每一个开发环境。</p>
+<p>以下是几种推荐的 VM 配置方案：</p>
+<ul>
+<li><strong><code>dev-trusted</code>（可信环境）</strong> —— 专门用于处理那些已知安全且依赖包经过严格审查的项目。这个 VM 的安全限制可以稍微放宽一些，甚至可以配置少量凭证，以便将代码部署到预发布（Staging）环境。</li>
+<li><strong><code>dev-experiments</code>（实验环境）</strong> —— 专门用于运行 AI 生成的代码实验或是尝鲜新工具。在这里，可以放手让 AI 助手“撒欢”跑代码，完全不用担心引发什么严重的后果。</li>
+<li><strong><code>dev-dirty</code>（高危环境）</strong> —— 专门用于测试那些看着就不靠谱的依赖、未知的软件包或来源不可信的代码。可以默认把这个 VM 视为<strong>“已沦陷”</strong>状态，<strong>绝对不要</strong>在里面存放任何真实数据或敏感凭证。</li>
+</ul>
+<p>正如前文“VM 克隆”一节所述，你可以利用 <code>limactl clone</code> 命令，基于你的基础 VM 模板快速创建出适用于不同项目的全新实例。</p>
+<h2 id="每个项目独立-VM"><a href="#每个项目独立-VM" class="headerlink" title="每个项目独立 VM"></a>每个项目独立 VM</h2><p>对于敏感项目或生产级项目，个人强烈推荐<strong>为每个项目分配一个独立的虚拟机</strong>。这种做法能有效防止项目之间潜在的“交叉感染”，并且允许你实施最小权限策略——仅挂载该项目真正需要的特定目录。</p>
+<p>在创建项目专属 VM 时，你可以灵活地定制挂载目录。具体操作方式有两种：一是在启动 VM 前（不要使用 <code>-y</code> 参数）直接编辑配置文件中的 <code>mounts</code> 部分；二是在 VM 创建完成后，修改 <code>~/.lima/&lt;vm_name&gt;/lima.yaml</code> 文件并重启实例。</p>
+<p>这种方法还极大简化了团队协作中的配置共享。你无需费力传输巨大的磁盘镜像文件，只需分发轻量级的 Lima 模板 YAML 文件。团队成员拿到后，就能在自己的机器上通过它快速启动一个完全一致的开发环境。</p>
+<p>针对自动化配置，Lima 支持在 VM 创建过程中运行预置（Provisioning）脚本。而对于更复杂的环境构建需求，建议引入像 <strong>Ansible</strong> 这样具备“幂等性”（Idempotent）的配置管理工具，以确保团队中每个人的开发环境都能始终保持一致且可复现。</p>
+<h2 id="创建自定义模板"><a href="#创建自定义模板" class="headerlink" title="创建自定义模板"></a>创建自定义模板</h2><p>如果你发现自己总是在重复创建配置雷同的虚拟机，可以进一步考虑制作自定义的 Lima 模板。模板本质上是定义了 VM 设置的 YAML 文件，而且它们还支持引用（包含）其他模板。</p>
+<p>自定义模板在以下场景中非常有用：</p>
+<ul>
+<li><strong>统一团队标准：</strong> 确保团队内部所有成员的 VM 配置保持一致。</li>
+<li><strong>预装环境：</strong> 预先安装好指定的开发工具和依赖项。</li>
+<li><strong>定制连接：</strong> 配置项目专属的目录挂载点及端口转发规则。</li>
+<li><strong>安全分级：</strong> 定义不同级别的安全策略（例如区分“可信环境”与“实验环境”）。</li>
+</ul>
+<p>制作自定义模板的方法很简单：只需从 Lima 的官方模板库中复制一个现有的模板，然后在此基础上进行修改即可。将制作好的模板保存到 <code>~/.lima/_templates/</code> 目录下，之后在创建新 VM 时就可以直接引用它了：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">limactl start --name myvm ~/.lima/_templates/my-custom-template.yaml</span><br></pre></td></tr></table></figure>
+
+<p>关于模板语法和可用配置项的更多细节，请参阅 <a target="_blank" rel="noopener" href="https://github.com/lima-vm/lima/blob/master/templates/README.md">Lima 官方模板文档</a>。</p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>在使用虚拟机进行开发时，建议遵循以下重要的安全最佳实践，以确保万无一失：</p>
+<p><strong>✅ 推荐做法：</strong></p>
+<ul>
+<li><strong>分级隔离：</strong> 根据不同的信任级别（如生产环境、实验环境、不可信代码），使用独立的 VM 进行物理隔离。</li>
+<li><strong>勤打快照：</strong> 在执行任何高风险操作或安装来路不明的依赖包之前，务必先创建 VM 快照。</li>
+<li><strong>定期更新：</strong> 保持虚拟机内的系统软件和开发工具处于最新状态。</li>
+<li><strong>最小挂载：</strong> 仅挂载真正需要的特定目录，<strong>千万别</strong>把整个主目录（Home directory）都挂载进去。</li>
+<li><strong>专用传输：</strong> 利用预设的共享目录（<code>~/VM-Shared</code>）在宿主机和虚拟机之间传输文件。</li>
+</ul>
+<p><strong>❌ 禁止做法：</strong></p>
+<ul>
+<li><strong>泄露凭证：</strong> 严禁在实验性质的 VM 中存储<strong>真实</strong>的凭证、API 密钥或 SSH 私钥。</li>
+<li><strong>全盘挂载：</strong> 不要将整个主目录挂载到 VM 中（虽然这是 Lima 的默认行为，但请手动禁用它）。</li>
+<li><strong>过度授权：</strong> 不要授予 VM 访问宿主机上敏感文件或目录的权限。</li>
+<li><strong>盲目接入：</strong> 不要轻易授权 AI 工具访问私有代码仓库，除非你完全知晓并愿意承担由此带来的数据泄露风险。</li>
+<li><strong>侥幸心理：</strong> 绝不要在宿主机上直接运行不可信代码，哪怕心里想着“我就快速试一下”。</li>
+</ul>
+<p>使用虚拟机的核心意义就在于<strong>隔离</strong>。如果不确定安不安全，哪怕麻烦一点，最好也是给那些高风险实验专门创建一个新的 VM，<strong>用完即删</strong>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>正如开篇所言，AI 辅助编程和各种现代开发工具确实能让效率起飞，但直接在主力机器上运行未经验证的代码、安装各种复杂的依赖，无异于在互联网上“裸奔”。</p>
+<p>本文则主要介绍了如何 <strong>利用 Lima VM 构建一个既坚固又灵活的沙盒环境。</strong> 并详细拆解了如何安装和配置 Lima（特别是如何通过自定义模板避开“默认挂载主目录”这个安全大坑），同时也演示了如何将 Claude、Gemini、Codex 等 AI 助手，以及 Node.js、Python 等开发环境统统“关进”虚拟机里。配合 VS Code Remote-SSH 的无缝连接，你几乎感觉不到物理隔离的存在，体验依然丝滑。</p>
+<p>更重要的是，本文还引入了<strong>多级隔离</strong>的理念：通过 <strong>快照（Snapshots）</strong> 和 <strong>克隆（Clones）</strong> 功能，你可以为不同的项目建立“可信”、“实验”乃至“高危”的专属环境。这意味着你可以放心地让 AI 开启 YOLO 模式，或者随意运行 <code>npm install</code> 测试陌生代码——即使玩脱了也能秒级回滚，毫发无伤。把风险留在沙盒里，把自由和效率留给自己。Happy Coding! 🚀</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI engineering" >
+    <span class="tag-code">AI engineering</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2025/11/23/cloudfare-outage/">
+        <span class="nav-arrow">← </span>
+        
+          2025 年 11 月 18 号 cloudflare 崩溃复盘
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2025/12/14/react-hooks-evolve/">
+        
+          编写现代化 React Hooks 的最佳实践
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E7%94%A8%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%80%8C%E4%B8%8D%E6%98%AF-Docker"><span class="toc-nav-text">为什么选用虚拟机而不是 Docker</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B3%E4%BA%8E-Lima-%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-nav-text">关于 Lima 虚拟机</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%89%E8%A3%85-Lima"><span class="toc-nav-text">安装 Lima</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%B2%99%E7%9B%92%E5%8C%96%E5%90%AF%E5%8A%A8"><span class="toc-nav-text">沙盒化启动</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%87%86%E5%A4%87%E5%85%B1%E4%BA%AB%E7%9B%AE%E5%BD%95"><span class="toc-nav-text">准备共享目录</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%85%8D%E7%BD%AE-VM-%E9%BB%98%E8%AE%A4%E8%AE%BE%E7%BD%AE"><span class="toc-nav-text">配置 VM 默认设置</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%87%86%E5%A4%87%E4%BE%BF%E6%8D%B7%E7%9A%84-SSH-%E8%AE%BF%E9%97%AE"><span class="toc-nav-text">准备便捷的 SSH 访问</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%90%AF%E5%8A%A8%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-nav-text">启动虚拟机</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%B1%E4%BA%AB%E9%A1%B9%E7%9B%AE%E4%B8%93%E5%B1%9E%E7%9B%AE%E5%BD%95"><span class="toc-nav-text">共享项目专属目录</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#SSH-%E7%99%BB%E5%BD%95%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-nav-text">SSH 登录虚拟机</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E4%B8%8E%E9%85%8D%E7%BD%AE-Bash"><span class="toc-nav-text">更新系统与配置 Bash</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%B5%8B%E8%AF%95%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="toc-nav-text">测试端口转发</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7%E4%B8%8E%E8%AF%AD%E8%A8%80"><span class="toc-nav-text">安装工具与语言</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#VSCode-Remote-SSH-%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91"><span class="toc-nav-text">VSCode - Remote-SSH 远程开发</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Claude-Code-Codex-%E4%B8%8E-Gemini"><span class="toc-nav-text">Claude Code, Codex 与 Gemini</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Claude-Code"><span class="toc-nav-text">Claude Code</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Claude-Code-VS-Code-%E6%89%A9%E5%B1%95"><span class="toc-nav-text">Claude Code VS Code 扩展</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Gemini-CLI"><span class="toc-nav-text">Gemini CLI</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Codex-CLI"><span class="toc-nav-text">Codex CLI</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96%E5%B7%A5%E5%85%B7"><span class="toc-nav-text">其他工具</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#VM-%E5%85%8B%E9%9A%86%E4%B8%8E%E5%BF%AB%E7%85%A7"><span class="toc-nav-text">VM 克隆与快照</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8-limactl-clone"><span class="toc-nav-text">使用 limactl clone</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A4%9A%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="toc-nav-text">多虚拟机工作流</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%AF%8F%E4%B8%AA%E9%A1%B9%E7%9B%AE%E7%8B%AC%E7%AB%8B-VM"><span class="toc-nav-text">每个项目独立 VM</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E6%9D%BF"><span class="toc-nav-text">创建自定义模板</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-nav-text">最佳实践</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2025/11/30/sandbox-ai-tools/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link active">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <main class="app-body">
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/06/15/rss/">我的 rss 订阅</a>
+      </h2>
+      <p class="article-date">June 15, 2025</p>
+      
+        
+  <a href="/tags#rss, read" >
+    <span class="tag-code">rss, read</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          前言我创建了一个 github 仓库 my-rss 来专门记录我的订阅源，这份订阅源覆盖了前端，docker, 设计，AI，goLang 以及一些我关注的大佬博客等等。未来如果有新的高质量 blog 订阅，也会持续添加进去。
+如何使用你需要先下载一个 rss 阅读器，目前我在使用的一款阅读器 ...
+        
+      </div>
+      <a class="more" href="/2025/06/15/rss/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/05/30/vinenote/">VineNote</a>
+      </h2>
+      <p class="article-date">May 30, 2025</p>
+      
+        
+  <a href="/tags#tauri, rust, react" >
+    <span class="tag-code">tauri, rust, react</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+
+前言VineNote 是一款基于 Tauri、React、shadcn&#x2F;ui、TailwindCSS、Zustand 等优秀技术栈构建的轻量化跨平台笔记软件，兼具强大的编辑功能与卓越性能
+
+Github 地址
+下载地址
+
+我为什么要写 VineNote作为深度文字创作者，我长期 ...
+        
+      </div>
+      <a class="more" href="/2025/05/30/vinenote/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/01/27/react-scan/">React-scan 是如何检测性能的</a>
+      </h2>
+      <p class="article-date">January 27, 2025</p>
+      
+        
+  <a href="/tags#React,Performance" >
+    <span class="tag-code">React,Performance</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          前言react-scan 是 React 社区中最近热度很高的一个项目，在 github 上目前已经获得了 12.5k 的 star 量，主要用于自动检测 React 应用的性能问题(核心是组件的渲染性能)。针对该问题，之前社区中也有一些类似方案，但各自存在一些使用上的缺陷，比如：
+
+Rea ...
+        
+      </div>
+      <a class="more" href="/2025/01/27/react-scan/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2024/12/01/qwik/">追求极致性能的框架 - Qwik</a>
+      </h2>
+      <p class="article-date">December 1, 2024</p>
+      
+        
+  <a href="/tags#Framework,Front End" >
+    <span class="tag-code">Framework,Front End</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          Qwik 是什么Qwik 是来源于社区的一个新的 SSR 前端研发框架，作者即为原 angularJs 框架的作者，其核心理念是页面启动时通过 HTML 直出和尽可能少的 js 实现秒开的页面体验以及无 hydrate（水合）过程以达到最快的页面可交互时间（TTI）。
+Qwik 核心想解决的 ...
+        
+      </div>
+      <a class="more" href="/2024/12/01/qwik/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2024/09/12/react19-updates/">React 19 带来了什么</a>
+      </h2>
+      <p class="article-date">September 12, 2024</p>
+      
+        
+  <a href="/tags#React" >
+    <span class="tag-code">React</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          前言今年的 React conf 主要介绍了即将推出的 React 19 的诸多新特性，演讲视频合集可以看https://conf.react.dev/talks，目前 React 19 已经正式进入到了 RC 阶段，意味着其离正式发布为期不远矣，笔者整理了演讲中的诸多内容，并根据自身实践和 ...
+        
+      </div>
+      <a class="more" href="/2024/09/12/react19-updates/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2024/08/11/useful-libraries/">一些优质的三方库</a>
+      </h2>
+      <p class="article-date">August 11, 2024</p>
+      
+        
+  <a href="/tags#libraries" >
+    <span class="tag-code">libraries</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          前言这篇主要是记录一些优质的三方库
+Etahttps://eta.js.org/, 非常酷的一个模板引擎，可以在 Node, Deno 和浏览器环境中使用
+Date-fnshttps://date-fns.org/, 日期处理工具库
+VineJshttps://vinejs.dev/docs ...
+        
+      </div>
+      <a class="more" href="/2024/08/11/useful-libraries/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2024/08/11/production-tools/">一些不错的生产力工具</a>
+      </h2>
+      <p class="article-date">August 11, 2024</p>
+      
+        
+  <a href="/tags#production tools" >
+    <span class="tag-code">production tools</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          前言主要记录一些比较不错的小工具。
+Web Checkhttps://web-check.as93.net/, 可以快速查看某个网站的一些技术信息，比如 ip 地址, ssl 证书等等。
+Spectaclehttps://commerce.nearform.com/open-source/s ...
+        
+      </div>
+      <a class="more" href="/2024/08/11/production-tools/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2020/08/20/esm-hmr/">如何实现 esm 模块的热更新 HMR</a>
+      </h2>
+      <p class="article-date">August 20, 2020</p>
+      
+        
+  <a href="/tags#javascript, Front-end engineering" >
+    <span class="tag-code">javascript, Front-end engineering</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          前言最近在前端工程领域出现了一些新的工程化工具，诸如尤雨溪的 vite 以及已在 GitHub 社区斩获 8317 个 star 的 snowpack，这些工具的优势除了内置支持 vue, react 等框架的运行和构建，很重要的一点是开发环境下应用的快速启动能力， snowpack 的启动 ...
+        
+      </div>
+      <a class="more" href="/2020/08/20/esm-hmr/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2020/08/01/progressbar-in-webpack/">webpack 中构建进度条的实现原理</a>
+      </h2>
+      <p class="article-date">August 1, 2020</p>
+      
+        
+  <a href="/tags#javascript, webpack, Front-end engineering" >
+    <span class="tag-code">javascript, webpack, Front-end engineering</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          前言我们在使用 webpack 的时候经常会用到 webpackbar 或者 progress-bar-webpack-plugin 之类的 webpack 插件通过进度条等方式来展示 webpack 的构建进度，以提升构建过程中的反馈体验。对于不同的插件来说，它们只是进度条的 UI 展示形 ...
+        
+      </div>
+      <a class="more" href="/2020/08/01/progressbar-in-webpack/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2018/11/12/koa-share/">koa源码中的promise</a>
+      </h2>
+      <p class="article-date">November 12, 2018</p>
+      
+        
+  <a href="/tags#node.js, koa" >
+    <span class="tag-code">node.js, koa</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          koa 是一个非常轻量优雅的 node 应用开发框架，趁着双十一值班的空当阅读了下其源代码，其中一些比较有意思的地方整理成文与大家分享一下。
+ 洋葱型中间件机制的实现原理我们经常把 koa 中间件的执行机制类比于剥洋葱，这样设计其执行顺序的好处是我们不再需要手动去管理 request 和 ...
+        
+      </div>
+      <a class="more" href="/2018/11/12/koa-share/">Read more</a>
+    </article>
+  
+
+  
+    <div class="guide-pager">
+  
+    <a href="/"><span class="page-arrow">← </span>Prev</a>
+  
+  
+    <a href="/page/3/">Next<span class="page-arrow"> →</span></a>
+  
+</div>
+  
+</main>
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

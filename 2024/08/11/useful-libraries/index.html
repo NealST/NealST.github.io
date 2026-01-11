@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      一些优质的三方库 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>一些优质的三方库</h2>
+  <p class="post-date">2024-08-11</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这篇主要是记录一些优质的三方库</p>
+<h2 id="Eta"><a href="#Eta" class="headerlink" title="Eta"></a>Eta</h2><p><a target="_blank" rel="noopener" href="https://eta.js.org/">https://eta.js.org/</a>, 非常酷的一个模板引擎，可以在 Node, Deno 和浏览器环境中使用</p>
+<h2 id="Date-fns"><a href="#Date-fns" class="headerlink" title="Date-fns"></a>Date-fns</h2><p><a target="_blank" rel="noopener" href="https://date-fns.org/">https://date-fns.org/</a>, 日期处理工具库</p>
+<h2 id="VineJs"><a href="#VineJs" class="headerlink" title="VineJs"></a>VineJs</h2><p><a target="_blank" rel="noopener" href="https://vinejs.dev/docs/introduction">https://vinejs.dev/docs/introduction</a>, 非常不错的 node.js 数据校验工具库，在一些典型的场景比如校验 HTTP 请求 body 时会非常有用</p>
+<h2 id="React-Content-Loader"><a href="#React-Content-Loader" class="headerlink" title="React Content Loader"></a>React Content Loader</h2><p><a target="_blank" rel="noopener" href="https://skeletonreact.com/">https://skeletonreact.com/</a>, 可以创建具有动画效果的骨架屏组件</p>
+<h2 id="React-Spring"><a href="#React-Spring" class="headerlink" title="React Spring"></a>React Spring</h2><p><a target="_blank" rel="noopener" href="https://react-spring.dev/">https://react-spring.dev/</a>, 在 React 应用程序中构建交互式动画的首选，支持 SSR 和 React native。 这篇文章介绍了如何使用它：<a target="_blank" rel="noopener" href="https://www.sitepoint.com/react-spring-interactive-animations/">https://www.sitepoint.com/react-spring-interactive-animations/</a>.</p>
+<h2 id="React-data-grid"><a href="#React-data-grid" class="headerlink" title="React data grid"></a>React data grid</h2><p><a target="_blank" rel="noopener" href="https://adazzle.github.io/react-data-grid/#/common-features">https://adazzle.github.io/react-data-grid/#/common-features</a>, 如果你有数百万条数据并想用 grid 布局进行展示，还想拥有非常不错的性能表现，这个库会帮到你</p>
+<h2 id="Pragmatic-drag-and-drop"><a href="#Pragmatic-drag-and-drop" class="headerlink" title="Pragmatic drag and drop"></a>Pragmatic drag and drop</h2><p><a target="_blank" rel="noopener" href="https://atlassian.design/components/pragmatic-drag-and-drop/about">https://atlassian.design/components/pragmatic-drag-and-drop/about</a>, 高性能的实现拖拽体验的 React 工具库</p>
+<h2 id="Microdiff"><a href="#Microdiff" class="headerlink" title="Microdiff"></a>Microdiff</h2><p><a target="_blank" rel="noopener" href="https://github.com/AsyncBanana/microdiff">https://github.com/AsyncBanana/microdiff</a>, 高性能且开箱即用的数据比较工具库。</p>
+<h2 id="Pino"><a href="#Pino" class="headerlink" title="Pino"></a>Pino</h2><p><a target="_blank" rel="noopener" href="https://github.com/pinojs/pino/issues">https://github.com/pinojs/pino/issues</a>, json 日志库，主要 for node.js 场景</p>
+<h2 id="Modern-errors"><a href="#Modern-errors" class="headerlink" title="Modern-errors"></a>Modern-errors</h2><p><a target="_blank" rel="noopener" href="https://github.com/ehmicky/modern-errors">https://github.com/ehmicky/modern-errors</a>, 非常优雅的处理错误的工具库</p>
+<h2 id="React-phone-number-input"><a href="#React-phone-number-input" class="headerlink" title="React-phone-number-input"></a>React-phone-number-input</h2><p><a target="_blank" rel="noopener" href="https://catamphetamine.gitlab.io/react-phone-number-input/">https://catamphetamine.gitlab.io/react-phone-number-input/</a>, 支持国际化的手机号输入 React 组件</p>
+<h2 id="Svelte-dnd-action"><a href="#Svelte-dnd-action" class="headerlink" title="Svelte-dnd-action"></a>Svelte-dnd-action</h2><p><a target="_blank" rel="noopener" href="https://github.com/isaacHagoel/svelte-dnd-action">https://github.com/isaacHagoel/svelte-dnd-action</a>, Svelte 框架下支持拖放实现的工具库</p>
+<h2 id="Google-APIs-Node-js-Client"><a href="#Google-APIs-Node-js-Client" class="headerlink" title="Google APIs Node.js Client"></a>Google APIs Node.js Client</h2><p><a target="_blank" rel="noopener" href="https://github.com/googleapis/google-api-nodejs-client">https://github.com/googleapis/google-api-nodejs-client</a>, Google API 的 node.js 封装库</p>
+<h2 id="Perfect-arrows"><a href="#Perfect-arrows" class="headerlink" title="Perfect arrows"></a>Perfect arrows</h2><p><a target="_blank" rel="noopener" href="https://github.com/steveruizok/perfect-arrows">https://github.com/steveruizok/perfect-arrows</a>, 在点和形状直接连接箭头的工具库，在图表类应用研发中会很有用</p>
+<h2 id="Primereact"><a href="#Primereact" class="headerlink" title="Primereact"></a>Primereact</h2><p><a target="_blank" rel="noopener" href="https://github.com/primefaces/primereact">https://github.com/primefaces/primereact</a>, 最全面的 React UI 组件库</p>
+<h2 id="Typical-for-Typing-in"><a href="#Typical-for-Typing-in" class="headerlink" title="Typical for Typing in"></a>Typical for Typing in</h2><p><a target="_blank" rel="noopener" href="https://github.com/camwiegert/typical">https://github.com/camwiegert/typical</a>, 输入时支持动画效果</p>
+<h2 id="Mantine-for-React"><a href="#Mantine-for-React" class="headerlink" title="Mantine for React"></a>Mantine for React</h2><p><a target="_blank" rel="noopener" href="https://mantine.dev/">https://mantine.dev/</a>, 一些 React 组件和自定义 hook 的集合</p>
+<h2 id="React-Icons"><a href="#React-Icons" class="headerlink" title="React Icons"></a>React Icons</h2><p><a target="_blank" rel="noopener" href="https://github.com/react-icons/react-icons">https://github.com/react-icons/react-icons</a>, 一个流行的 icon 图标库，支持 es6 module, 因此可以做到按需引入而不是跟传统的图标库一样，需要引入一个全量的 iconfont 文件</p>
+<h2 id="Awesome-react"><a href="#Awesome-react" class="headerlink" title="Awesome react"></a>Awesome react</h2><p><a target="_blank" rel="noopener" href="https://github.com/enaqx/awesome-react">https://github.com/enaqx/awesome-react</a>, 不解释</p>
+<h2 id="Pechkin-for-file-upload-in-Node-js"><a href="#Pechkin-for-file-upload-in-Node-js" class="headerlink" title="Pechkin for file upload in Node.js"></a>Pechkin for file upload in Node.js</h2><p><a target="_blank" rel="noopener" href="https://github.com/rafasofizada/pechkin">https://github.com/rafasofizada/pechkin</a>, 现代的，异步的，灵活的处理文件上传的 node.js 库。</p>
+<h2 id="Journey-js"><a href="#Journey-js" class="headerlink" title="Journey.js"></a>Journey.js</h2><p><a target="_blank" rel="noopener" href="https://github.com/williamtroup/Journey.js">https://github.com/williamtroup/Journey.js</a>, 轻量，易用的工具库，可以快速给你的应用创建可交互的介绍引导</p>
+<h2 id="Tagify-for-tags-input-component"><a href="#Tagify-for-tags-input-component" class="headerlink" title="Tagify for tags input component"></a>Tagify for tags input component</h2><p><a target="_blank" rel="noopener" href="https://github.com/yairEO/tagify">https://github.com/yairEO/tagify</a>, 灵活易用的输入组件，可以将你的输入转换成 tag 标签</p>
+<h2 id="Odiff-for-image-diff-in-Node-js"><a href="#Odiff-for-image-diff-in-Node-js" class="headerlink" title="Odiff for image diff in Node.js"></a>Odiff for image diff in Node.js</h2><p><a target="_blank" rel="noopener" href="https://github.com/dmtrKovalenko/odiff">https://github.com/dmtrKovalenko/odiff</a>, 高性能的图片比对库，for node.js</p>
+<h2 id="Imaskjs"><a href="#Imaskjs" class="headerlink" title="Imaskjs"></a>Imaskjs</h2><p><a target="_blank" rel="noopener" href="https://imask.js.org/guide.html#getting-started%EF%BC%8Cinput">https://imask.js.org/guide.html#getting-started，input</a> 遮罩</p>
+<h2 id="Unovis-for-data-visualization"><a href="#Unovis-for-data-visualization" class="headerlink" title="Unovis for data visualization"></a>Unovis for data visualization</h2><p><a target="_blank" rel="noopener" href="https://github.com/f5/unovis">https://github.com/f5/unovis</a>, 现代化的数据可视化框架，支持 React，Angular, Svelte, Vue 等多种框架</p>
+<h2 id="React-Swipeable"><a href="#React-Swipeable" class="headerlink" title="React Swipeable"></a>React Swipeable</h2><p><a target="_blank" rel="noopener" href="https://commerce.nearform.com/open-source/react-swipeable">https://commerce.nearform.com/open-source/react-swipeable</a>, 可定制，轻量化，高性能的 React hook，帮助开发者高效处理 swipe 交互事件</p>
+<h2 id="Viselect"><a href="#Viselect" class="headerlink" title="Viselect"></a>Viselect</h2><p><a target="_blank" rel="noopener" href="https://simonwep.github.io/selection/">https://simonwep.github.io/selection/</a>, 当你想创建一个通过点击和拖拽来可视化选中多个元素时，这个库可以开箱即用。</p>
+<h2 id="React-currency-input-field"><a href="#React-currency-input-field" class="headerlink" title="React currency input field"></a>React currency input field</h2><p><a target="_blank" rel="noopener" href="https://github.com/cchanxzy/react-currency-input-field">https://github.com/cchanxzy/react-currency-input-field</a>, 高质量的国际化多币种输入框组件，在国际化业务场景下会非常有用</p>
+<h2 id="Fast-grid"><a href="#Fast-grid" class="headerlink" title="Fast-grid"></a>Fast-grid</h2><p><a target="_blank" rel="noopener" href="https://github.com/gabrielpetersson/fast-grid">https://github.com/gabrielpetersson/fast-grid</a>, 号称是世界上最高性能的基于 web 的表格展示组件</p>
+<h2 id="React-loading-skeleton"><a href="#React-loading-skeleton" class="headerlink" title="React-loading-skeleton"></a>React-loading-skeleton</h2><p><a target="_blank" rel="noopener" href="https://github.com/dvtng/react-loading-skeleton">https://github.com/dvtng/react-loading-skeleton</a>, 高效创建与 app 相对应的骨架屏</p>
+<h2 id="Simple-Keyboard"><a href="#Simple-Keyboard" class="headerlink" title="Simple Keyboard"></a>Simple Keyboard</h2><p><a target="_blank" rel="noopener" href="https://virtual-keyboard.js.org/react/">https://virtual-keyboard.js.org/react/</a>, 高性能，零依赖，可定制化的虚拟键盘组件</p>
+<h2 id="React-Email"><a href="#React-Email" class="headerlink" title="React Email"></a>React Email</h2><p><a target="_blank" rel="noopener" href="https://resend.com/blog/react-email-3">https://resend.com/blog/react-email-3</a>, 邮件 API 服务</p>
+<h2 id="Floating-UI"><a href="#Floating-UI" class="headerlink" title="Floating UI"></a>Floating UI</h2><p><a target="_blank" rel="noopener" href="https://floating-ui.com/">https://floating-ui.com/</a>, 一个用于管理浮动元素并能创建各种浮动元素的交互效果的 js 库，官网也做的挺好的。</p>
+<h2 id="International-Telephone-Input"><a href="#International-Telephone-Input" class="headerlink" title="International Telephone Input"></a>International Telephone Input</h2><p><a target="_blank" rel="noopener" href="https://intl-tel-input.com/">https://intl-tel-input.com/</a>, 适用于国际化场景下的手机号输入框组件</p>
+<h2 id="React-movable"><a href="#React-movable" class="headerlink" title="React-movable"></a>React-movable</h2><p><a target="_blank" rel="noopener" href="https://github.com/tajo/react-movable">https://github.com/tajo/react-movable</a>, 支持对列表和表格元素通过拖放来移动排序</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#libraries" >
+    <span class="tag-code">libraries</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2024/08/11/production-tools/">
+        <span class="nav-arrow">← </span>
+        
+          一些不错的生产力工具
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2024/09/12/react19-updates/">
+        
+          React 19 带来了什么
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Eta"><span class="toc-nav-text">Eta</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Date-fns"><span class="toc-nav-text">Date-fns</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#VineJs"><span class="toc-nav-text">VineJs</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#React-Content-Loader"><span class="toc-nav-text">React Content Loader</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#React-Spring"><span class="toc-nav-text">React Spring</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#React-data-grid"><span class="toc-nav-text">React data grid</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Pragmatic-drag-and-drop"><span class="toc-nav-text">Pragmatic drag and drop</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Microdiff"><span class="toc-nav-text">Microdiff</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Pino"><span class="toc-nav-text">Pino</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Modern-errors"><span class="toc-nav-text">Modern-errors</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#React-phone-number-input"><span class="toc-nav-text">React-phone-number-input</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Svelte-dnd-action"><span class="toc-nav-text">Svelte-dnd-action</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Google-APIs-Node-js-Client"><span class="toc-nav-text">Google APIs Node.js Client</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Perfect-arrows"><span class="toc-nav-text">Perfect arrows</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Primereact"><span class="toc-nav-text">Primereact</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Typical-for-Typing-in"><span class="toc-nav-text">Typical for Typing in</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Mantine-for-React"><span class="toc-nav-text">Mantine for React</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#React-Icons"><span class="toc-nav-text">React Icons</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Awesome-react"><span class="toc-nav-text">Awesome react</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Pechkin-for-file-upload-in-Node-js"><span class="toc-nav-text">Pechkin for file upload in Node.js</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Journey-js"><span class="toc-nav-text">Journey.js</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Tagify-for-tags-input-component"><span class="toc-nav-text">Tagify for tags input component</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Odiff-for-image-diff-in-Node-js"><span class="toc-nav-text">Odiff for image diff in Node.js</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Imaskjs"><span class="toc-nav-text">Imaskjs</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Unovis-for-data-visualization"><span class="toc-nav-text">Unovis for data visualization</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#React-Swipeable"><span class="toc-nav-text">React Swipeable</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Viselect"><span class="toc-nav-text">Viselect</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#React-currency-input-field"><span class="toc-nav-text">React currency input field</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Fast-grid"><span class="toc-nav-text">Fast-grid</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#React-loading-skeleton"><span class="toc-nav-text">React-loading-skeleton</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Simple-Keyboard"><span class="toc-nav-text">Simple Keyboard</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#React-Email"><span class="toc-nav-text">React Email</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Floating-UI"><span class="toc-nav-text">Floating UI</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#International-Telephone-Input"><span class="toc-nav-text">International Telephone Input</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#React-movable"><span class="toc-nav-text">React-movable</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2024/08/11/useful-libraries/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

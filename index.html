@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link active">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <main class="app-body">
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2026/01/11/claude-code-customization/">Claude Code 定制化指南：详解 CLAUDE.md、Skills 与 Subagents</a>
+      </h2>
+      <p class="article-date">January 11, 2026</p>
+      
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          在使用 Claude Code 进行开发时，我们常常面临一个两难困境：AI 模型拥有广博的通用知识，但往往缺乏项目特定的上下文，或者对某些库的最新版本（如 Dexie.js 的最新 API）缺乏了解。
+虽然 Claude Code 允许我们通过提示词（Prompt）来补充信息，但如何优雅地管 ...
+        
+      </div>
+      <a class="more" href="/2026/01/11/claude-code-customization/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/12/14/react-hooks-evolve/">编写现代化 React Hooks 的最佳实践</a>
+      </h2>
+      <p class="article-date">December 14, 2025</p>
+      
+        
+  <a href="/tags#React" >
+    <span class="tag-code">React</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+前言React Hooks 问世已有数年，但在日常很多场景和代码库中仍然充斥着最原始的那套写法：各种 useState 搭配沉重繁杂的 useEffect，以及各种无脑复制粘贴的代码。
+Hooks 的初衷不仅仅是生命周期方法的简单替代品，它本质上是一套设计系统，旨在构建更具表现力、更模块化 ...
+        
+      </div>
+      <a class="more" href="/2025/12/14/react-hooks-evolve/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/11/30/sandbox-ai-tools/">如何沙盒化运行你的 AI 工具</a>
+      </h2>
+      <p class="article-date">November 30, 2025</p>
+      
+        
+  <a href="/tags#AI engineering" >
+    <span class="tag-code">AI engineering</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          前言AI 编程助手、npm、pip 等诸多开发工具可以在机器上执行任意代码或脚本，这意味着，它们极易在用户没有察觉的情况下，窃取 SSH 密钥、API 令牌、数字钱包私钥、敏感凭证以及其他隐私数据。此外，像 npm&#x2F;yarn 和 pip 这类工具还允许依赖包在安装过程中执行任意脚本 ...
+        
+      </div>
+      <a class="more" href="/2025/11/30/sandbox-ai-tools/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/11/23/cloudfare-outage/">2025 年 11 月 18 号 cloudflare 崩溃复盘</a>
+      </h2>
+      <p class="article-date">November 23, 2025</p>
+      
+        
+  <a href="/tags#cloudflare" >
+    <span class="tag-code">cloudflare</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+前言全球领先的网络基础设施服务提供商 Cloudflare 于 2025 年 11 月 18 日（UTC 时间）发生了一次持续数小时的重大服务中断，导致全球大量网站和在线服务出现访问故障，包括 X（原 Twitter）、ChatGPT、Spotify、Roblox、Grindr、Canva ...
+        
+      </div>
+      <a class="more" href="/2025/11/23/cloudfare-outage/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/11/18/disigner-ai-tools/">设计师视角下我最常用的 8 个 AI 工具</a>
+      </h2>
+      <p class="article-date">November 18, 2025</p>
+      
+        
+  <a href="/tags#AI, Designer" >
+    <span class="tag-code">AI, Designer</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+作为一名产品工程师，在代码之外也会涉及一些产品设计的工作，本篇文章主要列举设计师视角下笔者认为最好用，也是最常用的 8 个 AI 工具（排名不分先后）
+Uizard
+Uizard 可以将手绘草图或屏幕截图转化为可编辑的线框图，既是头脑风暴到产品设计雏形的神器，也可以用来捕捉一些好看的设计风 ...
+        
+      </div>
+      <a class="more" href="/2025/11/18/disigner-ai-tools/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/11/05/vision-llm-grab/">Grab 自研视觉大模型提取图像信息</a>
+      </h2>
+      <p class="article-date">November 5, 2025</p>
+      
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+前言Grab 是东南亚领先的超级应用平台，总部位于新加坡，业务覆盖 8 个国家 500 余城市。其核心业务模式是通过移动应用整合多元生活服务，具体包括：出行，外卖配送，金融等。
+在数字服务领域，从用户提交的电子文件（如身份证、驾驶证、注册证书等）中准确提取信息，是客户识别等流程的关键第一步 ...
+        
+      </div>
+      <a class="more" href="/2025/11/05/vision-llm-grab/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/10/25/claude-skills/">简单聊聊 Claude 新推出的 Agent Skills</a>
+      </h2>
+      <p class="article-date">October 25, 2025</p>
+      
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+前言Claude 系列模型的母公司 Anthropic 近期新推出了一种为大模型赋予专业领域知识和任务执行能力的实现模式，即 agent skills，其核心思想是让大模型层次递进地读取结构化组织好的文档，脚本等资源以获取上下文。在笔者看来，这种 skills 的方案因其更好的简洁性和扩展 ...
+        
+      </div>
+      <a class="more" href="/2025/10/25/claude-skills/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/10/12/shopify-ai-product-classify/">Shopify 如何利用 AI 来解决商品分类问题</a>
+      </h2>
+      <p class="article-date">October 12, 2025</p>
+      
+        
+  <a href="/tags#AI, 电商" >
+    <span class="tag-code">AI, 电商</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          前言在看多了所谓 AI 研发提效的 case 以后，我最近对 AI 在业务场景中的落地产生了浓厚的兴趣，AI 能够如何解决业务问题，给业务带来增量价值，这非常考验业务观察力和技术思考力，毕竟发展才是硬道理。笔者注意到 Shopify 刚好有这方面的应用案例，落地场景也是笔者熟悉且很接地气的电 ...
+        
+      </div>
+      <a class="more" href="/2025/10/12/shopify-ai-product-classify/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/09/27/bun-install/">Bun install 如何做到极致的包安装速度</a>
+      </h2>
+      <p class="article-date">September 27, 2025</p>
+      
+        
+  <a href="/tags#Front-end engineering" >
+    <span class="tag-code">Front-end engineering</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          前言Bun install 命令安装依赖包的速度堪称极致，平均而言，它比 npm 快 7 倍，比 pnpm 快 4 倍，比 yarn 快 17 倍。这种速度优势在依赖众多的大型前端工程中会体现的非常明显，其安装耗时直接从分钟级干到毫秒级。
+
+它能达到这个效果的核心原因在于它针对安装过程中的每 ...
+        
+      </div>
+      <a class="more" href="/2025/09/27/bun-install/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2025/09/08/cursor-vs-claudecode/">Cursor 与 Claude Code 的终极对比</a>
+      </h2>
+      <p class="article-date">September 8, 2025</p>
+      
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+前言Cursor 和 Claude Code 作为 AI Coding 领域的现象级产品，都获得了非常高的关注度和使用率，笔者围绕两款产品的核心功能，上下文管理，高级特性，团队协作，多任务执行，定制化能力，集成与扩展，MCP 支持以及氪金消耗等多个方面进行了深入对比，并给出了自己的一些结论 ...
+        
+      </div>
+      <a class="more" href="/2025/09/08/cursor-vs-claudecode/">Read more</a>
+    </article>
+  
+
+  
+    <div class="guide-pager">
+  
+    <a class="unvisible" href="/"><span class="page-arrow">←</span> Prev</a>
+  
+  
+    <a href="/page/2/">Next<span class="page-arrow"> →</span></a>
+  
+</div>
+  
+</main>
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

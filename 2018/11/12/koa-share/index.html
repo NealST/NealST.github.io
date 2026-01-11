@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      koa源码中的promise | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>koa源码中的promise</h2>
+  <p class="post-date">2018-11-12</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>koa 是一个非常轻量优雅的 node 应用开发框架，趁着双十一值班的空当阅读了下其源代码，其中一些比较有意思的地方整理成文与大家分享一下。</p>
+<h2 id="洋葱型中间件机制的实现原理"><a href="#洋葱型中间件机制的实现原理" class="headerlink" title=" 洋葱型中间件机制的实现原理"></a> 洋葱型中间件机制的实现原理</h2><p>我们经常把 koa 中间件的执行机制类比于剥洋葱，这样设计其执行顺序的好处是我们不再需要手动去管理 request 和 response 的业务执行流程，且一个中间件对于 request 和 response 的不同逻辑能够放在同一个函数中，可以帮助我们极大的简化代码。在了解其实现原理之前，先来介绍一下 koa 的整体代码结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">lib</span><br><span class="line">|-- application.js</span><br><span class="line">|-- context.js</span><br><span class="line">|-- request.js</span><br><span class="line">|-- response.js</span><br></pre></td></tr></table></figure>
+
+<p>application 是整个应用的入口，提供 koa constructor 以及实例方法属性的定义。context 封装了 koa ctx 对象的原型对象，同时提供了对 response 和 request 对象下  许多属性方法的代理访问，request.js 和 response.js 分别定义了 ctx request 和 response 属性的原型对象。</p>
+<p>接下来让我们来看 application.js 中的一段代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">listen</span>(<span class="params">...args</span>) &#123;</span><br><span class="line">    <span class="title function_">debug</span>(<span class="string">&#x27;listen&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> server = http.<span class="title function_">createServer</span>(<span class="variable language_">this</span>.<span class="title function_">callback</span>());</span><br><span class="line">    <span class="keyword">return</span> server.<span class="title function_">listen</span>(...args);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">callback</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> fn = <span class="title function_">compose</span>(<span class="variable language_">this</span>.<span class="property">middleware</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="title function_">listenerCount</span>(<span class="string">&#x27;error&#x27;</span>)) <span class="variable language_">this</span>.<span class="title function_">on</span>(<span class="string">&#x27;error&#x27;</span>, <span class="variable language_">this</span>.<span class="property">onerror</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handleRequest</span> = (<span class="params">req, res</span>) =&gt; &#123;</span><br><span class="line">      <span class="keyword">const</span> ctx = <span class="variable language_">this</span>.<span class="title function_">createContext</span>(req, res);</span><br><span class="line">      <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">handleRequest</span>(ctx, fn);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> handleRequest;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">handleRequest</span>(<span class="params">ctx, fnMiddleware</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> res = ctx.<span class="property">res</span>;</span><br><span class="line">    res.<span class="property">statusCode</span> = <span class="number">404</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">onerror</span> = err =&gt; ctx.<span class="title function_">onerror</span>(err);</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handleResponse</span> = (<span class="params"></span>) =&gt; <span class="title function_">respond</span>(ctx);</span><br><span class="line">    <span class="title function_">onFinished</span>(res, onerror);</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">fnMiddleware</span>(ctx).<span class="title function_">then</span>(handleResponse).<span class="title function_">catch</span>(onerror);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码展示了 koa 的基本原理，在其实例方法 listen 中对 http.createServer 进行了封装<br>，然后在回调函数中执行 koa 的中间件 ，在 callback 中，this.middleware 为业务定义的中间件函数所构成的数组，compose 为 koa-compose 模块提供的方法，它对中间件进行了整合，是构建 koa 洋葱型中间件模型的奥妙所在。从 handleRequest 方法中可以看出 compose 方法执行返回的是一个函数，且该函数的执行结果是一个 promise。接下来我们就来一探究竟，看看 koa-compose 是如何做到这些的，其  源代码和一段 koa 中间件应用示例代码如下所示：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// compose源码</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">compose</span> (<span class="params">middleware</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="title class_">Array</span>.<span class="title function_">isArray</span>(middleware)) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;Middleware stack must be an array!&#x27;</span>)</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> fn <span class="keyword">of</span> middleware) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> fn !== <span class="string">&#x27;function&#x27;</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;Middleware must be composed of functions!&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params">context, next</span>) &#123;</span><br><span class="line">    <span class="comment">// last called middleware #</span></span><br><span class="line">    <span class="keyword">let</span> index = -<span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">dispatch</span>(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">dispatch</span> (<span class="params">i</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (i &lt;= index) <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(<span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;next() called multiple times&#x27;</span>))</span><br><span class="line">      index = i</span><br><span class="line">      <span class="keyword">let</span> fn = middleware[i]</span><br><span class="line">      <span class="keyword">if</span> (i === middleware.<span class="property">length</span>) fn = next</span><br><span class="line">      <span class="keyword">if</span> (!fn) <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>()</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="title function_">fn</span>(context, dispatch.<span class="title function_">bind</span>(<span class="literal">null</span>, i + <span class="number">1</span>)));</span><br><span class="line">      &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(err)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">** 中间件应用示例代码</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">let</span> <span class="title class_">Koa</span> = <span class="built_in">require</span>(<span class="string">&#x27;koa&#x27;</span>)</span><br><span class="line"><span class="keyword">let</span> app = <span class="keyword">new</span> <span class="title class_">Koa</span>()</span><br><span class="line">app.<span class="title function_">use</span>(<span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">ware0</span> (ctx, next) &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;ware0 request&#x27;</span>)</span><br><span class="line">  &#125;, <span class="number">0</span>)</span><br><span class="line">  <span class="title function_">next</span>()</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;ware0 response&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line">app.<span class="title function_">use</span>(<span class="keyword">function</span> <span class="title function_">ware1</span> (<span class="params">ctx, next</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;ware1 request&#x27;</span>)</span><br><span class="line">  <span class="title function_">next</span>()</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;ware1 response&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 执行结果</span></span><br><span class="line">ware0 request</span><br><span class="line">ware1 request</span><br><span class="line"></span><br><span class="line">ware1 response</span><br><span class="line">ware0 response</span><br></pre></td></tr></table></figure>
+
+<p>从上述 compose 的源码可以看出，每个中间件所接受的 next 函数入参都是在 compose 返回函数中定义的 dispatch 函数，dispatch 接受下一个中间件在 middlewares 数组中的索引作为入参，该索引就像一个游标一样， 每当 next 函数执行后，游标向后移一位，以获取 middlaware 数组中的下一个中间件函数  进行执行，直到数组中最后一个中间件也就是使用 app.use 方法添加的最后一个中间件执行完毕之后再依次  回溯执行。整个流程实际上就是函数的调用栈，next 函数的执行就是下一个中间件的执行，只是 koa 在函数基础上加了一层 promise 封装以便在  中间件执行过程中能够  将捕获到的异常进行统一处理。 以上述编写的应用示例代码作为例子画出  函数执行调用栈示意图如下：<br><img src="https://i.loli.net/2018/11/12/5be9730b8c876.png"><br>整个 compose 方法的实现非常简洁，核心代码仅仅 17 行而已，还是非常值得围观学习的。</p>
+<h2 id="generator-函数类型中间件的执行"><a href="#generator-函数类型中间件的执行" class="headerlink" title="generator 函数类型中间件的执行"></a>generator 函数类型中间件的执行</h2><p>v1 版本的 koa 其中间件主流支持的是 generator 函数，在 v2 之后改而支持 async&#x2F;await 模式，如果依旧使用 generator，koa 会给出一个 deprecated 提示，但是为了向后兼容，目前 generator 函数类型的中间件依然能够执行，koa 内部利用 koa-convert 模块对 generator 函数进行了一层包装，请看代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">function convert (mw) &#123;</span><br><span class="line">  // mw为generator中间件</span><br><span class="line">  if (typeof mw !== &#x27;function&#x27;) &#123;</span><br><span class="line">    throw new TypeError(&#x27;middleware must be a function&#x27;)</span><br><span class="line">  &#125;</span><br><span class="line">  if (mw.constructor.name !== &#x27;GeneratorFunction&#x27;) &#123;</span><br><span class="line">    // assume it&#x27;s Promise-based middleware</span><br><span class="line">    return mw</span><br><span class="line">  &#125;</span><br><span class="line">  const converted = function (ctx, next) &#123;</span><br><span class="line">    return co.call(ctx, mw.call(ctx, createGenerator(next)))</span><br><span class="line">  &#125;</span><br><span class="line">  converted._name = mw._name || mw.name</span><br><span class="line">  return converted</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function * createGenerator (next) &#123;</span><br><span class="line">  return yield next()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面代码可以看出，koa-convert 在 generator 外部包裹了一个函数来提供与其他中间件一致的接口，内部利用 co 模块来执行 generator 函数，这里我想聊的就是 co 模块的原理，generator 函数  执行时并不会立即执行其内部逻辑，而是返回一个遍历器对象，然后通过调用该遍历器对象的 next 方法来执行，generator 函数本质来说是一个状态机，如果内部有多个 yield 表达式，就需要 next 方法执行多次才能完成函数体的执行，而 co 模块的能力就是实现 generator 函数的  自动执行，不需要手动多次调用 next 方法，那么它是如何做到的呢？co 源码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">co</span>(<span class="params">gen</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> ctx = <span class="variable language_">this</span>;</span><br><span class="line">  <span class="keyword">var</span> args = slice.<span class="title function_">call</span>(<span class="variable language_">arguments</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// we wrap everything in a promise to avoid promise chaining,</span></span><br><span class="line">  <span class="comment">// which leads to memory leak errors.</span></span><br><span class="line">  <span class="comment">// see https://github.com/tj/co/issues/180</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span>(<span class="params">resolve, reject</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> gen === <span class="string">&quot;function&quot;</span>) gen = gen.<span class="title function_">apply</span>(ctx, args);</span><br><span class="line">    <span class="keyword">if</span> (!gen || <span class="keyword">typeof</span> gen.<span class="property">next</span> !== <span class="string">&quot;function&quot;</span>) <span class="keyword">return</span> <span class="title function_">resolve</span>(gen);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">onFulfilled</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &#123;<span class="type">Mixed</span>&#125; <span class="variable">res</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &#123;<span class="type">Promise</span>&#125;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@api</span> <span class="variable">private</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">onFulfilled</span>(<span class="params">res</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> ret;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        ret = gen.<span class="title function_">next</span>(res);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">reject</span>(e);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="title function_">next</span>(ret);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &#123;<span class="type">Error</span>&#125; <span class="variable">err</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &#123;<span class="type">Promise</span>&#125;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@api</span> <span class="variable">private</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">onRejected</span>(<span class="params">err</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> ret;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        ret = gen.<span class="keyword">throw</span>(err);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">reject</span>(e);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="title function_">next</span>(ret);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Get the next value in the generator,</span></span><br><span class="line"><span class="comment">     * return a promise.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &#123;<span class="type">Object</span>&#125; <span class="variable">ret</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &#123;<span class="type">Promise</span>&#125;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@api</span> <span class="variable">private</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">next</span>(<span class="params">ret</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (ret.<span class="property">done</span>) <span class="keyword">return</span> <span class="title function_">resolve</span>(ret.<span class="property">value</span>);</span><br><span class="line">      <span class="comment">// toPromise是一个函数，返回一个promise示例</span></span><br><span class="line">      <span class="keyword">var</span> value = toPromise.<span class="title function_">call</span>(ctx, ret.<span class="property">value</span>);</span><br><span class="line">      <span class="keyword">if</span> (value &amp;&amp; <span class="title function_">isPromise</span>(value)) <span class="keyword">return</span> value.<span class="title function_">then</span>(onFulfilled, onRejected);</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">onRejected</span>(</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">TypeError</span>(</span><br><span class="line">          <span class="string">&quot;You may only yield a function, promise, generator, array, or object, &quot;</span> +</span><br><span class="line">            <span class="string">&#x27;but the following object was passed: &quot;&#x27;</span> +</span><br><span class="line">            <span class="title class_">String</span>(ret.<span class="property">value</span>) +</span><br><span class="line">            <span class="string">&#x27;&quot;&#x27;</span></span><br><span class="line">        )</span><br><span class="line">      );</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从 co 源码来看，它先是手动执行了一次 onFulfilled 函数来触发 generator 遍历器对象的 next 方法，然后利用 promise 的 onFulfilled 函数去自动完成剩余状态机的执行，在 onRejected 中利用遍历器对象的 throw 方法抛出执行上一次 yield 过程中遇到的异常，整个实现过程可以说是相当简洁优雅。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语 "></a>结语 </h2><p>通过上面的例子  可以看出 promise 的能量是非常强大的，koa 的中间件实现和 co 模块的实现都是基于 promise，除了应用于日常的异步流程控制，在开发过程中我们还可以大大挖掘其潜力，帮助我们完成一些自动化程序工作流的事情。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#node.js, koa" >
+    <span class="tag-code">node.js, koa</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/11/01/rust-ownership/">
+        <span class="nav-arrow">← </span>
+        
+          rust 的 ownership 是什么
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2020/08/01/progressbar-in-webpack/">
+        
+          webpack 中构建进度条的实现原理
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%B4%8B%E8%91%B1%E5%9E%8B%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-nav-text"> 洋葱型中间件机制的实现原理</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#generator-%E5%87%BD%E6%95%B0%E7%B1%BB%E5%9E%8B%E4%B8%AD%E9%97%B4%E4%BB%B6%E7%9A%84%E6%89%A7%E8%A1%8C"><span class="toc-nav-text">generator 函数类型中间件的执行</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-nav-text">结语 </span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2018/11/12/koa-share/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

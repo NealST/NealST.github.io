@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      设计师视角下我最常用的 8 个 AI 工具 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>设计师视角下我最常用的 8 个 AI 工具</h2>
+  <p class="post-date">2025-11-18</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fd04760f952e84129835415175160c471?format=webp&width=2000"></p>
+<p>作为一名产品工程师，在代码之外也会涉及一些产品设计的工作，本篇文章主要列举设计师视角下笔者认为最好用，也是最常用的 8 个 AI 工具（排名不分先后）</p>
+<h2 id="Uizard"><a href="#Uizard" class="headerlink" title="Uizard"></a>Uizard</h2><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F1ad5c89391114e1cad4ecc1b985f766c?format=webp&width=2000"></p>
+<p><a target="_blank" rel="noopener" href="https://uizard.io/">Uizard</a> 可以将手绘草图或屏幕截图转化为可编辑的线框图，既是头脑风暴到产品设计雏形的神器，也可以用来捕捉一些好看的设计风格，然后做一些自定义修改。</p>
+<h2 id="Khroma"><a href="#Khroma" class="headerlink" title="Khroma"></a>Khroma</h2><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff08658004e7b44dcb2a75f0fb2927c9e?format=webp&width=2000"></p>
+<p><a target="_blank" rel="noopener" href="https://www.khroma.co/">Khroma</a> 主要用于色彩选择，你可以选几个自己比较喜欢的颜色，然后它会根据你的颜色偏好生成符合你审美的调色板。我个人喜欢用它来做产品的配色选择。</p>
+<h2 id="Fontjoy"><a href="#Fontjoy" class="headerlink" title="Fontjoy"></a>Fontjoy</h2><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F13f713a706b04d32a692eaad19eb3f40?format=webp&width=2000"></p>
+<p><a target="_blank" rel="noopener" href="https://fontjoy.com/">Fontjoy</a> 这个堪称神器，它能自动帮我找到那些搭配起来既美观又平衡的字体组合，我不需要再花很多时间在各种字体网站上反复挑选试错。</p>
+<h2 id="Spline-AI"><a href="#Spline-AI" class="headerlink" title="Spline AI"></a>Spline AI</h2><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F354b04cd36b14680acf3e0c69b0e827e?format=webp&width=2000"></p>
+<p><a target="_blank" rel="noopener" href="https://spline.design/">Spline</a> 通过文本提示词来创建 3D 对象和场景的工具，无需专业 3D 建模知识也能上手，效果不错，适合给网站加一些特效，或者做一些酷炫的数据可视化来汇报。</p>
+<h2 id="Veo-3-1"><a href="#Veo-3-1" class="headerlink" title="Veo 3.1"></a>Veo 3.1</h2><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fef007eec11f94844ab29029d01893607?format=webp&width=2000"></p>
+<p><a target="_blank" rel="noopener" href="https://deepmind.google/models/veo/">Veo 3.1</a> 是谷歌的视频生成模型，简单来说，它能根据你输入的文字生成生成带有与画面高度同步的音效和环境音的 8 秒短视频，且音频是原生生成而不是简单拼接。</p>
+<h2 id="Runway-ML"><a href="#Runway-ML" class="headerlink" title="Runway ML"></a>Runway ML</h2><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F50c74e95a4f0475dba10de0ef477eba4?format=webp&width=2000"></p>
+<p><a target="_blank" rel="noopener" href="https://runwayml.com/">Runway ML</a>也是一个视频工具，不过其独特性在于它不仅能根据文字描述生成视频片段，还可以给视频添加各种风格效果，比如电影风之类。它还能移除视频中的物体，可以做各种创意性的视频探索，也是比较有意思的。</p>
+<h2 id="Topaz-Labs"><a href="#Topaz-Labs" class="headerlink" title="Topaz Labs"></a>Topaz Labs</h2><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fa5737f1de6bd43f5959042ab037bc580?format=webp&width=2000"></p>
+<p><a target="_blank" rel="noopener" href="https://www.topazlabs.com/">Topaz Labs</a> 能给图片和视频做锐化，降噪，放大等各种处理，特点是完全本地运行，不走云端，适合处理私密文件。</p>
+<h2 id="Bubbi"><a href="#Bubbi" class="headerlink" title="Bubbi"></a>Bubbi</h2><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F81ce821dcffa4441b9049dcd6c9d4bc3?format=webp&width=2000"></p>
+<p><a target="_blank" rel="noopener" href="https://bubbi.ai/">Bubbi</a> 图片编辑工具集，主打一个简单高效，适合快速修图，功能颇多，包括抠图，放大，修复，上色，去杂物等。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI, Designer" >
+    <span class="tag-code">AI, Designer</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2025/11/05/vision-llm-grab/">
+        <span class="nav-arrow">← </span>
+        
+          Grab 自研视觉大模型提取图像信息
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2025/11/23/cloudfare-outage/">
+        
+          2025 年 11 月 18 号 cloudflare 崩溃复盘
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Uizard"><span class="toc-nav-text">Uizard</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Khroma"><span class="toc-nav-text">Khroma</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Fontjoy"><span class="toc-nav-text">Fontjoy</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Spline-AI"><span class="toc-nav-text">Spline AI</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Veo-3-1"><span class="toc-nav-text">Veo 3.1</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Runway-ML"><span class="toc-nav-text">Runway ML</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Topaz-Labs"><span class="toc-nav-text">Topaz Labs</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Bubbi"><span class="toc-nav-text">Bubbi</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2025/11/18/disigner-ai-tools/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

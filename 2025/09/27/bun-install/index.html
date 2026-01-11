@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Bun install 如何做到极致的包安装速度 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Bun install 如何做到极致的包安装速度</h2>
+  <p class="post-date">2025-09-27</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>Bun install</code> 命令安装依赖包的速度堪称极致，平均而言，它比 npm 快 7 倍，比 pnpm 快 4 倍，比 yarn 快 17 倍。这种速度优势在依赖众多的大型前端工程中会体现的非常明显，其安装耗时直接从分钟级干到毫秒级。</p>
+<p><img src="https://bun.com/images/blog/bun-install/Group1.svg" alt="Image 1: Timeline showing shift from I/O wait to syscall overhead"></p>
+<p>它能达到这个效果的核心原因在于它针对安装过程中的每个环节都做了极致性的设计和实现，包括优化系统调用，消除 javascript 开销，异步 dns 解析，二进制 Manifest 缓存，优化 tarball 提取，利于缓存的数据结构设计，锁文件格式的优化，文件复制过程的优化以及多核利用的并行化处理等，笔者读完之后叹为观止，感受到了其做底层基建的匠心，特意翻译并分享出来。</p>
+<p>在正式介绍优化手段前，需要先介绍一个概念 - 系统调用</p>
+<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="什么是系统调用"><a href="#什么是系统调用" class="headerlink" title="什么是系统调用"></a>什么是系统调用</h3><p>软件程序无法直接与计算机的硬盘，网络等打交道，我们的代码每次在执行一些操作（诸如文件读写，网络连接，分配内存）时都需要调用操作系统的能力来实现，这称之为系统调用。</p>
+<h3 id="系统调用会带来什么问题"><a href="#系统调用会带来什么问题" class="headerlink" title="系统调用会带来什么问题"></a>系统调用会带来什么问题</h3><p>计算机的 CPU 可以在两种模式下运行程序，一种是用户模式，一种是内核模式。</p>
+<p>我们的应用代码主要在用户模式下运行，这种模式下的程序无法直接访问计算机的硬件，物理内存，主要是防止程序相互干扰致使系统崩溃。</p>
+<p>内核模式则主要是应用于系统内核的运行，用于管理资源，例如调度进程，驱动 CPU、处理内存以及磁盘或网络设备等硬件。只有内核和设备驱动程序才可以在该模式下运行！</p>
+<p>当我们的代码在执行系统调用时，CPU 会进行模式切换，模式切换时，CPU 会经历停止执行程序 → 保存其所有状态 → 切换到内核模式 → 执行操作 → 然后切换回用户模式的过程。这个模式切换的成本比较高，单次切换就需要耗费 1000-1500 个 CPU 周期。</p>
+<p>这是什么概念呢？在 3G Hz 处理器上，1000-1500 个周期大约是 500 纳秒。这个时间听起来可以忽略不计，但现代 SSD 每秒可以处理超过 100 万次操作。如果每个操作都需要进行系统调用，那么仅模式切换就需要 15 亿个周期。</p>
+<p>依赖包安装的过程会进行数千次系统调用。像 React 这种大型库及其依赖项甚至可能会触发 50,000+ 次的系统调用，意味着仅模式切换就消耗了几秒的 CPU 时间！这还不包括读取文件或安装软件包的耗时。</p>
+<p>针对不同包管理器做系统调用的 benchmark 测试，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">Benchmark 1: strace -c -f npm install</span><br><span class="line">    Time (mean ± σ):  37.245 s ±  2.134 s [User: 8.432 s, System: 4.821 s]</span><br><span class="line">    Range (min … max):   34.891 s … 41.203 s    10 runs</span><br><span class="line"></span><br><span class="line">    System calls: 996,978 total (108,775 errors)</span><br><span class="line">    Top syscalls: futex (663,158),  write (109,412), epoll_pwait (54,496)</span><br><span class="line"></span><br><span class="line">  Benchmark 2: strace -c -f bun install</span><br><span class="line">    Time (mean ± σ):      5.612 s ±  0.287 s [User: 2.134 s, System: 1.892 s]</span><br><span class="line">    Range (min … max):    5.238 s …  6.102 s    10 runs</span><br><span class="line"></span><br><span class="line">    System calls: 165,743 total (3,131 errors)</span><br><span class="line">    Top syscalls: openat(45,348), futex (762), epoll_pwait2 (298)</span><br><span class="line"></span><br><span class="line">  Benchmark 3: strace -c -f yarn install</span><br><span class="line">    Time (mean ± σ):     94.156 s ±  3.821 s    [User: 12.734 s, System: 7.234 s]</span><br><span class="line">    Range (min … max):   89.432 s … 98.912 s    10 runs</span><br><span class="line"></span><br><span class="line">    System calls: 4,046,507 total (420,131 errors)</span><br><span class="line">    Top syscalls: futex (2,499,660), epoll_pwait (326,351), write (287,543)</span><br><span class="line"></span><br><span class="line">  Benchmark 4: strace -c -f pnpm install</span><br><span class="line">    Time (mean ± σ):     24.521 s ±  1.287 s    [User: 5.821 s, System: 3.912 s]</span><br><span class="line">    Range (min … max):   22.834 s … 26.743 s    10 runs</span><br><span class="line"></span><br><span class="line">    System calls: 456,930 total (32,351 errors)</span><br><span class="line">    Top syscalls: futex (116,577), openat(89,234), epoll_pwait (12,705)</span><br><span class="line"></span><br><span class="line">  Summary</span><br><span class="line">    &#x27;strace -c -f bun install&#x27; ran</span><br><span class="line">      4.37 ± 0.28 times faster than &#x27;strace -c -f pnpm install&#x27;</span><br><span class="line">      6.64 ± 0.51 times faster than &#x27;strace -c -f npm install&#x27;</span><br><span class="line">     16.78 ± 1.12 times faster than &#x27;strace -c -f yarn install&#x27;</span><br><span class="line"></span><br><span class="line">  System Call Efficiency:</span><br><span class="line">    - bun:  165,743 syscalls (29.5k syscalls/s)</span><br><span class="line">    - pnpm: 456,930 syscalls (18.6k syscalls/s)</span><br><span class="line">    - npm:  996,978 syscalls (26.8k syscalls/s)</span><br><span class="line">    - yarn: 4,046,507 syscalls (43.0k syscalls/s)</span><br></pre></td></tr></table></figure>
+
+<p>Bun 的安装速度最快，它的系统调用最少。对于一个简单的安装，yarn 有超过 400 万次的系统调用，npm 接近 100 万次，pnpm 接近 500k，bun 165k。</p>
+<p>Bun 之所以能做到这一点，离不开它在细节处的臻于完美。</p>
+<h2 id="消除-javascript-开销"><a href="#消除-javascript-开销" class="headerlink" title="消除 javascript 开销"></a>消除 javascript 开销</h2><p>npm, pnpm, yarn 均采用 Node.js 编写，在 Node.js 中调用 fs.readFile 读取文件时，会经过一个复杂的管道，包括：</p>
+<ol>
+<li>JavaScript 验证参数并将字符串从 UTF-16 转换为 UTF-8，以适配于 libuv 的 C API。这个转换过程会在任何 I&#x2F;O 启动之前短暂阻塞主线程。</li>
+<li>libuv 将该处理请求加入到 4 个工作线程的处理队列中。如果当前无空闲线程，则请求将持续等待。</li>
+<li>工作线程拾取请求，打开文件描述符，并进行实际的 <code>read()</code> 系统调用。</li>
+<li>CPU 切换到内核模式，从磁盘获取数据，并将其返回到工作线程。</li>
+<li>工作线程通过事件循环将文件数据推送回主线程，最终规划和执行你的回调。</li>
+</ol>
+<p>每个 <code>fs.readFile()</code> 调用都会经过此管道。包安装过程会涉及数千个 package.json 文件的读取，包括：扫描目录、处理依赖项元数据等。每次线程调度时（例如，在访问任务队列或向事件循环发出信号时），可以使用 futex 系统调用（Fast Userspace Mutex, Linux 内核提供的一种基础同步机制，用于实现高效的锁和同步原语。它结合了用户空间操作的快速性和内核空间阻塞的可靠性，是现代多线程编程的核心组件）来管理锁或等待。</p>
+<p>数千次这种复杂的管道执行带来的系统调用开销相当高昂。而 Bun 是用 Zig 语言（对标 rust 的另一种系统编程语言）编写的，可编译为具有直接系统调用访问权限的本机代码。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// Direct system call, no JavaScript overhead</span><br><span class="line">var file = bun.sys.File.from(try bun.sys.openatA(</span><br><span class="line">    bun.FD.cwd(),</span><br><span class="line">    abs,</span><br><span class="line">    bun.O.RDONLY,</span><br><span class="line">    0,</span><br><span class="line">).unwrap());</span><br></pre></td></tr></table></figure>
+
+<p>当 Bun 读取文件时，Zig 代码直接进行系统调用，内核立即执行系统调用并返回数据，中间没有任何 javascript 引擎解析，线程池，事件循环等处理流程，性能差异不言而喻。</p>
+<table>
+<thead>
+<tr>
+<th>Runtime</th>
+<th>Version</th>
+<th>Files&#x2F;Second</th>
+<th>Performance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Bun</strong></td>
+<td>v1.2.20</td>
+<td><strong>146,057</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>v24.5.0</td>
+<td>66,576</td>
+<td>2.2x slower</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>v22.18.0</td>
+<td>64,631</td>
+<td>2.3x slower</td>
+</tr>
+</tbody></table>
+<p>在此基准测试中，Bun 每秒处理 146,057 个 package.json 文件，而 Node.js v24.5.0 处理 66,576 个，v22.18.0 处理 64,631 个，快了 2 倍多！</p>
+<p>Bun 基本没有任何运行时负担，每个文件的 0.019 毫秒就代表了其实际的 I&#x2F;O 开销。而基于 Node.js 编写的包管理器由于 Node.js 本身的运行时解析成本和底层抽象成本，相同的读文件操作就需要耗费 0.065 毫秒。</p>
+<h2 id="异步-DNS-解析"><a href="#异步-DNS-解析" class="headerlink" title="异步 DNS 解析"></a>异步 DNS 解析</h2><p>安装依赖意味着需要处理网络请求，从 registry 上拉取依赖包信息，这就需要获取 registry.npmjs.org 等域名的 IP 地址。</p>
+<p>对基于 Node.js 编写的包管理器来说，执行 dns 解析主要通过 <code>dns.lookup()</code> 方法来实现，这个方法看似异步，实则其内部实现为 <code>getaddrinfo()</code> 方法的调用，在 libuv 的线程池上运行时仍然会阻塞子线程。</p>
+<p>在 macOS 系统上 Bun 采用了 Apple 提供的一个隐藏异步 dns 查询 API - <code>getaddrinfo_async_start()</code>, 这个 API 并不在 POSIX 标准之中，它可以使用 mach 端口（Apple 的进程间通信方式）实现完全异步运行的 dns 解析请求。</p>
+<p>这个优化仅针对 macOs 系统。</p>
+<h2 id="二进制-Manifest-缓存"><a href="#二进制-Manifest-缓存" class="headerlink" title="二进制 Manifest 缓存"></a>二进制 Manifest 缓存</h2><p>在正式安装依赖包之前，包管理器会先下载依赖包的 manifest 文件(内容包括这个包的版本记录，依赖项和元数据等)，对于一些像 React 这种具有 100+ 版本的流行包，其 manifest 文件大小可能会达到几兆大小。以 lodash 为例，其 manifest json 文件内容如下所示：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lodash&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;versions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;4.17.20&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lodash&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;4.17.20&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Lodash modular utilities.&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;license&quot;</span><span class="punctuation">:</span> <span class="string">&quot;MIT&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;repository&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git+https://github.com/lodash/lodash.git&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;homepage&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://lodash.com/&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;4.17.21&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lodash&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;4.17.21&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Lodash modular utilities.&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;license&quot;</span><span class="punctuation">:</span> <span class="string">&quot;MIT&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;repository&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;url&quot;</span><span class="punctuation">:</span> <span class="string">&quot;git+https://github.com/lodash/lodash.git&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;homepage&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://lodash.com/&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="comment">// ... 100+ more versions, nearly identical</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>对于包管理器来说，这种 manifest 描述文件的问题在于每次安装依赖包时，即使通过缓存的手段避免了文件的再次加载，但依然需要解析该 json 文件，除了语法验证，ast 构建，gc 管理等解析本身的开销以外，还有大量的内存冗余消耗问题。以上述的 lodash 为例，字符串 <code>Lodash modular utilitie</code>， <code>https://lodash.com/</code>，<code>git+https://github.com/lodash/lodash.git</code> 重复出现在每个版本中。在 json 解析时，js 会在内存中为每个字符串都创建一个单独的字符串对象，这就导致了有很多重复的内存分配。</p>
+<p>Bun 解决这个问题的方式为通过二进制格式来存储 manifest 描述。当下载 manifest 文件时，它会解析一次 JSON 将其存储为二进制文件（~&#x2F;.bun&#x2F;install&#x2F;cache&#x2F; 中的 .npm 文件），并将所有包信息（版本、依赖项、校验和等）存储于特定的字节偏移量中。</p>
+<p>当 Bun 访问名称 <code>Lodash modular utilitie</code> 时，它只是进行指针的算数运算：<code>string_buffer + offset</code>，没有任何的 json 解析，对象遍历和内存分配。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// Pseudocode</span><br><span class="line"></span><br><span class="line">// String buffer (all strings stored once)</span><br><span class="line">string_buffer = &quot;lodash\0MIT\0Lodash modular utilities.\0git+https://github.com/lodash/lodash.git\0https://lodash.com/\04.17.20\04.17.21\0...&quot;</span><br><span class="line">                 ^0     ^7   ^11                        ^37                                      ^79                   ^99      ^107</span><br><span class="line"></span><br><span class="line">// Version entries (fixed-size structs)</span><br><span class="line">versions = [</span><br><span class="line">  &#123; name_offset: 0, name_len: 6, version_offset: 99, version_len: 7, desc_offset: 11, desc_len: 26, license_offset: 7, license_len: 3, ... &#125;,  // 4.17.20</span><br><span class="line">  &#123; name_offset: 0, name_len: 6, version_offset: 107, version_len: 7, desc_offset: 11, desc_len: 26, license_offset: 7, license_len: 3, ... &#125;, // 4.17.21</span><br><span class="line">  // ... 100+ more version structs</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>benchmark 测试下显示即使是缓存下的 <code>npm install</code> 也比无缓存的 Bun 安装要慢。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Benchmark 1: bun install # fresh</span><br><span class="line">  Time (mean ± σ):     230.2 ms ± 685.5 ms    [User: 145.1 ms, System: 161.9 ms]</span><br><span class="line">  Range (min … max):     9.0 ms … 2181.0 ms    10 runs</span><br><span class="line"></span><br><span class="line">Benchmark 2: bun install # cached</span><br><span class="line">  Time (mean ± σ):       9.1 ms ±   0.3 ms    [User: 8.5 ms, System: 5.9 ms]</span><br><span class="line">  Range (min … max):     8.7 ms …  11.5 ms    10 runs</span><br><span class="line"></span><br><span class="line">Benchmark 3: npm install # fresh</span><br><span class="line">  Time (mean ± σ):      1.786 s ±  4.407 s    [User: 0.975 s, System: 0.484 s]</span><br><span class="line">  Range (min … max):    0.348 s … 14.328 s    10 runs</span><br><span class="line"></span><br><span class="line">Benchmark 4: npm install # cached</span><br><span class="line">  Time (mean ± σ):     363.1 ms ±  21.6 ms    [User: 276.3 ms, System: 63.0 ms]</span><br><span class="line">  Range (min … max):   344.7 ms … 412.0 ms    10 runs</span><br><span class="line"></span><br><span class="line">Summary</span><br><span class="line">  bun install # cached ran</span><br><span class="line">    25.30 ± 75.33 times faster than bun install # fresh</span><br><span class="line">    39.90 ± 2.37 times faster than npm install # cached</span><br><span class="line">   	196.26 ± 484.29 times faster than npm install # fresh</span><br></pre></td></tr></table></figure>
+
+<h2 id="Tarball-提取"><a href="#Tarball-提取" class="headerlink" title="Tarball 提取"></a>Tarball 提取</h2><p>在处理完 manifest 描述文件后，包管理器会从 registry 上下载并提取 tarball 文件（即压缩的存档文件，如 .zip 文件，其中包含每个包的实际源代码和文件）。</p>
+<p>大多数包管理器通过流式传输来接收 tarball 文件数据，并在接收到数据时进行解压缩，整个过程从一个小缓冲区开始，随着更多解压缩数据的到来，缓冲区会被填满，此时会再分配一个更大的缓冲区，然后复制所有当前数据，再循环往复这个过程。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> buffer = <span class="title class_">Buffer</span>.<span class="title function_">alloc</span>(<span class="number">64</span> * <span class="number">1024</span>); <span class="comment">// Start with 64KB</span></span><br><span class="line"><span class="keyword">let</span> offset = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">onData</span>(<span class="params">chunk</span>) &#123;</span><br><span class="line">  <span class="keyword">while</span> (moreDataToCome) &#123;</span><br><span class="line">    <span class="keyword">if</span> (offset + chunk.<span class="property">length</span> &gt; buffer.<span class="property">length</span>) &#123;</span><br><span class="line">      <span class="comment">// buffer full → allocate bigger one</span></span><br><span class="line">      <span class="keyword">const</span> newBuffer = <span class="title class_">Buffer</span>.<span class="title function_">alloc</span>(buffer.<span class="property">length</span> * <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// copy everything we’ve already written</span></span><br><span class="line">      buffer.<span class="title function_">copy</span>(newBuffer, <span class="number">0</span>, <span class="number">0</span>, offset);</span><br><span class="line"></span><br><span class="line">      buffer = newBuffer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// copy new chunk into buffer</span></span><br><span class="line">    chunk.<span class="title function_">copy</span>(buffer, offset);</span><br><span class="line">    offset += chunk.<span class="property">length</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ... decompress from buffer ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种处理逻辑看似合理，但会带来性能瓶颈：当缓冲区反复超出当前大小时，会出现多次复制拷贝相同数据的情况，举例来说，假设我们有一个 1M 大小的包，按照上述逻辑会经历以下步骤：</p>
+<ol>
+<li>初始化 64kb 大小的缓冲区</li>
+<li>填写 → 分配 128KB → 复制 64KB</li>
+<li>填写 → 分配 256KB → 复制 128KB</li>
+<li>填写 → 分配 512KB → 复制 256KB</li>
+<li>填写 → 分配 1MB → 复制 512KB</li>
+</ol>
+<p>整个过程重复的复制了多达 960kb 的数据，而且每个安装包都会出现这种 case。</p>
+<p>Bun 的处理方式则是在解压缩之前就缓冲整个 tarball，而不是在数据到达时才进行处理。它能做到这点是因为在 Zig 中可以直接查找到 tarball 文件的最后 4 个字节，这 4 个字节中存储了文件的未压缩大小，因此 Bun 可以预先分配内存。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  // Last 4 bytes of a gzip-compressed file are the uncompressed size.</span><br><span class="line">  if (tgz_bytes.len &gt; 16) &#123;</span><br><span class="line">    // If the file claims to be larger than 16 bytes and smaller than 64 MB, we&#x27;ll preallocate the buffer.</span><br><span class="line">    // If it&#x27;s larger than that, we&#x27;ll do it incrementally. We want to avoid OOMing.</span><br><span class="line">    const last_4_bytes: u32 = @bitCast(tgz_bytes[tgz_bytes.len - 4 ..][0..4].*);</span><br><span class="line">    if (last_4_bytes &gt; 16 and last_4_bytes &lt; 64 * 1024 * 1024) &#123;</span><br><span class="line">      // It&#x27;s okay if this fails. We will just allocate as we go and that will error if we run out of memory.</span><br><span class="line">      esimated_output_size = last_4_bytes;</span><br><span class="line">      if (zlib_pool.data.list.capacity == 0) &#123;</span><br><span class="line">          zlib_pool.data.list.ensureTotalCapacityPrecise(zlib_pool.data.allocator, last_4_bytes) catch &#123;&#125;;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">          zlib_pool.data.ensureUnusedCapacity(last_4_bytes) catch &#123;&#125;;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而基于 Node.js 编写的包管理器很难做到这一点则是因为它需要单独创建一个读取流，一直搜索到最后，读取到那 4 个字节之后解析它们再关闭流，然后重新开始解压缩，这么做会比流式传输更慢。</p>
+<h2 id="缓存友好的数据结构"><a href="#缓存友好的数据结构" class="headerlink" title="缓存友好的数据结构"></a>缓存友好的数据结构</h2><p>在安装依赖包时，由于大多数包都有自己的依赖，且这些依赖还会有自己的依赖，就会形成一个比较复杂的图关系结构。包管理器必须遍历该图以检查包版本、解决版本冲突并确定要安装的版本，部分依赖项还需要进行”提升（hoist）”，以便多个包可以共享它们。传统的包管理器存储依赖项的数据结构如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> packages = &#123;</span><br><span class="line">  <span class="attr">next</span>: &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;next&quot;</span>,</span><br><span class="line">    <span class="attr">version</span>: <span class="string">&quot;15.5.0&quot;</span>,</span><br><span class="line">    <span class="attr">dependencies</span>: &#123;</span><br><span class="line">      <span class="string">&quot;@swc/helpers&quot;</span>: <span class="string">&quot;0.5.15&quot;</span>,</span><br><span class="line">      <span class="string">&quot;postcss&quot;</span>: <span class="string">&quot;8.4.31&quot;</span>,</span><br><span class="line">      <span class="string">&quot;styled-jsx&quot;</span>: <span class="string">&quot;5.1.6&quot;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">postcss</span>: &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;postcss&quot;</span>,</span><br><span class="line">    <span class="attr">version</span>: <span class="string">&quot;8.4.31&quot;</span>,</span><br><span class="line">    <span class="attr">dependencies</span>: &#123;</span><br><span class="line">      <span class="attr">nanoid</span>: <span class="string">&quot;^3.3.6&quot;</span>,</span><br><span class="line">      <span class="attr">picocolors</span>: <span class="string">&quot;^1.0.0&quot;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在 js 中，对象存储在堆上，当访问 <code>packages[“next”]</code> 时，CPU 会访问一个指针，该指针告诉它 Next 的数据在内存中的位置。然后，此数据包含指向其依赖项所在位置的另一个指针，而该指针又包含指向实际依赖项的更多指针,如下图所示。<br><img src="https://bun.com/images/blog/bun-install/image24.png" alt="Pointer chasing through scattered JS objects in memory"></p>
+<p>在不同时间创建对象时，javascript 引擎会使用当时可用的任何内存：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// These objects are created at different moments during parsing</span></span><br><span class="line">packages[<span class="string">&quot;react&quot;</span>] = &#123; <span class="attr">name</span>: <span class="string">&quot;react&quot;</span>, ... &#125;  	  <span class="comment">// Allocated at address 0x1000</span></span><br><span class="line">packages[<span class="string">&quot;next&quot;</span>] = &#123; <span class="attr">name</span>: <span class="string">&quot;next&quot;</span>, ... &#125;     		<span class="comment">// Allocated at address 0x2000</span></span><br><span class="line">packages[<span class="string">&quot;postcss&quot;</span>] = &#123; <span class="attr">name</span>: <span class="string">&quot;postcss&quot;</span>, ... &#125;  <span class="comment">// Allocated at address 0x8000</span></span><br><span class="line"><span class="comment">// ... hundreds more packages</span></span><br></pre></td></tr></table></figure>
+<p>这些内存地址非常随机，没有任何局部性保证，对象可以随意分散在 RAM 中，即便是彼此有关联的对象！这种方式与现代 CPU 的取数机制背道而驰。</p>
+<p>现代 CPU 处理数据的速度极快（每秒数十亿次运算），但从 RAM 获取数据的速度却很慢，为了弥补这一差距，CPU 实现了多级缓存：</p>
+<ul>
+<li>L1 缓存，32kb，但速度极快（~4 个 CPU 周期）</li>
+<li>L2 缓存，256kb，稍慢（~12 个 CPU 周期）</li>
+<li>L3 缓存，8-32MB 存储，需要 ~40 个 CPU 周期</li>
+<li>RAM：大 GB 空间存储，需要 ~300 个周期</li>
+</ul>
+<p>当进行内存访问时，CPU 会加载该内存地址以及该地址后的整个 64 字节块，CPU 会认为如果你访问了一个字节，那么你可能很快就会用到其附近的数据，这称之为空间局部性。但这种机制非常适合按顺序存储的数据，像上面那种随机分配的内存地址则会适得其反。</p>
+<p>当 CPU 在地址 0x2000 处加载 packages[“next”] 时，它实际上加载了该缓存行中的所有字节。但是下一个包 packages[“postcss”] 位于地址 0x8000 。这是一条完全不同的缓存线！CPU 加载在缓存行中的其他 56 字节完全被浪费了，它们只是附近恰好分配的任何东西的随机内存;也许是垃圾，也许是不相关对象的一部分。</p>
+<p>当访问 512 个不同的包（32KB &#x2F; 64 字节）时，L1 缓存会被填满。后续每个新的包访问都会逐出以前加载的缓存行以腾出空间。这样刚刚访问的包很快就会被逐出，缓存命中率下降，每次访问就都变成了 ~300 个周期的 RAM 行程，而不是 4 个周期的 L1 命中。</p>
+<p>在遍历 Next 的依赖项时，CPU 必须执行多个依赖的内存加载：</p>
+<ol>
+<li>加载 packages[“next”] 指针 → 缓存未命中 → RAM 获取（~300 个周期）</li>
+<li>按照该指针加载 next.dependencies 指针 → 另一个缓存未命中 → RAM 获取（~300 个周期）</li>
+<li>按照它在哈希表中找到 “postcss” → 缓存未命中 → RAM 获取（~300 个周期）</li>
+<li>按照该指针加载实际字符串数据 → 缓存未命中 → RAM 获取（~300 个周期）</li>
+</ol>
+<p>仅读取一个依赖项名称，就是 ~1200 个周期（在 400GHz CPU 上为 3ns），如果有 1000 个依赖包，每个包平均有 5 个依赖项，这就是 2 毫秒的纯内存延迟。</p>
+<p>Bun 则采用了数组结构来存储所有的依赖项，将所有包名称保存在一个共享数组中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// ❌ Traditional Array of Structures (AoS) - lots of pointers</span><br><span class="line">packages = &#123;</span><br><span class="line">  next: &#123; dependencies: &#123; &quot;@swc/helpers&quot;: &quot;0.5.15&quot;, &quot;postcss&quot;: &quot;8.4.31&quot; &#125; &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// ✅ Bun&#x27;s Structure of Arrays (SoA) - cache friendly</span><br><span class="line">packages = [</span><br><span class="line">  &#123;</span><br><span class="line">    name: &#123; off: 0, len: 4 &#125;,</span><br><span class="line">    version: &#123; off: 5, len: 6 &#125;,</span><br><span class="line">    deps: &#123; off: 0, len: 2 &#125;,</span><br><span class="line">  &#125;, // next</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">dependencies = [</span><br><span class="line">  &#123; name: &#123; off: 12, len: 13 &#125;, version: &#123; off: 26, len: 7 &#125; &#125;, // @swc/helpers@0.5.15</span><br><span class="line">  &#123; name: &#123; off: 34, len: 7 &#125;, version: &#123; off: 42, len: 6 &#125; &#125;, // postcss@8.4.31</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">string_buffer = &quot;next\015.5.0\0@swc/helpers\00.5.15\0postcss\08.4.31\0&quot;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>packages 存储轻量级的结构体，结构体中使用偏移量来指定依赖包数据查找的位置。</li>
+<li>dependencies 将所有包的实际依赖关系存储在一个地方</li>
+<li>string_buffer 将所有文本（名称、版本等）按顺序存储在一个大字符串中</li>
+</ul>
+<p>这种数据结构下，再访问 Next 的依赖项就变成了纯算数运算：</p>
+<ol>
+<li><code>packages[0]</code> 告诉我们 Next 的依赖项从 dependencies 数组中的位置 0 开始，并且有 2 个依赖项： <code>&#123; name_offset: 0, deps_offset: 0, deps_count: 2 &#125;</code></li>
+<li>转到 <code>dependencies[1]</code>，它告诉我们 postcss 的名称从字符串 string_buffer 中的第 34 位开始，版本在第 42 位开始： <code>&#123; name_offset: 34, version_offset: 42 &#125;</code></li>
+<li>转到 string_buffer 中的第 34 位并阅读 postcss</li>
+<li>转到 string_buffer 中的位置 42 并阅读 “8.4.31”</li>
+</ol>
+<p>这样一来，由于 CPU 会加载整个 64 字节的缓存行，每个包是 8 个字节，当你访问 packages[0] 时，你可以在单个内存获取中通过包[7] 获得包[0]。当 Bun 处理 react 依赖项（packages[0]、packages[1] 到 packages[7] 时，它们就已经位于 L1 缓存中，无需额外申请内存即可访问。这就是顺序访问如此之快的原因：只需访问一次内存即可获得 8 个包。相比传统的基于对象嵌套结构的包管理器而言，可谓颇具优势。</p>
+<h2 id="锁文件处理"><a href="#锁文件处理" class="headerlink" title="锁文件处理"></a>锁文件处理</h2><p>大多数包管理器将锁文件存储为嵌套的 json(如 npm 的 package-lock.json) 或者 yaml(pnpm, yarn) 文件，当 npm 解析锁文件时，它也需要解析这种深度嵌套的对象。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;next&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;15.5.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;requires&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;@swc/helpers&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.5.15&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;postcss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8.4.31&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;postcss&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8.4.31&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;requires&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;nanoid&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^3.3.6&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;picocolors&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^1.0.0&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这就会面临跟前面一样的内存随机分配的问题，Bun 在锁文件的处理上也应用上了上述的数组结构优化。同时，Bun 也复用了 tarball 文件优化的手段，前置读取锁文件大小并预先分配内存。</p>
+<h2 id="文件复制"><a href="#文件复制" class="headerlink" title="文件复制"></a>文件复制</h2><p>当依赖包完成安装并缓存在对应目录下后，包管理需要将文件复制到 node_modules 中。传统的文件复制方式是遍历每个目录并单独复制文件，这个过程会涉及多次系统调用：</p>
+<ol>
+<li>打开源文件</li>
+<li>创建和打开目标文件</li>
+<li>从源重复读取块并将它们写入目标，直到完成</li>
+<li>最后，关闭两个文件</li>
+</ol>
+<p>对于一个典型的具有上千个依赖包文件的 React 应用程序来说，系统调用的次数会高达数十万到数百万次。</p>
+<p>Bun 解决这个问题的方式是利用不同操作系统的特性，采用不同的复制策略。</p>
+<h3 id="macOS-系统"><a href="#macOS-系统" class="headerlink" title="macOS 系统"></a>macOS 系统</h3><p>在 macOS 上，Bun 使用 Apple 原生的 <code>clonefile（）</code> API 执行复制操作，该 API 可以在单个系统调用中克隆整个目录树。它的方式是创建新的目录和文件元数据来存放原缓存中依赖包数据的引用，而不是完全的数据拷贝和写入。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// Traditional approach: millions of syscalls</span><br><span class="line">for (each file) &#123;</span><br><span class="line">  copy_file_traditionally(src, dst);  // 50+ syscalls per file</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Bun&#x27;s approach: ONE syscall</span><br><span class="line">clonefile(&quot;/cache/react&quot;, &quot;/node_modules/react&quot;, 0);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Benchmark 1: bun install --backend=copyfile</span><br><span class="line">  Time (mean ± σ):      2.955 s ±  0.101 s    [User: 0.190 s, System: 1.991 s]</span><br><span class="line">  Range (min … max):    2.825 s …  3.107 s    10 runs</span><br><span class="line"></span><br><span class="line">Benchmark 2: bun install --backend=clonefile</span><br><span class="line">  Time (mean ± σ):      1.274 s ±  0.052 s    [User: 0.140 s, System: 0.257 s]</span><br><span class="line">  Range (min … max):    1.184 s …  1.362 s    10 runs</span><br><span class="line"></span><br><span class="line">Summary</span><br><span class="line">  bun install --backend=clonefile ran</span><br><span class="line">    2.32 ± 0.12 times faster than bun install --backend=copyfile</span><br></pre></td></tr></table></figure>
+
+<p>cloneFile 的方式明显更为高效，且 Bun 也实现了兜底策略，当 cloneFile 执行失败时，Bun 会回退到 clonefile_each_dir 以进行每个目录的克隆。如果这也失败了，Bun 使用传统的复制文件作为最终的兜底。</p>
+<h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><p>在 Linux 下，Bun 采用了硬链接的方式进行优化。硬链接不创建文件，仅为现有文件创建新名称并引用该文件。创建一个硬链接仅需一次系统调用，且与源文件大小无关。这种方式由于没有移动数据，性能提升和磁盘空间利用的效果非常显著。但这种方式也并非稳定有效，可能会有文件系统不支持或者权限配置导致创建失败的问题。</p>
+<p>但 Bun 还有后招：</p>
+<ul>
+<li>ioctl_ficlone, 该方法支持在 Btrfs 和 XFS 等文件系统上进行写时复制（copy-on-write）。这与   macOs 下的 clonefile 的写时复制非常相似，它也创建了共享相同磁盘数据的新文件引用。</li>
+<li>copy_file_range, 如果写时复制不可用，Bun 会回退到 copy_file_range 方法。该方法下，内核从磁盘读取到缓冲区再到直接写入磁盘，数据移动只需两个操作和零上下文切换。而传统方式下，调用 write 方法进行写入时，会在写入磁盘前将数据再复制回缓冲区，这就是 4 个操作和多个上下文切换的成本。</li>
+<li>如果上述方法均不可用，Bun 会使用 <code>sendfile</code> 方法，该方法最初为网络传输而设计，但它在两个文件间复制传输数据也很高效。</li>
+<li>copyfile, 这是最后的手段，即传统的文件复制方式，也与大多数包管理器的实现方式一致，同时也是最低效的方式。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Benchmark 1: bun install --backend=copyfile</span><br><span class="line">  Time (mean ± σ):     325.0 ms ±   7.7 ms    [User: 38.4 ms, System: 295.0 ms]</span><br><span class="line">  Range (min … max):   314.2 ms … 340.0 ms    10 runs</span><br><span class="line"></span><br><span class="line">Benchmark 2: bun install --backend=hardlink</span><br><span class="line">  Time (mean ± σ):     109.4 ms ±   5.1 ms    [User: 32.0 ms, System: 86.8 ms]</span><br><span class="line">  Range (min … max):   102.8 ms … 119.0 ms    19 runs</span><br><span class="line"></span><br><span class="line">Summary</span><br><span class="line">  bun install --backend=hardlink ran</span><br><span class="line">    2.97 ± 0.16 times faster than bun install --backend=copyfile</span><br></pre></td></tr></table></figure>
+
+<p>Bun 在不同系统下采用了不同的优化手段最大程度上减少了文件复制带来的系统调用开销，堪称极致。</p>
+<h2 id="多核并行"><a href="#多核并行" class="headerlink" title="多核并行"></a>多核并行</h2><p>传统的包管理器基于 Node.js 编写，尽管 Node.js 拥有一个线程池，但在安装依赖包过程中，所有实际工作都运行在一个线程和一个 CPU 内核上，在现代多核 CPU 架构上明显会有资源闲置。</p>
+<p>Bun 采用的是一种无锁，无闲置的线程池架构，空闲线程会从繁忙线程中拾取待处理任务，当一个线程完成一项工作后，它会检查其工作队列，如果没有剩余任务，则从其他线程中取活儿干，可谓一刻不停歇的顶级牛马。</p>
+<p>Bun 的线程池会自动扩展以匹配设备的 CPU 核心数量，使其可以最大限度的并行化安装过程中的 I&#x2F;O 密集型部分。</p>
+<p>但多线程最大的问题就是数据竞争，传统实现下，每次单个线程想要添加任务到共享队列时，都必须先添加锁，避免其他线程写入。Bun 采用了无锁数据结构，它使用了一种原子化操作的特殊 CPU 指令，允许线程在没有锁的情况下可以安全修改共享数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pub fn push(self: *Queue, batch: Batch) void &#123;</span><br><span class="line">  // Atomic compare-and-swap, happens instantly</span><br><span class="line">  _ = @cmpxchgStrong(usize, &amp;self.state, state, new_state, .seq_cst, .seq_cst);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此外，为了避免多线程同时争夺内存分配，Bun 还为每个线程分配了单独的内存池，线程可以独立管理这些内存，无需共享或等待。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Bun 深度挖掘了依赖包安装过程中的每个细节，并尽可能做到了极致的优化。整个过程令我受益匪浅，不积跬步无以至千里，尽管 AI 浪潮汹涌，但底层的基础设施仍需关注和精心打磨。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://bun.com/blog/behind-the-scenes-of-bun-install">https://bun.com/blog/behind-the-scenes-of-bun-install</a></li>
+</ul>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Front-end engineering" >
+    <span class="tag-code">Front-end engineering</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2025/09/08/cursor-vs-claudecode/">
+        <span class="nav-arrow">← </span>
+        
+          Cursor 与 Claude Code 的终极对比
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2025/10/12/shopify-ai-product-classify/">
+        
+          Shopify 如何利用 AI 来解决商品分类问题
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-nav-text">系统调用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-nav-text">什么是系统调用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%BC%9A%E5%B8%A6%E6%9D%A5%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-nav-text">系统调用会带来什么问题</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%B6%88%E9%99%A4-javascript-%E5%BC%80%E9%94%80"><span class="toc-nav-text">消除 javascript 开销</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%BC%82%E6%AD%A5-DNS-%E8%A7%A3%E6%9E%90"><span class="toc-nav-text">异步 DNS 解析</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6-Manifest-%E7%BC%93%E5%AD%98"><span class="toc-nav-text">二进制 Manifest 缓存</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Tarball-%E6%8F%90%E5%8F%96"><span class="toc-nav-text">Tarball 提取</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BC%93%E5%AD%98%E5%8F%8B%E5%A5%BD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-nav-text">缓存友好的数据结构</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%94%81%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86"><span class="toc-nav-text">锁文件处理</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%96%87%E4%BB%B6%E5%A4%8D%E5%88%B6"><span class="toc-nav-text">文件复制</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#macOS-%E7%B3%BB%E7%BB%9F"><span class="toc-nav-text">macOS 系统</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Linux"><span class="toc-nav-text">Linux</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A4%9A%E6%A0%B8%E5%B9%B6%E8%A1%8C"><span class="toc-nav-text">多核并行</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%8F%82%E8%80%83"><span class="toc-nav-text">参考</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2025/09/27/bun-install/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

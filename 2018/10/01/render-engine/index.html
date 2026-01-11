@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      彻底了解渲染引擎以及几点关于性能优化的建议 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>彻底了解渲染引擎以及几点关于性能优化的建议</h2>
+  <p class="post-date">2018-10-01</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>在日常开发过程中，要编写性能足够优秀的代码，构造更加稳定的应用，我们不仅要对 javascript 本身的执行机制有深入的了解，更要对其宿主环境有更加深刻的认识，理解其工作原理以及组成结构，它可以帮助我们对 web 世界的运转模式有更高层级的认知。这次想要介绍的是浏览器的渲染引擎。</p>
+<h2 id="浏览器的构成"><a href="#浏览器的构成" class="headerlink" title="浏览器的构成"></a>浏览器的构成</h2><p>在具体介绍渲染引擎之前，我们先来看看浏览器的构成，看看渲染引擎在浏览器中扮演的是一个怎样的角色。关于浏览器的构成可以参见下图：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/4/15/162c7da5b19bd249?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"><br>如上图所示，浏览器从外到内的组成包括了以下几个部分：</p>
+<ol>
+<li>User interface，即浏览器的视觉外观，具体包括其地址输入栏，前进后退键，书签菜单栏等等。</li>
+<li>Browser engine, 浏览器引擎，它主要处理 User interface 与 render engine，即渲染引擎之间的交互。</li>
+<li>Rendering engine, 即本文介绍的重点－渲染引擎，它负责解析 html 以及 css，并将解析后的内容渲染到屏幕上，完成 web 页面的展示。</li>
+<li>Networking, 浏览器的网络处理层，主要负责处理 xhr 之类的网络请求，之后我也会专门写一篇文章来详细介绍它。</li>
+<li>Javascript engine, 负责 javascript 的运行时处理，关于它我之前已经专门从内存管理和异步执行方面写了两篇文章，没有看过的可以参见我的其他文章哦。</li>
+<li>Data persistence，数据持久化,即浏览器的本地数据存储，目前浏览器所支持的几种本地数据存储方式包括有 localstorage,indexDB,webSQL 以及 FileSystem。<br>了解了渲染引擎在整个浏览器中的角色作用后，我们回到渲染引擎本身，看看它是如何完成页面渲染的。</li>
+</ol>
+<h2 id="渲染过程"><a href="#渲染过程" class="headerlink" title=" 渲染过程"></a> 渲染过程</h2><p>渲染引擎接收到网络层传递过来的页面文档内容后，大致的解析处理过程如下：<br><img src="https://user-gold-cdn.xitu.io/2018/4/15/162c7fccbca93904?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+<h3 id="dom-树构造"><a href="#dom-树构造" class="headerlink" title="dom 树构造"></a>dom 树构造</h3><p>首先解析 html 来构成 dom 树，假设有如下 html 文档内容：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span> <span class="attr">href</span>=<span class="string">&quot;theme.css&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span> Hello, <span class="tag">&lt;<span class="name">span</span>&gt;</span> friend! <span class="tag">&lt;/<span class="name">span</span>&gt;</span> <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;smiley.gif&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;Smiley face&quot;</span> <span class="attr">height</span>=<span class="string">&quot;42&quot;</span> <span class="attr">width</span>=<span class="string">&quot;42&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>解析后，其 dom 树构造示意图如下:<br><img src="https://user-gold-cdn.xitu.io/2018/4/15/162c802ddf2b8a56?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"><br>可以看出 dom 树中每个节点的父子关系与 html 元素的父子关系保持一致。dom 树构造完成后还不能直接生成 render tree，还需要 cssom 树的配合。</p>
+<h3 id="cssom-树"><a href="#cssom-树" class="headerlink" title="cssom 树"></a>cssom 树</h3><p>cssom 是指 css object model,当浏览器在解析 html 时如果在 head 中遇到了连接到外部 css 文件的 link 标签，浏览器就会立刻发起请求获取该 css 文件的内容，需要注意的是 css 文件的获取和解析不会阻塞 html 的解析,但是 script 标签的内容无论是下载还是执行都会阻塞 html 解析。假设页面中的 css 内容如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">16px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">font-weight</span>: bold;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">span</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">p</span> <span class="selector-tag">span</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">float</span>: right;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>浏览器会将其转换成如下的 cssom 树：<br><img src="https://user-gold-cdn.xitu.io/2018/4/15/162c8111e16c31a2?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"><br>也许你会奇怪为什么 css 也会有这样的树形结构，这是因为浏览器在为某个 dom 对象计算最终的样式规则时，是先从最一般的规则开始，然后才是具体指定的规则。比如上述示例中，对于 span 标签，会先添加 body 中的 font-size 为 16px 的规则，然后才是它自己定义的规则，如果 span 标签包裹于某个 p 标签下还会添加 display 为 none 的规则，总结下来就是先 apply 父级规则，然后 apply specific rule.</p>
+<h3 id="render-树"><a href="#render-树" class="headerlink" title="render 树"></a>render 树</h3><p>上述两项工作完成后，通过 dom 树与 cssom 树的结合就可以生成 render 树，或许你会问 render 树到底是什么？为什么一定要先生成 render 树，而不能直接用 dom 树和 cssdom 树去做 paint 呢？有这样的疑问很好，所谓 render 树，它其实是拥有样式表现的可见元素按照其文档顺序构造而成的树形结构，生成它的目的是确保元素的渲染过程是严格按照文档流顺序以及样式规则进行的。rener tree 的示意图如下：<br><img src="https://user-gold-cdn.xitu.io/2018/4/15/162c83c63ff4bd29?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"></p>
+<h3 id="layout"><a href="#layout" class="headerlink" title="layout"></a>layout</h3><p>render 树虽然构造完成，但是其中的节点还需要进行位置和尺寸的计算，这些数值的计算过程就是 layout.<br>layout 是一个递归的过程，它从根元素也就是 html 元素开始计算，位置计算的坐标系也是相对于根元素，html 元素坐标为(0,0).后续的计算可能是局部更新也有可能是整体替换。<br>layout 过程结束后就意味着每个节点都会获得它将在屏幕上展示的位置坐标，可以开始进行真正的渲染过程了。</p>
+<h3 id="painting"><a href="#painting" class="headerlink" title="painting"></a>painting</h3><p>在这个阶段，浏览器就会把整个文档结构展示在页面上，与 layout 一样，painting 也有局部更新和全部更新两种可能。这取决于你的 dom 操作机制。<br>painting 是一个渐进的过程，为了更好的 UX 体验，渲染引擎不会等到所有 html 全部解析完成后才开始，而是先解析完成的部分先绘制，其余部分解析完成后再行绘制。<br>至此渲染引擎的整个执行流程已经结束，了解了渲染引擎的执行机制，下面我们就来看看可以从哪些方面入手去做页面的优化，以获得更好的用户体验。</p>
+<h2 id="关于性能优化"><a href="#关于性能优化" class="headerlink" title="关于性能优化"></a>关于性能优化</h2><p>从渲染引擎的角度，我们可以从一下五个方面入手去做性能优化.</p>
+<ol>
+<li>avascript, 在 js 代码编写过程中我们需要更多的注意会引起视觉变化的操作，比如 dom 操作等，尤其是在单页应用中，这样的场景更加常见。关于 javascript 方面的优化，我的建议是：</li>
+</ol>
+<ul>
+<li>避免使用 setTimeout 或者 setInterval 这类定时器去操作视觉更新，因为它们的执行机制并不精准，有可能会离我们想要的时机相去甚远</li>
+<li>将计算量大的操作交给 web workers,因为 js 的执行会阻塞页面的更新以及对用户交互的响应.</li>
+<li>如果需要异步的操作 dom，那么请选择用 microtask 的方式，比如 mutationObserver。</li>
+</ul>
+<ol start="2">
+<li>css，在 css 编写过程中要尽量减少选择器的复杂度，相比给某个元素确定其样式规则，元素选择器的计算要多消耗 50%的时间。</li>
+<li>ayout, 在 layout 过程中浏览器需要确定每个元素的坐标和尺寸，这意味着 layout 是一个计算密集型的过程，所以我们需要尽量减少重复触发 layout。针对 layout，我的优化建议是:</li>
+</ol>
+<ul>
+<li>减少对元素位置和尺寸有影响的属性的操作，比如 width,height,left,top 等等，这些操作会使浏览器重新进行 layout.</li>
+<li>尽可能使用 flexbox 进行布局，它比传统的基于盒模型的布局有更好的性能优势。</li>
+<li>避免强制触发 layout,浏览器对于 dom 操作和属性的变化是有原生优化机制的，它会等到合适的时机将多个操作集中执行以避免高频触发 layout，但如果你在操作或更新了某个 dom 之后立即访问它的某些属性，比如 offsetHeight 这些，它就会立刻触发 layout,我们要尽量避免这样的访问。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章主要介绍了浏览器渲染引擎的执行机制，相对来说是一篇非常偏基础知识的文章，也是我最近对前端基础重新梳理回顾对一次思考总结，希望也会对你有帮助。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#html, css, dom, engine" >
+    <span class="tag-code">html, css, dom, engine</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/10/01/terminal/">
+        <span class="nav-arrow">← </span>
+        
+          狂拽酷炫的terminal，你值得拥有
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2018/10/01/event-async/">
+        
+          深入理解事件循环和异步流程控制
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E6%9E%84%E6%88%90"><span class="toc-nav-text">浏览器的构成</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B"><span class="toc-nav-text"> 渲染过程</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#dom-%E6%A0%91%E6%9E%84%E9%80%A0"><span class="toc-nav-text">dom 树构造</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#cssom-%E6%A0%91"><span class="toc-nav-text">cssom 树</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#render-%E6%A0%91"><span class="toc-nav-text">render 树</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#layout"><span class="toc-nav-text">layout</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#painting"><span class="toc-nav-text">painting</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B3%E4%BA%8E%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-nav-text">关于性能优化</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2018/10/01/render-engine/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

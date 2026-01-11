@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Grab 自研视觉大模型提取图像信息 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Grab 自研视觉大模型提取图像信息</h2>
+  <p class="post-date">2025-11-05</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://img.alicdn.com/imgextra/i1/O1CN015vtwaI1luB6wqXBO8_!!6000000004878-2-tps-1408-768.png"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Grab 是东南亚领先的超级应用平台，总部位于新加坡，业务覆盖 8 个国家 500 余城市。其核心业务模式是通过移动应用整合多元生活服务，具体包括：出行，外卖配送，金融等。</p>
+<p>在数字服务领域，从用户提交的电子文件（如身份证、驾驶证、注册证书等）中准确提取信息，是客户识别等流程的关键第一步。在东南亚地区，由于语言和证件格式的多样性，使得这项任务尤其具有挑战性。</p>
+<p><img src="https://engineering.grab.com/img/custom-vision-llm-at-grab/figure-1.png"></p>
+<p>传统的 OCR 技术难以应对这种证件模板的多样性，尽管业界也有一些专有大模型，但它们通常在理解东南亚语言方面表现欠佳，且存在错误，幻觉以及高延迟等问题。此外，开源的多模态视觉大模型在准确度上也还难以达到生产环境的要求。</p>
+<p>于是 Grab 选择对现有模型进行微调，并最终从头开始开发了一个轻量级、专业化的视觉大语言模型，本文梳理了全过程以及 Grab 在实践中得出的一些关键结论和洞察，这也是 AI 解决实际业务问题的又一经典案例。</p>
+<h2 id="关于视觉模型"><a href="#关于视觉模型" class="headerlink" title="关于视觉模型"></a>关于视觉模型</h2><h3 id="什么是视觉模型"><a href="#什么是视觉模型" class="headerlink" title="什么是视觉模型"></a>什么是视觉模型</h3><p>与普通大语言模型不同的是，视觉大语言模型可以理解图像，其基础架构主要包括以下三个部分：</p>
+<ul>
+<li>图像编码器：主要作用是将图片的图元数据转化为向量化的数值格式。</li>
+<li>视觉-语言投影器：主要作用是充当跨模态翻译器，将图像的数值化特征转换为语言模型可理解的特征表示。</li>
+<li>语言模型：接收转化后的图片特征表示和文本作为输入，输出模型处理后的结果，类普通的大语言模型。</li>
+</ul>
+<p>整体的输入输出流程示意图如下所示：<br><img src="https://engineering.grab.com/img/custom-vision-llm-at-grab/figure-2.png"></p>
+<h3 id="基座视觉模型的选择"><a href="#基座视觉模型的选择" class="headerlink" title="基座视觉模型的选择"></a>基座视觉模型的选择</h3><p>Grab 评估了多款具备 OCR 与关键信息提取（KIE）能力的大语言模型。通过对开源方案的深入测试—包括 Qwen2VL、miniCPM、Llama3.2 Vision、Pixtral 12B、GOT-OCR2.0 和 NVLM 1.0——最终选定 Qwen2-VL 2B 作为基础多模态大模型，该决策基于以下关键因素：</p>
+<ul>
+<li>高效的模型尺寸：模型体积足够小，可在显存资源有限（VRAM-limited）的 GPU 上实现全参数微调。</li>
+<li>东南亚语言支持：分词器对泰语、越南语等语言处理高效，表明其原生词汇覆盖度良好。</li>
+<li>动态分辨率处理：与要求固定尺寸输入的模型不同，Qwen2-VL 可直接处理原始分辨率图像。该特性对 OCR 任务至关重要，可避免因图像缩放&#x2F;裁剪导致的文本字符变形问题。</li>
+</ul>
+<p>Grab 基于已有数据集对 Qwen2-VL 和 miniCPM 进行了基准测试。初步结果显示准确率较低，主要源于东南亚（SEA）语言覆盖不足。因此，需要对模型进行微调，以提升 OCR 和 KIE（关键信息提取） 的准确率。</p>
+<p>训练大语言模型是数据密集型且 GPU 资源密集型的过程，在具体实施前需解决两大关键问题：</p>
+<ul>
+<li>数据，如何有效利用开源和内部的相关数据来训练模型。</li>
+<li>模型，如何自定义模型以达到高精度和低延迟的效果。</li>
+</ul>
+<h2 id="准备训练数据集"><a href="#准备训练数据集" class="headerlink" title="准备训练数据集"></a>准备训练数据集</h2><h3 id="合成-OCR-数据集"><a href="#合成-OCR-数据集" class="headerlink" title="合成 OCR 数据集"></a>合成 OCR 数据集</h3><p>首先从大型在线文本语料库——<a target="_blank" rel="noopener" href="https://commoncrawl.org/">Common Crawl（互联网开放数据集）</a>中提取东南亚语言文本内容。然后通过内部合成数据流水线，将东南亚语种文本内容以多样化字体、背景及图像增强技术渲染生成文本图像，数据集包含印尼语、泰语、越南语及英语等语言的文本图像，每张图像对应一个随机句子段落，如下图所示：<br><img src="https://engineering.grab.com/img/custom-vision-llm-at-grab/figure-3.png"></p>
+<h3 id="Documint-AI-驱动的自动标注框架"><a href="#Documint-AI-驱动的自动标注框架" class="headerlink" title="Documint: AI 驱动的自动标注框架"></a>Documint: AI 驱动的自动标注框架</h3><p>实验证明，文档检测与方向校正能显著提升 OCR 与信息提取准确率。在获得 OCR 数据集后，需进一步生成预处理数据集以优化模型训练。</p>
+<p>Grab 内部自主研发了一个名为 Documint 的面向文档理解的自动标注与预处理框架，可生成高质量标注数据集。该系统通过多个子模块协同执行完整的 OCR 与 KIE（关键信息提取）任务：</p>
+<p>基于 Grab 海量卡证文档构建处理流水线，通过人工审核员精校标签数据确保高精度，Documint 系统包括四个部分：</p>
+<ul>
+<li>检测模块：从整图中定位文档区域</li>
+<li>方向校正模块：返回旋转校正角度（如文档倒置时输出180°）</li>
+<li>OCR 模块：输出非结构化文本</li>
+<li>KIE 模块：将非结构化文本转化为结构化JSON（如提取{“姓名”:”张三”,”电话”:”138xxxx”}）</li>
+</ul>
+<p>示意图如下所示：<br><img src="https://engineering.grab.com/img/custom-vision-llm-at-grab/figure-4.png"></p>
+<p>具体的处理流程图如下：<br><img src="https://img.alicdn.com/imgextra/i2/O1CN01A9y3ef1dYBA0kDnva_!!6000000003747-2-tps-2164-5496.png"></p>
+<h2 id="实验开始"><a href="#实验开始" class="headerlink" title="实验开始"></a>实验开始</h2><p>有了标注数据集后就可以正式开始模型训练，Grab 的炼丹过程经历了如下三个阶段：</p>
+<h3 id="第一阶段：LoRa-降秩微调"><a href="#第一阶段：LoRa-降秩微调" class="headerlink" title="第一阶段：LoRa 降秩微调"></a>第一阶段：LoRa 降秩微调</h3><p>Grab 首先采用低秩自适应（LoRA）技术对开源模型 Qwen2-VL 进行了微调。LoRA 的优势在于能对模型参数进行轻量化更新，显著降低算力资源需求，其原理如下所示：<br><img src="https://img.alicdn.com/imgextra/i4/O1CN01uGgk0Y25z1cNDM79C_!!6000000007596-2-tps-4560-292.png"></p>
+<p>在精选的多语言文档数据集上训练后，模型对拉丁语系文档表现出良好性能。经 LoRA 微调的 Qwen2-VL-2B 模型在印尼语文档上实现了较高的字段级准确率。</p>
+<p>但仍存在以下局限：</p>
+<ul>
+<li>非拉丁语系处理缺陷，泰语&#x2F;越南语等复杂文字识别率偏低</li>
+<li>复杂版式解析不足，对密集小文本的非结构化版式适应能力弱</li>
+</ul>
+<p>这种拉丁语系和非拉丁语系的性能差异根源在于其文字特性的差异</p>
+<table>
+<thead>
+<tr>
+<th>语种</th>
+<th>文字特性</th>
+<th>错误案例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>印尼语</td>
+<td>拉丁字母+简单附加符</td>
+<td>地址字段漏识别率&lt;3%</td>
+</tr>
+<tr>
+<td>泰语</td>
+<td>叠加字符&#x2F;无空格分隔</td>
+<td>单词切分错误率≈42%</td>
+</tr>
+<tr>
+<td>越南语</td>
+<td>声调符号&#x2F;复合字母</td>
+<td>音调标记丢失率≈28%</td>
+</tr>
+</tbody></table>
+<h3 id="第二阶段：全量微调"><a href="#第二阶段：全量微调" class="headerlink" title="第二阶段：全量微调"></a>第二阶段：全量微调</h3><p>在微调过程中 Grab 团队发现，尽管开源视觉大语言模型的预训练文本解码器通常覆盖了广泛的多语言语料，但其视觉编码器与联合训练阶段严重缺乏东南亚语言的视觉文本数据（当前视觉模型，如 CLIP 主要在英语图像-文本对训练，东南亚语言的图像文本数据，如泰语路牌&#x2F;越南语收据等数据极度稀缺），从而导致模型无法针对东南亚语言建立从文字图像到语义的跨模态关联。技术矛盾如下图所示：</p>
+<p><img src="https://img.alicdn.com/imgextra/i4/O1CN01tgMytq1VckBL568ee_!!6000000002674-2-tps-4560-696.png"></p>
+<p>这种情况下 LoRA 这种只能小幅调整现有知识的模型微调就无法满足诉求，需要考虑进行全参数微调，重构视觉编码器的特征提取逻辑。</p>
+<p>基于 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2304.08485">LLaVA（大型语言视觉助手）</a> 方法(来源于计算机视觉和模式识别领域的一篇论文，<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2304.08485)%EF%BC%8CGrab">https://arxiv.org/abs/2304.08485)，Grab</a> 实施了如下图所示的训练策略，分为两个阶段执行：<br><img src="https://engineering.grab.com/img/custom-vision-llm-at-grab/figure-5.png"></p>
+<ul>
+<li><p>阶段1 - 持续预训练<br>使用前序为印尼语、泰语、越南语及英语创建的合成 OCR 数据集，专项精调模型视觉组件。此阶段使模型学习东南亚文字的独特视觉模式（如泰文叠加字符、越南语声调符号）。</p>
+</li>
+<li><p>阶段2 - 全参数微调<br>基于任务专用文档数据，端到端微调整个模型体系——包括视觉编码器、投影层及语言模型。</p>
+</li>
+</ul>
+<p><img src="https://img.alicdn.com/imgextra/i1/O1CN01cGNXmY22aLQZBdI7G_!!6000000007136-2-tps-4560-541.png"></p>
+<p>全量微调后的实验结果如下图所示(pp 为百分点，口径为 OCR 字段级的准确度)：<br><img src="https://engineering.grab.com/img/custom-vision-llm-at-grab/table-1.png"></p>
+<p>经过全参数微调的 Qwen2-VL 2B 模型实现了显著提升，在 LoRA 模型处理困难的文档类型上进步尤为突出：</p>
+<ul>
+<li>泰语文档准确率较基准提升 +70个百分点</li>
+<li>越南语文档准确率较基准提升 +40个百分点</li>
+</ul>
+<h3 id="第三阶段：从头构建一个轻量模型"><a href="#第三阶段：从头构建一个轻量模型" class="headerlink" title="第三阶段：从头构建一个轻量模型"></a>第三阶段：从头构建一个轻量模型</h3><p>尽管 Qwen2-VL 2B 模型取得了比较不错的效果，但全参数微调已逼近 GPU 算力极限。为优化资源使用并构建精准匹配需求的模型，Grab 决定从头开发约 1B 参数的轻量级视觉大模型。</p>
+<p>Grab 采用的策略是融合多个模型中最优质的组件，包括：</p>
+<ul>
+<li>视觉模块：继承 Qwen2-VL 2B 的高性能视觉编码器</li>
+<li>语言模块：采用 Qwen2.5 0.5B 紧凑高效的语言解码器</li>
+<li>连接层：定制自适应投影层实现多模态无缝协同</li>
+</ul>
+<p><img src="https://img.alicdn.com/imgextra/i2/O1CN0179yzNH1z8SSs5cdkw_!!6000000006669-2-tps-4560-289.png"></p>
+<p>由此构建的约 1B 参数定制视觉大模型，在训练效率与部署成本上实现深度优化。新模型的训练采用四段渐进式流程：</p>
+<ul>
+<li><p>阶段1 - 投影层对齐<br>训练新建投影层，确保视觉编码器与语言解码器实现有效跨模态通信。</p>
+</li>
+<li><p>阶段2 - 视觉编码器增强<br>在海量公共多模态数据集上训练视觉编码器，覆盖视觉问答、通用 OCR 及图像描述等任务，夯实基础视觉理解能力。</p>
+</li>
+<li><p>阶段3 - 语言专项视觉训练<br>使用两类合成 OCR 数据训练模型。此阶段缺失将导致非拉丁语文档性能断崖式下降（最高达 10%）。</p>
+</li>
+<li><p>阶段4 - 任务集中微调<br>基于精选文档数据集，对定制 1B 参数模型实施全参数微调。</p>
+</li>
+</ul>
+<p>最终结果如下：</p>
+<ul>
+<li>精度表现，模型达到与更大规模 2B 模型相当的精度，在多数文档类型上精度差距控制在 3 个百分点（pp）内。基于质量增强数据集训练后，模型展现出卓越的泛化能力。</li>
+<li>延迟表现，模型延迟显著优于 2B 模型、传统 OCR 模型及 chatGPT&#x2F;Gemini 等外部模型 API。外部模型 API 的核心缺陷在于 P99 延迟可达 P50 的 3-4 倍，无法满足 Grab 大规模商业部署需求。具体效果如下所示：<br><img src="https://engineering.grab.com/img/custom-vision-llm-at-grab/table-2.png"></li>
+</ul>
+<h2 id="关键结论与洞察"><a href="#关键结论与洞察" class="headerlink" title="关键结论与洞察"></a>关键结论与洞察</h2><p>Grab 经过大量的实践得出的结论是：基于高质量数据的策略性训练可以使小型专用模型同时实现高效能与高效率，并由此得出几个关键洞察：</p>
+<ul>
+<li><p>全参数微调优势显著<br>针对非拉丁语系专业领域，全参数微调全面超越 LoRA 等高效微调方法。</p>
+</li>
+<li><p>轻量模型效果卓越<br>从头构建的约 1B 参数模型经充分训练，可达到接近业界顶尖水平，验证了定制架构价值。</p>
+</li>
+<li><p>基础模型选择至关重要<br>采用原生支持目标语言的基础模型是成功关键。</p>
+</li>
+<li><p>数据质量是核心竞争力<br>精细化的数据预处理与增强对实现稳定高精度具有决定性作用。</p>
+</li>
+<li><p>原生分辨率处理能力带来变革<br>支持动态图像分辨率的模型能保持文本结构完整性，革命性提升 OCR 性能。</p>
+</li>
+</ul>
+<p>Grab 的实践证明：专用视觉大语言模型能够以单一高精度模型架构替代传统 OCR 流水线，为大规模文档处理开辟全新范式。</p>
+<p><img src="https://engineering.grab.com/img/custom-vision-llm-at-grab/table-3.png"></p>
+<h2 id="下一步规划"><a href="#下一步规划" class="headerlink" title="下一步规划"></a>下一步规划</h2><p>在持续升级视觉大语言模型能力的同时，Grab 的下一步计划是：</p>
+<ul>
+<li><p>构建更智能的通用模型<br>研发基于思维链（Chain of Thought）技术的 OCR 与 KIE 模型，通过多步推理机制增强泛化能力，攻克更复杂的文档场景（如混合版式&#x2F;模糊文本）。</p>
+</li>
+<li><p>东南亚全域扩展<br>将支持范围拓展至 Grab 所覆盖的所有市场，为缅甸、柬埔寨等地区提供先进的文档处理能力。</p>
+</li>
+</ul>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>为了解决东南亚地区复杂的文本图像识别和准确高效的关键信息提取问题，Grab 进行了大模型降秩微调，全量微调以及完全自研模型的一系列实践，并最终取得了比较不错的业务效果，这也是 AI 用于解决实际业务问题的一例典型 case。笔者认为 AGI 的世界依然遥远，但轻量化，垂直化，结合业务特点定制化的小模型在当前阶段更有实际价值。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><p>Qwen2-VL：增强视觉语言模型在任意分辨率下的世界感知能力，<a target="_blank" rel="noopener" href="https://doi.org/10.48550/arXiv.2409.12">https://doi.org/10.48550/arXiv.2409.12</a></p>
+</li>
+<li><p>基于视觉指令微调的改进基线模型，<a target="_blank" rel="noopener" href="https://doi.org/10.48550/arXiv.2310.03744">https://doi.org/10.48550/arXiv.2310.03744</a></p>
+</li>
+<li><p>SynthTIGER：面向高质量文本识别模型的合成文本图像生成器，<a target="_blank" rel="noopener" href="https://doi.org/10.48550/arXiv.2107.09313">https://doi.org/10.48550/arXiv.2107.09313</a></p>
+</li>
+<li><p>LlamaFactory：百种语言模型的统一高效微调框架<br><a target="_blank" rel="noopener" href="https://doi.org/10.48550/arXiv.2403.13372">https://doi.org/10.48550/arXiv.2403.13372</a></p>
+</li>
+<li><p>Grab 工程实践：<a target="_blank" rel="noopener" href="https://engineering.grab.com/custom-vision-llm-at-grab">https://engineering.grab.com/custom-vision-llm-at-grab</a></p>
+</li>
+</ul>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2025/10/25/claude-skills/">
+        <span class="nav-arrow">← </span>
+        
+          简单聊聊 Claude 新推出的 Agent Skills
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2025/11/18/disigner-ai-tools/">
+        
+          设计师视角下我最常用的 8 个 AI 工具
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B3%E4%BA%8E%E8%A7%86%E8%A7%89%E6%A8%A1%E5%9E%8B"><span class="toc-nav-text">关于视觉模型</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%A7%86%E8%A7%89%E6%A8%A1%E5%9E%8B"><span class="toc-nav-text">什么是视觉模型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%9F%BA%E5%BA%A7%E8%A7%86%E8%A7%89%E6%A8%A1%E5%9E%8B%E7%9A%84%E9%80%89%E6%8B%A9"><span class="toc-nav-text">基座视觉模型的选择</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%87%86%E5%A4%87%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-nav-text">准备训练数据集</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%90%88%E6%88%90-OCR-%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-nav-text">合成 OCR 数据集</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Documint-AI-%E9%A9%B1%E5%8A%A8%E7%9A%84%E8%87%AA%E5%8A%A8%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6"><span class="toc-nav-text">Documint: AI 驱动的自动标注框架</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%BC%80%E5%A7%8B"><span class="toc-nav-text">实验开始</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%9ALoRa-%E9%99%8D%E7%A7%A9%E5%BE%AE%E8%B0%83"><span class="toc-nav-text">第一阶段：LoRa 降秩微调</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%85%A8%E9%87%8F%E5%BE%AE%E8%B0%83"><span class="toc-nav-text">第二阶段：全量微调</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%9A%E4%BB%8E%E5%A4%B4%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E8%BD%BB%E9%87%8F%E6%A8%A1%E5%9E%8B"><span class="toc-nav-text">第三阶段：从头构建一个轻量模型</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B3%E9%94%AE%E7%BB%93%E8%AE%BA%E4%B8%8E%E6%B4%9E%E5%AF%9F"><span class="toc-nav-text">关键结论与洞察</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%8B%E4%B8%80%E6%AD%A5%E8%A7%84%E5%88%92"><span class="toc-nav-text">下一步规划</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-nav-text">结语</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%8F%82%E8%80%83"><span class="toc-nav-text">参考</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2025/11/05/vision-llm-grab/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

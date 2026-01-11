@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Shopify 如何利用 AI 来解决商品分类问题 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Shopify 如何利用 AI 来解决商品分类问题</h2>
+  <p class="post-date">2025-10-12</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在看多了所谓 AI 研发提效的 case 以后，我最近对 AI 在业务场景中的落地产生了浓厚的兴趣，AI 能够如何解决业务问题，给业务带来增量价值，这非常考验业务观察力和技术思考力，毕竟发展才是硬道理。笔者注意到 Shopify 刚好有这方面的应用案例，落地场景也是笔者熟悉且很接地气的电商领域，整理出来以供分享交流。</p>
+<h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>Shopify 的商品分类系统每天需要处理数千万次商品归类，在商业世界瞬息万变，新产品不断涌现的当下，Shopify 需要在维护其庞大（10,000+ 类别和 2,000+ 属性）的分类体系下，确保体系自身的可扩展性以服务好商家和消费者，该商品分类系统面临着以下三个问题：</p>
+<ul>
+<li><p>规模问题，每种新型产品、新兴技术类别以及季节性趋势都可能需要更新商品分类体系，而传统的人工维护分类的方式则无法跟上这种变化节奏。新产品的涌现不仅代表着新的分类需要，还意味着需要引入全新的属性集合，以智能家居设备或远程办公设备为例。智能家居设备需要定义连接类型、电源需求和兼容性等新的规格属性。</p>
+</li>
+<li><p>专业知识问题，高效的分类体系设计需要深厚的领域专业知识。举例来说，需要理解不同类型吉他拾音器之间的细微差别、工业设备的分类层级，或是护肤产品所需的恰当属性，都需要在数十个垂直领域具备专业知识。而 Shopify 的商品分类团队无法在商家销售的每一个产品类别中都保持专业水准，这种不一致或结构不佳的分类体系会直接影响商家的商业成功，具体表现为商品可发现性降低、搜索结果不理想，以及顾客筛选项无效等。</p>
+</li>
+<li><p>一致性问题，随着分类体系的自然增长，不一致性问题也会逐渐显现，表现在相似的概念在不同类别中被以不同方式表示，同时还存在命名规范上的不一致（比如说不同类别下的材质属性命名不一致，有的叫面料，有的叫材质），以及商家和客户之间在产品分类上的差异。这些不一致性随着时间的推移而累积，导致商家在商品上架时感到困惑，也让消费者在筛选和比较产品时感到沮丧。更关键的是，这种不一致性会劣化分类系统的准确度。</p>
+</li>
+</ul>
+<h2 id="Shopify-的解法思路"><a href="#Shopify-的解法思路" class="headerlink" title="Shopify 的解法思路"></a>Shopify 的解法思路</h2><p>Shopify 的分类体系管理方法经历了从最初的手动管理流程到 AI 驱动的转型突破，使其能够随着现代商业的复杂性而扩展。</p>
+<h3 id="传统分类体系管理"><a href="#传统分类体系管理" class="headerlink" title="传统分类体系管理"></a>传统分类体系管理</h3><p>传统的分类体系在更新分类时遵循一种熟悉的模式：领域专家进行产品数据分析，识别差距或不一致之处并提出修改建议，并通过细致的人工审查流程来进行变更保障。这种方法虽然确保了分类的高质量，但很明显它也带来了资源瓶颈，有限的专家资源与长流程的高耗时势必难以跟上商业快速发展的变化节奏。</p>
+<p>这种分类方式本质上也是一个被动的过程，只有在商家开始上架那些不完全符合现有结构的产品之后，平台侧才会意识到需要增加新的类别或属性，而此时已经算是后知后觉，平台侧已经错失了为商家和客户提供更好体验的机会。</p>
+<h3 id="基于智能体的突破"><a href="#基于智能体的突破" class="headerlink" title="基于智能体的突破"></a>基于智能体的突破</h3><p>先进大语言模型的出现为彻底重构分类管理体系提供了机会。Shopify 的想法是在保持人工整理所提供的质量和领域知识的基础上，让 AI 来提供所需的可扩展性和一致性。</p>
+<p>其中的关键在于认识到，算法侧可以通过结合不同维度的分析以获得更全面的系统洞察，比如分析分类体系本身的逻辑结构以及识别类别层级之间的空缺或缺失的属性关系等。举例来说，假设我们的服装类目下有上衣，下装和外套等分类，当智能体自动分析这个结构时就可能会发现一些逻辑上的漏洞，服装类目下还应该有内衣，睡衣，运动服等，否则商家在上架商品时就不得不硬塞到现有类别中，这会导致用户在商品搜索时系统也无法精准匹配，从而影响导购效率。</p>
+<p>此外，系统还可以通过真实的商品数据来理解商家事实上如何描述他们的产品，以及哪些商品属性是比较关键的购买决策因子。</p>
+<h2 id="Agent-技术设计"><a href="#Agent-技术设计" class="headerlink" title="Agent 技术设计"></a>Agent 技术设计</h2><p>Shopify 的 AI 智能体系统遵循三个基本原则：专业化分析、智能协调和质量保障。Shopify 并不仅仅只是简单的将 AI 应用于商品分类的体系管理，而是利用专业化的 AI 智能体对分类体系进行持续的演进迭代，而非静态构建。每个组件都解决了其在扩展分类体系管理过程中遇到的特定挑战，同时保持了平台所需的专业性和一致性，包括：</p>
+<ul>
+<li><strong>真实商品数据分析：</strong> 系统整合了来自平台上的真实商家商品数据，确保 AI 提出的更改能够真实反映商家描述和分类其产品的方式。这使得分类体系的决策可以基于真实的商业实践，而非纯粹的理论组织原则。</li>
+<li><strong>多智能体专业化：</strong> Shopify 采用了多个专业化的智能体，分别专注于结构一致性和商品洞察，并进行智能合成。这种多维度结合能够发现单一方法无法识别出的优化手段。</li>
+<li><strong>复杂的等价发现：</strong> 系统能够检测复杂的等价关系，某特定类目可能等同于通过属性值过滤后的更宽泛类目。这意味着商家可以根据其业务需求最佳地组织他们的商品目录，而平台系统则能理解其底层的产品关系。这么说可能有点抽象，举例来说，假设有商家 A 和商家 B。商家 A 主要销售手机配件且倾向于为热门商品创建较为具体的分类，以方便管理和用户搜索。针对手机壳产品就分别设置了 iphone 手机壳，三星手机壳已经华为手机壳等三个子类目，且不同品牌手机壳下还按照手机型号添加了更加细致的子类目，比如 iphone 15 pro max 手机壳。而商家 B 销售的商品种类更加广泛，其更倾向于使用较为宽泛的商品类目，然后通过属性来细化商品。其设置的商品类目中手机壳产品下并没有更多子目录，只有相关的商品属性，比如品牌（Apple, 三星，华为），型号（iphone 15 pro max），材质（硅胶，皮革）等。AI 智能体通过等价检测能力，可以智能理解这两种看似不同的分类方式实际指向的是同一类商品，商家可以根据自己的业务特点灵活的管理和设置类目，而无论商家如何分类，平台都能向消费者展示所有相关的“iPhone 15 Pro Max 手机壳”，从而提高商品的可发现性，优化搜索结果，并最终提升客户体验和商家销售额。</li>
+</ul>
+<h3 id="系统架构流程图"><a href="#系统架构流程图" class="headerlink" title="系统架构流程图"></a>系统架构流程图</h3><p>整个智能分类系统的执行流程如下图所示：<br><img src="https://img.alicdn.com/imgextra/i3/O1CN01s27Rax29Dd5YAMgoa_!!6000000008034-2-tps-820-1572.png"></p>
+<h3 id="智能体与分类体系的交互"><a href="#智能体与分类体系的交互" class="headerlink" title="智能体与分类体系的交互"></a>智能体与分类体系的交互</h3><p>为了让 AI 智能体有效地分析和改进分类体系，Shopify d单独实现了一个评测系统，允许智能体搜索相关类别、检查层级关系，并验证智能体提出的更改是否可能与现有元素冲突。</p>
+<p>这一评测系统使智能体能够进行上下文分析，不仅可以理解孤立的类别或属性，还可以理解它们如何融入更广泛的分类体系结构。例如，一个分析吉他相关类别的智能体可以探索整个乐器层级结构，检查不同乐器类型之间的相关属性，并识别有助于做出更好结构决策的模式。</p>
+<h3 id="多阶段分析-pipeline"><a href="#多阶段分析-pipeline" class="headerlink" title="多阶段分析 pipeline"></a>多阶段分析 pipeline</h3><p>这套系统是一个多阶段分析的组合，通过专业化的智能体结合了不同类型的专业知识，每个智能体都针对特定类型的洞察进行了优化。</p>
+<ul>
+<li><strong>结构分析智能体：</strong> 检查分类体系本身的逻辑一致性和完整性。该智能体识别类别层级中的空白、命名约定中的不一致，以及更好地组织相关概念的机会。它纯粹基于分类体系结构运行，确保逻辑连贯性和组织原则的一致性。</li>
+<li><strong>商品数据分析智能体：</strong> 整合真实的商家数据，检查商家实际描述商品和定义分类的方式。该智能体分析商品标题、描述和商家定义的类别中的模式，以识别商家对其商品的认知与我们的分类体系表示方式之间的差距。</li>
+<li><strong>智能合成智能体：</strong> 融合来自两种方法的洞察，解决冲突并消除冗余。当结构分析提出一种改进，而商品分析提出另一种改进时，这个合成过程会确定最佳的前进路径，通常会结合两者的洞察。</li>
+<li><strong>等价检测智能体：</strong> 解决了商业中的一个基本挑战：如何在保持商家灵活性的同时，实现智能化的系统行为。这个自主智能体识别当不同分类方法表示相同产品集时的情况，为理解商家组织偏好下产品关系的系统奠定了基础，等价检测的价值前序已有例子介绍。</li>
+</ul>
+<h3 id="自动化质量保障"><a href="#自动化质量保障" class="headerlink" title="自动化质量保障"></a>自动化质量保障</h3><p>最后一个阶段通过专业化的 AI 评估智能体进行自动化质量保障。这些评估智能体会应用领域专业知识和分类体系设计原则以及先进的推理能力评估前序 agent 提交的更改，在人工审查之前过滤和完善建议。</p>
+<p>针对不同的变更类型，如添加新属性、创建类目层级或修改现有结构，需要不同类型的评估。Shopify 的评审系统会对每种更改类型使用专门的评估标准，确保技术要求、业务规则和领域专业知识得到正确应用。</p>
+<p>领域特定评估员为不同的产品垂直领域提供专业知识。例如，专注于电子产品的评估员理解该行业特定的技术要求和常见模式，而专注于乐器的评估员则应用与该领域相关的不同专业知识。</p>
+<h2 id="结果与影响"><a href="#结果与影响" class="headerlink" title="结果与影响"></a>结果与影响</h2><p>从人工分类体系到 AI 驱动的演进，使 Shopify 能够在保持分类体系质量的同时，同时也具备高度的可扩展性可以灵活应对日益增长的商业复杂性，其获得的收益是多方面的，包括：</p>
+<h3 id="效率提升"><a href="#效率提升" class="headerlink" title="效率提升"></a>效率提升</h3><p>AI 智能体系统可以并行分析整个分类体系，识别出过去需要数周人工分析才能发现的改进机会。人工分类体系专家每天仅能分析几个类别，而该系统能够全面评估数百个类别，同时检查结构一致性以及与真实产品数据的一致性。</p>
+<p>这种效率提升对于新兴产品类别尤其有价值。当新型产品平台侧普及时，系统可以迅速识别分类体系中的空白并提出全面的解决方案，而不是随着时间累积再去被动修补技术债务。</p>
+<h3 id="质量改进"><a href="#质量改进" class="headerlink" title="质量改进"></a>质量改进</h3><p>多智能体方法提升了分类体系演进的一致性和全面性。通过将结构分析与真实商品数据相结合，我们识别出任何单一方法都无法发现的改进。结构分析确保了逻辑一致性和正确的层级组织，而商品数据分析则确保了类别和属性反映了商家实际描述和区分其商品的方式。</p>
+<p>自动化质量保障层可以在人工审查之前就发现潜在问题，并确保领域特定专业知识在不同产品垂直领域中得到一致应用。这也减少了从初始提案到最终实施通常所需的迭代周期。</p>
+<p>智能体可以快速识别真实的商家需求，提出解决方案，并获得复杂的评估。所有的这些协同工作都会系统性地优化分类体系。</p>
+<p>以系统处理手机配件为例：假设商品分析智能体发现商家经常宣传充电器、手机壳和钱包等配件的“ MagSafe 支持”特性，该智能体会建议添加一个“ MagSafe 兼容”的布尔型属性，以帮助客户筛选出支持 MagSafe 的产品。专业的电子产品评审员可以评估这一提案，在验证没有重复属性存在后，确认该布尔类型是合适的，尽管是品牌特定，但 MagSafe 代表一个合法的技术标准，类似于蓝牙或 Qi 充电。评审员以 93% 的置信度批准了该属性，并指出它将“改善客户对支持 MagSafe 的充电器、手机壳、钱包等的筛选”。</p>
+<h3 id="分类体系开发规模化"><a href="#分类体系开发规模化" class="headerlink" title="分类体系开发规模化"></a>分类体系开发规模化</h3><p>最重要的是，该智能系统在根本上改变了 Shopify 进行分类体系开发的方式。系统可以主动识别和解决分类体系中的空白，而不是由特定商家需求或平台限制触发的被动改进，从而在它们影响商家和客户体验之前加以处理。</p>
+<p>系统处理和推理整个分类体系结构的能力使得全面的改进成为可能，这些改进考虑了跨类别关系并保持了全局一致性。这种整体方法避免了在孤立地解决分类体系问题时经常出现的碎片化问题。</p>
+<p>为了验证这种系统性方法，Shopify 将 AI 驱动的分类体系演进方法专门应用于“电子产品 &gt; 通信 &gt; 电话”领域，并将其与我们以前的手动扩展方法进行了比较，效果如下图所示：</p>
+<p><img src="https://img.alicdn.com/imgextra/i2/O1CN01zvFIMR1rqPXfuWgmp_!!6000000005682-49-tps-1558-1164.webp"></p>
+<h2 id="未来展望"><a href="#未来展望" class="headerlink" title="未来展望"></a>未来展望</h2><p>AI 能力的持续进步会进一步增强我们的分类体系演进系统，并与我们的产品分类管道建立更紧密的集成，包括：</p>
+<h3 id="智能体能力的提升"><a href="#智能体能力的提升" class="headerlink" title="智能体能力的提升"></a>智能体能力的提升</h3><p>增强的推理能力可以对商品关系有更细致的理解，也可以更好地检测细微的不一致性，以及更精妙地综合来自不同分析方法的冲突洞察。</p>
+<p>此外，AI 专业评审员的领域专业知识也有可能得到进一步扩张，使其能够以更高的精确度和理解力处理日益复杂的商品类别和新兴的商业趋势。</p>
+<h3 id="国际化支持"><a href="#国际化支持" class="headerlink" title="国际化支持"></a>国际化支持</h3><p>随着 Shopify 全球业务范围的不断扩大，当前的分类系统还需要更好地支持国际商业，这包括理解商品分类和属性相关性在不同市场和文化中可能存在的差异，以及如何在保持一致性的同时允许区域定制。</p>
+<h3 id="更深度的集成到分类系统"><a href="#更深度的集成到分类系统" class="headerlink" title="更深度的集成到分类系统"></a>更深度的集成到分类系统</h3><p>分类模式和商家反馈可以为分类体系的演进提供数据，而分类体系的改进则可以立即提升分类准确性和商家的接受率。</p>
+<p>Shopify 设想的未来是，这些系统之间可以无缝协作，分类体系的演进由真实的分类表现所驱动，而分类则受益于不断优化的分类结构，从而形成正向循环。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Shopify 的商品分类体系经历了从手动、被动流程到 AI 驱动、主动改进系统的根本性转变。通过结合多种类型的分析、自动化质量保障和人类专业知识，该智能分类管理系统能够随着现代商业的复杂性而扩展，同时保持我们的商家和客户所依赖的质量和一致性。</p>
+<p>这项工作也展示了 AI 智能体如何在复杂、知识密集型领域增强人类专业知识。AI 智能系统并非要完全取代人类判断，而是可以放大团队能力，使员工能够专注于高层次的战略决策，而 AI 则负责支撑有效分类体系管理的全面分析和质量保障。</p>
+<p>在笔者看来，这是一个非常好的 AI 在业务中落地并切实解决业务痛点的应用案例。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://shopify.engineering/product-taxonomy-at-scale">https://shopify.engineering/product-taxonomy-at-scale</a></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI, 电商" >
+    <span class="tag-code">AI, 电商</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2025/09/27/bun-install/">
+        <span class="nav-arrow">← </span>
+        
+          Bun install 如何做到极致的包安装速度
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2025/10/25/claude-skills/">
+        
+          简单聊聊 Claude 新推出的 Agent Skills
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98%E8%83%8C%E6%99%AF"><span class="toc-nav-text">问题背景</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Shopify-%E7%9A%84%E8%A7%A3%E6%B3%95%E6%80%9D%E8%B7%AF"><span class="toc-nav-text">Shopify 的解法思路</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BC%A0%E7%BB%9F%E5%88%86%E7%B1%BB%E4%BD%93%E7%B3%BB%E7%AE%A1%E7%90%86"><span class="toc-nav-text">传统分类体系管理</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%99%BA%E8%83%BD%E4%BD%93%E7%9A%84%E7%AA%81%E7%A0%B4"><span class="toc-nav-text">基于智能体的突破</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Agent-%E6%8A%80%E6%9C%AF%E8%AE%BE%E8%AE%A1"><span class="toc-nav-text">Agent 技术设计</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-nav-text">系统架构流程图</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%99%BA%E8%83%BD%E4%BD%93%E4%B8%8E%E5%88%86%E7%B1%BB%E4%BD%93%E7%B3%BB%E7%9A%84%E4%BA%A4%E4%BA%92"><span class="toc-nav-text">智能体与分类体系的交互</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%A4%9A%E9%98%B6%E6%AE%B5%E5%88%86%E6%9E%90-pipeline"><span class="toc-nav-text">多阶段分析 pipeline</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B4%A8%E9%87%8F%E4%BF%9D%E9%9A%9C"><span class="toc-nav-text">自动化质量保障</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BB%93%E6%9E%9C%E4%B8%8E%E5%BD%B1%E5%93%8D"><span class="toc-nav-text">结果与影响</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%95%88%E7%8E%87%E6%8F%90%E5%8D%87"><span class="toc-nav-text">效率提升</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E8%B4%A8%E9%87%8F%E6%94%B9%E8%BF%9B"><span class="toc-nav-text">质量改进</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%88%86%E7%B1%BB%E4%BD%93%E7%B3%BB%E5%BC%80%E5%8F%91%E8%A7%84%E6%A8%A1%E5%8C%96"><span class="toc-nav-text">分类体系开发规模化</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="toc-nav-text">未来展望</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%99%BA%E8%83%BD%E4%BD%93%E8%83%BD%E5%8A%9B%E7%9A%84%E6%8F%90%E5%8D%87"><span class="toc-nav-text">智能体能力的提升</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%9B%BD%E9%99%85%E5%8C%96%E6%94%AF%E6%8C%81"><span class="toc-nav-text">国际化支持</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%9B%B4%E6%B7%B1%E5%BA%A6%E7%9A%84%E9%9B%86%E6%88%90%E5%88%B0%E5%88%86%E7%B1%BB%E7%B3%BB%E7%BB%9F"><span class="toc-nav-text">更深度的集成到分类系统</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%8F%82%E8%80%83"><span class="toc-nav-text">参考</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2025/10/12/shopify-ai-product-classify/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

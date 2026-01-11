@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Claude Code 定制化指南：详解 CLAUDE.md、Skills 与 Subagents | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Claude Code 定制化指南：详解 CLAUDE.md、Skills 与 Subagents</h2>
+  <p class="post-date">2026-01-11</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>在使用 Claude Code 进行开发时，我们常常面临一个两难困境：AI 模型拥有广博的通用知识，但往往缺乏项目特定的上下文，或者对某些库的最新版本（如 Dexie.js 的最新 API）缺乏了解。</p>
+<p>虽然 Claude Code 允许我们通过提示词（Prompt）来补充信息，但如何优雅地管理这些上下文？是该把规则写在文件里，还是做成一个工具？</p>
+<p>本文通过解决同一个问题——<strong>“如何让 Claude Code 准确掌握第三方库（Dexie.js）的最新文档与开发规范”</strong>——来深度解析 Claude Code 四种核心定制机制：<strong>CLAUDE.md</strong>、<strong>Slash Commands</strong>、<strong>Subagents</strong> 和 <strong>Skills</strong>。</p>
+<h2 id="核心痛点：上下文污染与知识过时"><a href="#核心痛点：上下文污染与知识过时" class="headerlink" title="核心痛点：上下文污染与知识过时"></a>核心痛点：上下文污染与知识过时</h2><p>假设我们正在开发一个使用 Dexie.js（IndexedDB 封装库）的应用。由于训练数据的滞后，Claude 可能会建议过时的 API，或者忽略了 <code>liveQuery()</code> 这样现代的响应式用法。</p>
+<p>我们需要“教会”Claude Code 获取最新文档。Claude Code 提供了四种截然不同的方式来实现这一点，每种方式都有其特定的适用场景和权衡。</p>
+<hr>
+<h2 id="1-CLAUDE-md：常驻的项目记忆"><a href="#1-CLAUDE-md：常驻的项目记忆" class="headerlink" title="1. CLAUDE.md：常驻的项目记忆"></a>1. CLAUDE.md：常驻的项目记忆</h2><h3 id="机制解析"><a href="#机制解析" class="headerlink" title="机制解析"></a>机制解析</h3><p><code>CLAUDE.md</code> 是 Claude Code 的“项目宪法”。每当你启动 Claude Code 或开始新对话时，这个 Markdown 文件的内容会被<strong>自动加载</strong>到上下文的最前端。</p>
+<ul>
+<li><strong>存放位置</strong>：项目根目录或 <code>.claude/CLAUDE.md</code>。</li>
+<li><strong>嵌套特性</strong>：Claude Code 支持目录级上下文。例如，<code>tests/CLAUDE.md</code> 只有在 Claude 访问测试目录时才会被读取，这有助于保持主上下文的精简。</li>
+</ul>
+<h3 id="实战应用"><a href="#实战应用" class="headerlink" title="实战应用"></a>实战应用</h3><p>在 <code>CLAUDE.md</code> 中，我们可以这样写：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## Database Guidelines</span></span><br><span class="line">我们使用 Dexie.js。在编写任何数据库代码前：</span><br><span class="line"><span class="bullet">1.</span> 必须先从 https://dexie.org/llms.txt 获取最新文档索引。</span><br><span class="line"><span class="bullet">2.</span> 使用 <span class="code">`liveQuery()`</span> 进行响应式数据绑定。</span><br><span class="line"><span class="bullet">3.</span> 遵循 <span class="code">`src/db/`</span> 中的 Repository 模式。</span><br></pre></td></tr></table></figure>
+
+<h3 id="优劣分析"><a href="#优劣分析" class="headerlink" title="优劣分析"></a>优劣分析</h3><ul>
+<li><strong>优点</strong>：零操作成本，自动生效；通过 Git 共享，团队规范统一。</li>
+<li><strong>缺点</strong>：<strong>上下文漂移（Context Drift）</strong>。随着对话变长，模型可能会逐渐“遗忘”初始的指令，优先关注最近的对话历史。它没有独立的上下文窗口，会占用宝贵的 Token 空间。</li>
+</ul>
+<hr>
+<h2 id="2-Slash-Commands：可手动触发的快捷指令"><a href="#2-Slash-Commands：可手动触发的快捷指令" class="headerlink" title="2. Slash Commands：可手动触发的快捷指令"></a>2. Slash Commands：可手动触发的快捷指令</h2><h3 id="机制解析-1"><a href="#机制解析-1" class="headerlink" title="机制解析"></a>机制解析</h3><p>Slash Commands 是你通过 <code>/command</code> 在终端显式调用的指令。它不仅是 Prompt 的快捷键，更是<strong>工作流的编排者</strong>。</p>
+<p>你可以在命令定义中明确要求 Claude 调用特定的工具、执行一系列步骤，甚至并发启动多个 Subagents（子智能体）来处理任务。</p>
+<h3 id="实战应用-1"><a href="#实战应用-1" class="headerlink" title="实战应用"></a>实战应用</h3><p>创建一个 <code>.claude/commands/dexie-help.md</code>：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">description: 获取 Dexie.js 指导并查询最新文档</span><br><span class="line"><span class="section">allowed-tools: Read, WebFetch</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line">首先，从 https://dexie.org/llms.txt 获取文档索引。</span><br><span class="line">然后，根据用户的问题抓取相关页面。</span><br><span class="line">最后，基于最新文档回答用户问题：$ARGUMENTS</span><br></pre></td></tr></table></figure>
+
+<p>使用时，只需在终端输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/dexie-help 如何创建复合索引？</span><br></pre></td></tr></table></figure>
+
+<h3 id="优劣分析-1"><a href="#优劣分析-1" class="headerlink" title="优劣分析"></a>优劣分析</h3><ul>
+<li><strong>优点</strong>：<strong>控制权在用户手中</strong>，明确何时触发；支持参数传递；非常适合“阅后即焚”的一次性查询任务。</li>
+<li><strong>缺点</strong>：必须记住命令名称；它通常是一次性的交互，不会持久化改变 Claude 的长期记忆。</li>
+</ul>
+<hr>
+<h2 id="3-Subagents：拥有独立上下文的专家"><a href="#3-Subagents：拥有独立上下文的专家" class="headerlink" title="3. Subagents：拥有独立上下文的专家"></a>3. Subagents：拥有独立上下文的专家</h2><h3 id="机制解析-2"><a href="#机制解析-2" class="headerlink" title="机制解析"></a>机制解析</h3><p>这是 Claude Code 最强大的特性之一。<strong>Subagent（子智能体）</strong> 是一个独立的 Claude 实例，拥有<strong>完全独立的上下文窗口</strong>。</p>
+<p>当主对话中的任务过于复杂（例如需要阅读大量文档、扫描整个代码库）时，主 Agent 可以委派一个 Subagent 去执行。Subagent 完成工作后，只将<strong>最终结果（摘要）</strong>返回给主对话。</p>
+<blockquote>
+<p><strong>关键洞察</strong>：Subagents 是保持主上下文（Main Context）清洁的秘诀。在 Plan Mode 中，Claude Code 默认就会启动一个 Explore 类型的 Subagent 来扫描代码库，从而避免将成吨的文件内容直接倾倒进你的主会话中。</p>
+</blockquote>
+<h3 id="实战应用-2"><a href="#实战应用-2" class="headerlink" title="实战应用"></a>实战应用</h3><p>定义一个 <code>.claude/agents/dexie-specialist.md</code>。在这个定义中，你可以强制要求该 Agent 在回答任何问题前，必须先联网读取最新文档。</p>
+<p>当你在主对话中问：“帮我设计一个包含外键的 Dexie Schema”时：</p>
+<ol>
+<li>主 Claude 识别任务，委派给 <code>dexie-specialist</code>。</li>
+<li><strong>Subagent</strong> 启动，在一个全新的上下文中联网下载文档、阅读、思考。</li>
+<li><strong>Subagent</strong> 将精炼后的 Schema 代码和解释返回给主 Claude。</li>
+<li>主 Claude 将结果展示给你。</li>
+</ol>
+<h3 id="优劣分析-2"><a href="#优劣分析-2" class="headerlink" title="优劣分析"></a>优劣分析</h3><ul>
+<li><strong>优点</strong>：<strong>彻底隔离上下文噪音</strong>；适合重型任务（阅读、研究、全库扫描）；可以为特定任务配置不同的模型（如 Opus）。</li>
+<li><strong>缺点</strong>：启动较重；用户无法直接与 Subagent 对话（中间隔了一层）。</li>
+</ul>
+<hr>
+<h2 id="4-Skills：自动发现的能力包"><a href="#4-Skills：自动发现的能力包" class="headerlink" title="4. Skills：自动发现的能力包"></a>4. Skills：自动发现的能力包</h2><h3 id="机制解析-3"><a href="#机制解析-3" class="headerlink" title="机制解析"></a>机制解析</h3><p>Skills 是结构化的能力封装。与 Slash Commands 不同，Skills 通常是<strong>自动发现</strong>的。Claude 会根据 <code>description</code> 判断当前任务是否需要调用某个 Skill。</p>
+<p>Skills 通常以目录形式存在（如 <code>.claude/skills/dexie-expert/</code>），可以包含 <code>SKILL.md</code> 定义文件、辅助脚本、模板文件等。</p>
+<h3 id="实战应用-3"><a href="#实战应用-3" class="headerlink" title="实战应用"></a>实战应用</h3><p>Claude 会在后台通过 <code>&lt;available_skills&gt;</code> 标签感知到这些能力。当你问“帮我优化一下数据库查询”时，Claude 可能会自动决定：“这需要使用 <code>dexie-expert</code> Skill”，并按照 Skill 中定义的最佳实践来执行，甚至运行 Skill 目录下的验证脚本。</p>
+<h3 id="优劣分析-3"><a href="#优劣分析-3" class="headerlink" title="优劣分析"></a>优劣分析</h3><ul>
+<li><strong>优点</strong>：<strong>智能触发</strong>，无需用户记忆命令；可以封装复杂的、包含代码脚本的逻辑；体验上更像是增强了 Claude 本身的能力。</li>
+<li><strong>缺点</strong>：与主对话共享上下文；触发与否取决于模型的判断（有时可能不触发）。</li>
+</ul>
+<hr>
+<h2 id="总结：该如何选择？"><a href="#总结：该如何选择？" class="headerlink" title="总结：该如何选择？"></a>总结：该如何选择？</h2><p>在定制 Claude Code 时，请参考以下决策矩阵：</p>
+<table>
+<thead>
+<tr>
+<th align="left">场景需求</th>
+<th align="left">推荐方案</th>
+<th align="left">核心理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>项目铁律、代码规范</strong></td>
+<td align="left"><strong>CLAUDE.md</strong></td>
+<td align="left">启动即加载，确保基准对齐。</td>
+</tr>
+<tr>
+<td align="left"><strong>手动触发的工作流</strong></td>
+<td align="left"><strong>Slash Commands</strong></td>
+<td align="left">明确的 <code>/</code> 入口，支持参数，适合定向任务。</td>
+</tr>
+<tr>
+<td align="left"><strong>重型研究、文档阅读</strong></td>
+<td align="left"><strong>Subagents</strong></td>
+<td align="left"><strong>关键推荐</strong>。拥有独立上下文，防止主对话被撑爆。</td>
+</tr>
+<tr>
+<td align="left"><strong>复杂的自动化能力</strong></td>
+<td align="left"><strong>Skills</strong></td>
+<td align="left">模型自动决策调用，可包含脚本与辅助文件。</td>
+</tr>
+</tbody></table>
+<p><strong>最佳实践建议</strong>：<br>对于需要大量阅读外部文档或扫描代码库的任务，优先考虑 <strong>Subagents</strong>，这是让你的 Claude Code 在长时间开发会话中保持“清醒”和高效的关键。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2025/12/14/react-hooks-evolve/">
+        <span class="nav-arrow">← </span>
+        
+          编写现代化 React Hooks 的最佳实践
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%A0%B8%E5%BF%83%E7%97%9B%E7%82%B9%EF%BC%9A%E4%B8%8A%E4%B8%8B%E6%96%87%E6%B1%A1%E6%9F%93%E4%B8%8E%E7%9F%A5%E8%AF%86%E8%BF%87%E6%97%B6"><span class="toc-nav-text">核心痛点：上下文污染与知识过时</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-CLAUDE-md%EF%BC%9A%E5%B8%B8%E9%A9%BB%E7%9A%84%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BF%86"><span class="toc-nav-text">1. CLAUDE.md：常驻的项目记忆</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90"><span class="toc-nav-text">机制解析</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%9E%E6%88%98%E5%BA%94%E7%94%A8"><span class="toc-nav-text">实战应用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BC%98%E5%8A%A3%E5%88%86%E6%9E%90"><span class="toc-nav-text">优劣分析</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-Slash-Commands%EF%BC%9A%E5%8F%AF%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91%E7%9A%84%E5%BF%AB%E6%8D%B7%E6%8C%87%E4%BB%A4"><span class="toc-nav-text">2. Slash Commands：可手动触发的快捷指令</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90-1"><span class="toc-nav-text">机制解析</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%9E%E6%88%98%E5%BA%94%E7%94%A8-1"><span class="toc-nav-text">实战应用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BC%98%E5%8A%A3%E5%88%86%E6%9E%90-1"><span class="toc-nav-text">优劣分析</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-Subagents%EF%BC%9A%E6%8B%A5%E6%9C%89%E7%8B%AC%E7%AB%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E7%9A%84%E4%B8%93%E5%AE%B6"><span class="toc-nav-text">3. Subagents：拥有独立上下文的专家</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90-2"><span class="toc-nav-text">机制解析</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%9E%E6%88%98%E5%BA%94%E7%94%A8-2"><span class="toc-nav-text">实战应用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BC%98%E5%8A%A3%E5%88%86%E6%9E%90-2"><span class="toc-nav-text">优劣分析</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-Skills%EF%BC%9A%E8%87%AA%E5%8A%A8%E5%8F%91%E7%8E%B0%E7%9A%84%E8%83%BD%E5%8A%9B%E5%8C%85"><span class="toc-nav-text">4. Skills：自动发现的能力包</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90-3"><span class="toc-nav-text">机制解析</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%9E%E6%88%98%E5%BA%94%E7%94%A8-3"><span class="toc-nav-text">实战应用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BC%98%E5%8A%A3%E5%88%86%E6%9E%90-3"><span class="toc-nav-text">优劣分析</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A%E8%AF%A5%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%EF%BC%9F"><span class="toc-nav-text">总结：该如何选择？</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2026/01/11/claude-code-customization/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

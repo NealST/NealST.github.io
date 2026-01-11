@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      2025 年 11 月 18 号 cloudflare 崩溃复盘 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>2025 年 11 月 18 号 cloudflare 崩溃复盘</h2>
+  <p class="post-date">2025-11-23</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://img.alicdn.com/imgextra/i1/O1CN01vwKXZh1EtpUeB2ZjW_!!6000000000410-2-tps-1408-768.png"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>全球领先的网络基础设施服务提供商 Cloudflare 于 2025 年 11 月 18 日（UTC 时间）发生了一次持续数小时的重大服务中断，导致全球大量网站和在线服务出现访问故障，包括 X（原 Twitter）、ChatGPT、Spotify、Roblox、Grindr、Canva 等热门平台均受到波及。尝试访问其服务网站的用户会看到一个错误页面，提示 Cloudflare 网络异常：</p>
+<p><img src="https://cf-assets.www.cloudflare.com/zkvhlag99gkb/3ony9XsTIteX8DNEFJDddJ/7da2edd5abca755e9088002a0f5d1758/BLOG-3079_2.png"></p>
+<p>根据 Cloudflare 官方披露的故障全过程，引发该事故的核心原因并非外部 DDos 攻击或者恶意行为，而是内部一次常规数据库权限调整引发的连锁反应。故障详情与过程整理如下：</p>
+<h2 id="故障描述"><a href="#故障描述" class="headerlink" title="故障描述"></a>故障描述</h2><p>根据 Cloudflare 官方披露博客以及多家监测机构的数据，中断于 UTC 时间 11:20（北京时间 19:20 左右）开始显现，用户大量报告出现 HTTP 500&#x2F;5xx 错误、页面加载失败或“内部服务器错误”。高峰期，Downdetector 等故障监测网站本身也因依赖 Cloudflare 而短暂下线，进一步放大了混乱。</p>
+<p><img src="https://cf-assets.www.cloudflare.com/zkvhlag99gkb/7GdZcWhEqNjwOmLcsKOXT0/fca7e6970d422d04c81b2baafb988cbe/BLOG-3079_3.png"></p>
+<p>核心流量在 UTC 14:30 左右恢复正常，但控制面板（Dashboard）、API、Workers KV、Access 等应用服务直到 UTC 17:06 才完全恢复，整个事件持续约 5 小时 46 分钟。Cloudflare 表示，此次中断影响了其全球网络，未限定特定地区，但依赖其 Bot Management、Workers 或 CDN 的客户几乎全部受到不同程度冲击。</p>
+<table>
+<thead>
+<tr>
+<th>服务&#x2F;产品</th>
+<th>影响描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>核心 CDN 与安全服务</td>
+<td>HTTP 5xx 状态代码，用户看到上述错误页</td>
+</tr>
+<tr>
+<td>Turnstile（一个用户验证服务，通过更轻量、隐私友好的方式区分真实用户与自动化程序，如爬虫或恶意流量）</td>
+<td>Turnstile 无法加载</td>
+</tr>
+<tr>
+<td>Workers KV（一种全球分布式、低延迟的键值存储服务，专为 Cloudflare Workers 设计，用于在 Cloudflare 的全球 300+ 节点的边缘网络中快速存储和读取数据）</td>
+<td>由于核心代理出现故障，导致对 KV“前端”网关发出的请求失败，进而导致 Workers KV 返回的 HTTP 5xx 错误数量显著增加。</td>
+</tr>
+<tr>
+<td>dashboard（用户管理 cloudflare 服务的控制面板页面）</td>
+<td>虽然 dashboard 基本维持正常运行，但由于登录页面中的 Turnstile 不可用，导致大多数用户无法登录。</td>
+</tr>
+<tr>
+<td>Access（cloudflare 的门禁服务）</td>
+<td>从事故开始直到 13:05 启动回滚操作期间，绝大多数用户的身份验证都出现了失败。但在故障发生前已经建立的 Access 会话（Session）并不受影响。</td>
+</tr>
+</tbody></table>
+<h2 id="故障根因"><a href="#故障根因" class="headerlink" title="故障根因"></a>故障根因</h2><p>此次故障的根本原因来自于 cloudflare 的机器人管理模块，该模块中存在一个机器学习模型，用于给流经 cloudflare 的请求生成机器人评分以控制该请求是否可以正常访问服务。模型接收一个特征（机器学习模型用于预测请求是否为自动化请求的单个特征）配置文件（特征的集合）作为输入，特征配置文件每隔几分钟就会自动更新部署到 cloudflare 的整个网络中以便快速应对各种攻击手段。由于底层 ClickHouse 查询行为变更（详见下文），在生成特征文件时出现大量重复的数据，导致特征配置文件超出原有的指定上限，引发机器人管理模块出现异常。因此，对于所有依赖于机器人模块的流量，负责处理客户流量的核心代理系统都返回了 HTTP 5xx 错误代码。这也影响了同样依赖于核心代理的 Workers KV 和 Access 等服务。</p>
+<h3 id="特征文件大小超出"><a href="#特征文件大小超出" class="headerlink" title="特征文件大小超出"></a>特征文件大小超出</h3><p>一个 ClickHouse 集群由许多分片（Shards）组成。为了从所有分片中查询数据，Cloudflare 在名为 default 的数据库中使用了所谓的“分布式表”（由 Distributed 引擎支持）。这个 Distributed 引擎实际上是去查询名为 r0 数据库中的底层表，这些底层表才是 ClickHouse 集群各分片上真正存储数据的地方。</p>
+<p>以前，对分布式表的查询是通过一个共享的系统账户运行的。为了提高分布式查询的安全性和可靠性，查询后来改用初始用户（initial user）的账户来执行。</p>
+<p>在故障发生之前，当 ClickHouse 用户查询系统表（如 system.tables 或 system.columns）以获取表元数据时，他们只能看到 default 数据库中的表。<br>切换查询账户之后，用户实际上已经隐式拥有了访问 r0 中底层表的权限，Cloudflare 团队在 11:05 做了一个变更，将这种访问权限显性化。这意味着用户现在也能看到底层表的元数据。这个操作主要是为了确保所有分布式子查询都能在初始用户下运行，从而更精细地评估查询限制和权限，避免某个用户的恶意子查询影响到其他人。</p>
+<p>上述变更让所有用户都能准确获取他们有权访问的所有表的元数据。但不幸的是，过去的代码中存在一个假设，认为执行像下面这样的查询时，返回的列列表只会包含 default 数据库：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  name,</span><br><span class="line">  type</span><br><span class="line"><span class="keyword">FROM</span> system.columns</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">  <span class="keyword">table</span> <span class="operator">=</span> <span class="string">&#x27;http_requests_features&#x27;</span></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> name;</span><br></pre></td></tr></table></figure>
+<p>由于这个查询并没有过滤数据库名称。随着逐步向集群用户推出显性权限，在 11:05 的变更后，上述查询开始返回“重复”的列，因为结果中不仅包含了 default 数据库的列，还包含了存储在 r0 数据库中底层表的列。</p>
+<p><img src="https://cf-assets.www.cloudflare.com/zkvhlag99gkb/ZIC5X8vMM7ifbJc0vxgLD/49dd33e7267bdb03b265ee0acccf381d/Screenshot_2025-11-18_at_2.51.24%C3%A2__PM.png"></p>
+<p>机器人管理模块特征文件的生成逻辑刚好使用了这类查询来构建文件所需的每一个输入“特征（feature）”，查询响应现在包含了 r0 模式的所有元数据，实际上导致响应行数翻倍，于是最终输出的特征文件也直接翻倍膨胀了。</p>
+<h3 id="为什么特征文件超出会引发故障"><a href="#为什么特征文件超出会引发故障" class="headerlink" title="为什么特征文件超出会引发故障"></a>为什么特征文件超出会引发故障</h3><p>Cloudflare 代理服务上运行的每个模块都设有一系列限制以避免无限制的内存消耗。具体到本次事件，机器人管理模块对运行时可使用的机器学习特征设定了 200 的数量上限。当那个翻倍膨胀后超出 200 个特征的问题文件分发到服务器时，系统发生如下 Panic（崩溃）报错，进而引发了 5xx 错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread fl2_worker_thread panicked: called Result::unwrap() on an Err value</span><br></pre></td></tr></table></figure>
+
+<p>源于其 Rust 代码中的检查逻辑未能妥善处理这个错误，代码如下所示：</p>
+<p><img src="https://cf-assets.www.cloudflare.com/zkvhlag99gkb/640fjk9dawDk7f0wJ8Jm5S/668bcf1f574ae9e896671d9eee50da1b/BLOG-3079_7.png"></p>
+<p>简单打个比方就是 cloudflare 的机器人管理模块就像一个大巴车，硬性规定最多只能乘坐 200 人，由于上一步的特征文件生成错误（数据重复），导致出现了超载，然后负责检票的代码（上述 rust 代码）发现人数超标之后并没有想办法容纳超出的人员，而是选择了原地崩溃，直接报警，于是处理请求的线程挂了，导致用户访问出现 5xx 服务错误。</p>
+<h2 id="后续处理与事件回顾"><a href="#后续处理与事件回顾" class="headerlink" title="后续处理与事件回顾"></a>后续处理与事件回顾</h2><p>这是自 19 年以后 cloudflare 最严重的一次宕机事故，为了避免未来再次发生此类故障，cloudflare 给出的具体 action 包括：</p>
+<ul>
+<li>加固配置文件的摄入流程： 像对待用户输入的（不可信）数据一样，严格审查和处理 Cloudflare 内部生成的配置文件。</li>
+<li>启用更多功能的全局终止开关： 确保在紧急情况下能快速禁用特定功能。</li>
+<li>限制资源消耗： 消除核心转储（Core dumps）或其他错误报告耗尽系统资源的可能性。</li>
+<li>全面审查故障模式： 检查所有核心代理模块在遇到错误条件时的处理逻辑（避免直接崩溃）。</li>
+</ul>
+<p>整个故障的时间线如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>时间（UTC）</th>
+<th>状态</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>11:05</td>
+<td>正常</td>
+<td>数据库访问控制变更已部署。</td>
+</tr>
+<tr>
+<td>11:28</td>
+<td>问题开始显现</td>
+<td>部署到达客户环境，首次在客户 HTTP 流量中发现错误。</td>
+</tr>
+<tr>
+<td>11:32-13:05</td>
+<td>Cloudflare 团队调查了 Workers KV 服务的流量激增和错误情况。</td>
+<td>最初的迹象表现为 Workers KV 响应速度下降，进而导致下游的其他 Cloudflare 服务受到影响。尝试流量控制和账户限制等缓解措施，以便让 Workers KV 服务恢复到正常运行水平。首次自动化测试于 11:31 检测到问题，人工调查于 11:32 启动。事件呼叫于 11:35 创建。</td>
+</tr>
+<tr>
+<td>13:05</td>
+<td>实施了 Workers KV 和 Cloudflare Access 绕过措施 - 已减轻影响。</td>
+<td>在调查过程中，针对 Workers KV 和 Cloudflare Access 使用了内部系统绕过措施，使二者回退到核心代理的先前版本。虽然代理的先前版本中也存在这个问题，但如下文所述，其影响较小。</td>
+</tr>
+<tr>
+<td>13:37</td>
+<td>工作重点是将机器人管理配置文件回滚至最近的已知合适版本。</td>
+<td>确认机器人管理配置文件是此次事件的触发因素。团队通过多个工作流程研究了补救服务的方法，其中最快的方法是恢复该文件之前的版本。</td>
+</tr>
+<tr>
+<td>14:24</td>
+<td>已停止创建和传播新的机器人管理配置文件。</td>
+<td>确定机器人管理模块是 500 错误的根源，而问题是由一个错误的配置文件引起，停止自动部署新的机器人管理配置文件。</td>
+</tr>
+<tr>
+<td>14:24</td>
+<td>新文件测试完成。</td>
+<td>观察到使用旧版本的配置文件成功恢复，随后集中精力加快全球范围的修复进程。</td>
+</tr>
+<tr>
+<td>14:30</td>
+<td>主要问题已解决。下游受影响服务的错误开始减少。</td>
+<td>在全球范围内部署正确的机器人管理配置文件，并且大多数服务已开始正常运行。</td>
+</tr>
+<tr>
+<td>17:06</td>
+<td>所有服务均已恢复。影响结束。</td>
+<td>所有下游服务均已重新启动，所有操作完全恢复。</td>
+</tr>
+</tbody></table>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>cloudflare 的这次故障影响甚大，故障当日 Cloudflare 的股价下跌约 3%-4%，收盘价约 196 美元，较 11 月初历史高点 260 美元已回调超过 24%。分析人士指出，频繁的云基础设施中断（AWS、Azure、Cloudflare 在一个月内接连出事）正引发投资者对“单点故障风险”的担忧。</p>
+<p>从技术角度出发，cloudflare 的这次故障核心还是在于机器人管理模块对异常输入的处理不够谨慎所致，当输入的特征配置文件大小异常时应该首先抛出告警，然后从缓存中取上一个正常版本的配置文件，而不是原地爆炸，直接抛出 panic。Cloudflare 处理着全球约五分之一的网页请求，这种处理逻辑还是有些过于粗暴了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.cloudflare.com/zh-cn/18-november-2025-outage/">https://blog.cloudflare.com/zh-cn/18-november-2025-outage/</a></li>
+</ul>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#cloudflare" >
+    <span class="tag-code">cloudflare</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2025/11/18/disigner-ai-tools/">
+        <span class="nav-arrow">← </span>
+        
+          设计师视角下我最常用的 8 个 AI 工具
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2025/11/30/sandbox-ai-tools/">
+        
+          如何沙盒化运行你的 AI 工具
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%95%85%E9%9A%9C%E6%8F%8F%E8%BF%B0"><span class="toc-nav-text">故障描述</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%95%85%E9%9A%9C%E6%A0%B9%E5%9B%A0"><span class="toc-nav-text">故障根因</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%89%B9%E5%BE%81%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E8%B6%85%E5%87%BA"><span class="toc-nav-text">特征文件大小超出</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%89%B9%E5%BE%81%E6%96%87%E4%BB%B6%E8%B6%85%E5%87%BA%E4%BC%9A%E5%BC%95%E5%8F%91%E6%95%85%E9%9A%9C"><span class="toc-nav-text">为什么特征文件超出会引发故障</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%90%8E%E7%BB%AD%E5%A4%84%E7%90%86%E4%B8%8E%E4%BA%8B%E4%BB%B6%E5%9B%9E%E9%A1%BE"><span class="toc-nav-text">后续处理与事件回顾</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%8F%82%E8%80%83"><span class="toc-nav-text">参考</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2025/11/23/cloudfare-outage/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>
