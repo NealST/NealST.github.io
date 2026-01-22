@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.jpg">
+  
+  <title>
+    
+      如何构建一个能让 Claude Code 做记忆检索的 Skill | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.jpg" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>如何构建一个能让 Claude Code 做记忆检索的 Skill</h2>
+  <p class="post-date">2026-01-18</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>最近看到一个很有趣且实用的 Claude Skill, 可以让 Claude 进行记忆检索，作者是来自德国的开发者，名为 Alex。</p>
+</blockquote>
+<p>在使用 Claude Code 时，一个常见的 case 是我们曾讨论过某个问题或解决方案，但就是找不到具体的记录。比如说 “上周我们修复那个 xx 错误时，最终的解决方案是什么来着？”或者需要总结一下“昨天我们具体做了哪些工作？”</p>
+<p>Claude Code 会将每一次会话都存储在本地，但 Claude 默认情况下不会去搜索这些文件。为了解决这个问题，Alex 构建了一个“技能（Skill）”，让 Claude 能够搜索它自己的对话历史。将 Claude 变成了一个真正拥有持久记忆的编程伙伴，能够记住过去的解决方案并对过去的工作进行总结。</p>
+<h2 id="Claude-Code-如何存储对话"><a href="#Claude-Code-如何存储对话" class="headerlink" title="Claude Code 如何存储对话"></a>Claude Code 如何存储对话</h2><p>每一个 Claude Code 会话都会作为一个 JSONL 文件保存在 <code>~/.claude/projects/</code> 目录下。目录结构如下所示：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.claude/</span><br><span class="line">└── projects/</span><br><span class="line">    ├── -Users-alex-Projects-myapp/      # 编码后的项目路径</span><br><span class="line">    │   ├── a1b2c3d4.jsonl               # 会话文件</span><br><span class="line">    │   ├── b2c3d4e5.jsonl</span><br><span class="line">    │   ├── c3d4e5f6.jsonl</span><br><span class="line">    │   ├── e5f6g7h8.jsonl</span><br><span class="line">    │   └── agent-xyz123.jsonl           # 子智能体(subagent)会话</span><br><span class="line">    └── -Users-alex-Projects-blog/</span><br><span class="line">        └── i9j0k1l2.jsonl</span><br></pre></td></tr></table></figure>
+
+<p>路径的编码方式很简单：将 &#x2F; 替换为 -，绝对路径以 - 开头。因此 <code>/Users/alex/Projects/myapp</code> 就变成了 <code>-Users-alex-Projects-myapp</code></p>
+<p>每个 JSONL 文件中，每一行都是一个 JSON 对象：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 用户输入记录 */</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2026-01-16T10:30:00Z&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;gitBranch&quot;</span><span class="punctuation">:</span> <span class="string">&quot;main&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Fix the EMFILE error&quot;</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 助手回复记录，包含工具调用 */</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;assistant&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2026-01-16T10:30:15Z&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Let me investigate...&quot;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span> <span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tool_use&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Bash&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;input&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ulimit -n&quot;</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span><span class="punctuation">]</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 会话总结记录 */</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;summary&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;summary&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Fixed EMFILE error by increasing file descriptor limit&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>每个条目包含角色（role）、时间戳、Git 分支、消息内容以及工具的使用情况。当 Claude 生成对话总结时，会出现 summary 类型。</p>
+<h2 id="Skill-文件结构"><a href="#Skill-文件结构" class="headerlink" title="Skill 文件结构"></a>Skill 文件结构</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conversation-search/</span><br><span class="line">├── SKILL.md                 # 定义触发模式和用法</span><br><span class="line">└── scripts/</span><br><span class="line">    └── search_history.py    # 搜索引擎脚本</span><br></pre></td></tr></table></figure>
+
+<p>SKILL.md 文件告诉 Claude 何时激活此技能：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">conversation-search</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">Search</span> <span class="string">past</span> <span class="string">Claude</span> <span class="string">Code</span> <span class="string">conversation</span> <span class="string">history.</span> <span class="string">Use</span> <span class="string">when</span> <span class="string">asked</span> <span class="string">to</span> <span class="string">recall,</span> <span class="string">find,</span> <span class="string">or</span> <span class="string">search</span> <span class="string">for</span> <span class="string">anything</span> <span class="string">from</span> <span class="string">previous</span> <span class="string">conversations</span> <span class="bullet">-</span> <span class="string">including</span> <span class="string">content</span> <span class="string">discussed,</span> <span class="string">links</span> <span class="string">shared,</span> <span class="string">problems</span> <span class="string">solved,</span> <span class="string">topics</span> <span class="string">covered,</span> <span class="string">things</span> <span class="string">posted,</span> <span class="string">or</span> <span class="string">work</span> <span class="string">done</span> <span class="string">together.</span> <span class="string">Triggers</span> <span class="string">include</span> <span class="string">&quot;what did we do today&quot;</span><span class="string">,</span> <span class="string">&quot;summary of our work&quot;</span><span class="string">,</span> <span class="string">&quot;what did we work on&quot;</span><span class="string">,</span> <span class="string">&quot;from our conversations&quot;</span><span class="string">,</span> <span class="string">&quot;what did we discuss&quot;</span><span class="string">,</span> <span class="string">&quot;which X was about Y&quot;</span><span class="string">,</span> <span class="string">&quot;recall when we&quot;</span><span class="string">,</span> <span class="string">&quot;find where we talked about&quot;</span><span class="string">,</span> <span class="string">&quot;search history&quot;</span><span class="string">,</span> <span class="string">&quot;what did I share/post/send you about&quot;</span><span class="string">,</span> <span class="string">&quot;how did we fix&quot;</span><span class="string">,</span> <span class="string">or</span> <span class="string">any</span> <span class="string">reference</span> <span class="string">to</span> <span class="string">past</span> <span class="string">sessions</span> <span class="string">or</span> <span class="string">collaborative</span> <span class="string">work.</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
+<p>比如说当我问“我们昨天做了什么？”时，Claude 会识别出触发条件，并知道要使用这个技能，这解决了何时触发的问题，但还有一个重要的问题：如何优雅的检索历史，也就是 How to do 的问题，这依赖于具体的 python 脚本实现。</p>
+<h2 id="Python-脚本的实现原理"><a href="#Python-脚本的实现原理" class="headerlink" title="Python 脚本的实现原理"></a>Python 脚本的实现原理</h2><p>该脚本支持两种模式：用于日常总结的 <strong>摘要模式 (digest)</strong> 和用于查找特定解决方案的 __搜索模式 (search)__，它没有依赖复杂的向量数据库，而是通过高效的关键词匹配 + 权重评分算法来实现搜索。</p>
+<h3 id="数据建模"><a href="#数据建模" class="headerlink" title="数据建模"></a>数据建模</h3><p>为了处理复杂的 JSON 结构，脚本使用 dataclass 定义了清晰的数据模型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Message</span>:</span><br><span class="line">    uuid: <span class="built_in">str</span>                <span class="comment"># 消息唯一标识</span></span><br><span class="line">    parent_uuid: <span class="type">Optional</span>[<span class="built_in">str</span>] <span class="comment"># 父消息标识</span></span><br><span class="line">    role: <span class="built_in">str</span>                <span class="comment"># 角色：&#x27;user&#x27; (用户), &#x27;assistant&#x27; (助手)</span></span><br><span class="line">    content: <span class="built_in">str</span>             <span class="comment"># 消息文本内容</span></span><br><span class="line">    timestamp: <span class="built_in">str</span>           <span class="comment"># 时间戳</span></span><br><span class="line">    tool_uses: <span class="built_in">list</span>          <span class="comment"># 工具使用记录列表</span></span><br><span class="line">    tool_results: <span class="built_in">list</span>       <span class="comment"># 工具执行结果列表</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Conversation</span>:</span><br><span class="line">    session_id: <span class="built_in">str</span>          <span class="comment"># 会话 ID</span></span><br><span class="line">    file_path: <span class="built_in">str</span>           <span class="comment"># 文件存储路径</span></span><br><span class="line">    summary: <span class="type">Optional</span>[<span class="built_in">str</span>]   <span class="comment"># 会话摘要（如果有）</span></span><br><span class="line">    messages: <span class="built_in">list</span>           <span class="comment"># 消息对象列表</span></span><br><span class="line">    project_path: <span class="built_in">str</span>        <span class="comment"># 项目路径</span></span><br><span class="line">    git_branch: <span class="type">Optional</span>[<span class="built_in">str</span>]<span class="comment"># Git 分支</span></span><br><span class="line">    timestamp: <span class="built_in">str</span>           <span class="comment"># 会话时间</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SearchResult</span>:</span><br><span class="line">    conversation: Conversation <span class="comment"># 关联的会话对象</span></span><br><span class="line">    score: <span class="built_in">float</span>             <span class="comment"># 相关性得分</span></span><br><span class="line">    matched_messages: <span class="built_in">list</span>   <span class="comment"># 匹配到的消息列表</span></span><br><span class="line">    problem_excerpt: <span class="built_in">str</span>     <span class="comment"># 问题摘录</span></span><br><span class="line">    solution_excerpt: <span class="built_in">str</span>    <span class="comment"># 解决方案摘录</span></span><br><span class="line">    commands_run: <span class="built_in">list</span>       <span class="comment"># 执行过的命令列表</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="搜索算法：基于权重的相关性评分"><a href="#搜索算法：基于权重的相关性评分" class="headerlink" title="搜索算法：基于权重的相关性评分"></a>搜索算法：基于权重的相关性评分</h3><p>为了让搜索结果更精准，脚本不是简单地匹配关键词，而是根据内容的重要性赋予不同的权重：</p>
+<ul>
+<li>Summary (摘要): 3.0 倍权重。如果关键词出现在摘要中，说明这是会话的主题。</li>
+<li>User Message (用户消息): 1.5 倍权重。用户通常在这里描述“问题”或“Bug”。</li>
+<li>Tool Use (工具使用): 1.3 倍权重。如果包含工具调用（如执行命令、修改文件），通常意味着这是“解决方案”的一部分。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">calculate_relevance_score</span>(<span class="params">query: <span class="built_in">str</span>, conversation: Conversation</span>) -&gt; <span class="built_in">tuple</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算会话与查询的相关性得分&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 1. 对查询语句进行简单的分词（转小写，提取单词）</span></span><br><span class="line">    query_tokens = tokenize(query)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> query_tokens:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.0</span>, []</span><br><span class="line"></span><br><span class="line">    total_score = <span class="number">0.0</span></span><br><span class="line">    matched_messages = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 检查会话摘要 (Summary) - 权重最高 (3.0)</span></span><br><span class="line">    <span class="keyword">if</span> conversation.summary:</span><br><span class="line">        summary_tokens = tokenize(conversation.summary)</span><br><span class="line">        <span class="comment"># 计算重叠词比例</span></span><br><span class="line">        summary_overlap = <span class="built_in">len</span>(query_tokens &amp; summary_tokens) / <span class="built_in">len</span>(query_tokens)</span><br><span class="line">        total_score += summary_overlap * <span class="number">3.0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 遍历每一条消息</span></span><br><span class="line">    <span class="keyword">for</span> msg <span class="keyword">in</span> conversation.messages:</span><br><span class="line">        msg_tokens = tokenize(msg.content)</span><br><span class="line">        overlap = <span class="built_in">len</span>(query_tokens &amp; msg_tokens)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> overlap &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 基础分：重叠词比例</span></span><br><span class="line">            msg_score = overlap / <span class="built_in">len</span>(query_tokens)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 策略：提升用户消息的权重 (1.5x)</span></span><br><span class="line">            <span class="comment"># 原因：用户通常在消息中描述具体的问题或报错信息</span></span><br><span class="line">            <span class="keyword">if</span> msg.role == <span class="string">&#x27;user&#x27;</span>:</span><br><span class="line">                msg_score *= <span class="number">1.5</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 策略：提升包含工具使用的消息权重 (1.3x)</span></span><br><span class="line">            <span class="comment"># 原因：包含代码执行或文件修改的消息通常是解决方案所在</span></span><br><span class="line">            <span class="keyword">if</span> msg.tool_uses:</span><br><span class="line">                msg_score *= <span class="number">1.3</span></span><br><span class="line"></span><br><span class="line">            total_score += msg_score</span><br><span class="line">            matched_messages.append(msg)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> total_score, matched_messages</span><br></pre></td></tr></table></figure>
+
+<h3 id="信息提取：复现记忆的关键"><a href="#信息提取：复现记忆的关键" class="headerlink" title="信息提取：复现记忆的关键"></a>信息提取：复现记忆的关键</h3><p>搜索不仅要找到会话，还要提取出具体的解决方案。脚本通过分析 tool_uses 字段，精准提取出运行过的 Bash 命令和修改过的文件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">extract_bash_commands</span>(<span class="params">conversation: Conversation</span>) -&gt; <span class="built_in">list</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;提取会话期间运行的所有 Bash 命令&quot;&quot;&quot;</span></span><br><span class="line">    commands = []</span><br><span class="line">    <span class="keyword">for</span> msg <span class="keyword">in</span> conversation.messages:</span><br><span class="line">        <span class="keyword">for</span> tool <span class="keyword">in</span> msg.tool_uses:</span><br><span class="line">            <span class="comment"># 过滤出 &#x27;Bash&#x27; 类型的工具调用</span></span><br><span class="line">            <span class="keyword">if</span> tool.get(<span class="string">&#x27;name&#x27;</span>) == <span class="string">&#x27;Bash&#x27;</span>:</span><br><span class="line">                cmd = tool.get(<span class="string">&#x27;input&#x27;</span>, &#123;&#125;).get(<span class="string">&#x27;command&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">                <span class="keyword">if</span> cmd:</span><br><span class="line">                    commands.append(cmd)</span><br><span class="line">    <span class="keyword">return</span> commands</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_files_touched</span>(<span class="params">conversation: Conversation</span>) -&gt; <span class="built_in">list</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;提取被读取、写入或编辑的文件列表&quot;&quot;&quot;</span></span><br><span class="line">    files = <span class="built_in">set</span>()</span><br><span class="line">    <span class="keyword">for</span> msg <span class="keyword">in</span> conversation.messages:</span><br><span class="line">        <span class="keyword">for</span> tool <span class="keyword">in</span> msg.tool_uses:</span><br><span class="line">            name = tool.get(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            inp = tool.get(<span class="string">&#x27;input&#x27;</span>, &#123;&#125;)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 关注文件操作类的工具</span></span><br><span class="line">            <span class="keyword">if</span> name <span class="keyword">in</span> (<span class="string">&#x27;Read&#x27;</span>, <span class="string">&#x27;Write&#x27;</span>, <span class="string">&#x27;Edit&#x27;</span>):</span><br><span class="line">                path = inp.get(<span class="string">&#x27;file_path&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">                <span class="keyword">if</span> path:</span><br><span class="line">                    <span class="comment"># 仅保留文件名，保持输出简洁</span></span><br><span class="line">                    files.add(Path(path).name)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sorted</span>(files)[:<span class="number">10</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="每日摘要模式的实现"><a href="#每日摘要模式的实现" class="headerlink" title="每日摘要模式的实现"></a>每日摘要模式的实现</h3><p>脚本还支持 –digest 参数，用于生成日报。它会按日期过滤会话，并生成 Markdown 格式的报告。这对于每日站会（Standup）非常有用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">format_digest</span>(<span class="params">conversations: <span class="built_in">list</span>, target_date: datetime, project_filter: <span class="type">Optional</span>[<span class="built_in">str</span>]</span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;格式化每日摘要报告&quot;&quot;&quot;</span></span><br><span class="line">    date_str = target_date.strftime(<span class="string">&#x27;%B %d, %Y&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># ... (省略头部构建)</span></span><br><span class="line"></span><br><span class="line">    lines = []</span><br><span class="line">    <span class="keyword">for</span> i, conv <span class="keyword">in</span> <span class="built_in">enumerate</span>(conversations, <span class="number">1</span>):</span><br><span class="line">        <span class="comment"># 自动提取问题描述作为标题</span></span><br><span class="line">        problem = extract_problem_excerpt(conv)</span><br><span class="line">        commands = extract_bash_commands(conv)</span><br><span class="line">        files = extract_files_touched(conv)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 截取前60个字符作为标题</span></span><br><span class="line">        title = problem[:<span class="number">60</span>].replace(<span class="string">&#x27;\n&#x27;</span>, <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 构建 Markdown 输出</span></span><br><span class="line">        lines.append(<span class="string">f&quot;### <span class="subst">&#123;i&#125;</span>. <span class="subst">&#123;title&#125;</span>&quot;</span>)</span><br><span class="line">        lines.append(<span class="string">f&quot;   Session: `<span class="subst">&#123;conv.session_id[:<span class="number">8</span>]&#125;</span>`&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> conv.git_branch:</span><br><span class="line">            lines.append(<span class="string">f&quot;   Branch: `<span class="subst">&#123;conv.git_branch&#125;</span>`&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 列出涉及的关键文件和命令数量</span></span><br><span class="line">        <span class="keyword">if</span> files:</span><br><span class="line">            lines.append(<span class="string">f&quot;   Files: <span class="subst">&#123;<span class="string">&#x27;, &#x27;</span>.join(files[:<span class="number">5</span>])&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> commands:</span><br><span class="line">            lines.append(<span class="string">f&quot;   Commands: <span class="subst">&#123;<span class="built_in">len</span>(commands)&#125;</span> executed&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        lines.append(<span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;\n&#x27;</span>.join(lines)</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h2><p>配置好 SKILL.md 后，你可以直接用自然语言与 Claude 交互，或者在终端直接运行脚本。</p>
+<h3 id="场景一：找回丢失的解决方案"><a href="#场景一：找回丢失的解决方案" class="headerlink" title="场景一：找回丢失的解决方案"></a>场景一：找回丢失的解决方案</h3><p>用户: “Recall how we fixed the EMFILE error last week.” (回忆一下上周我们是怎么修复 EMFILE 错误的。)</p>
+<p>Claude (调用脚本):</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 search_history.py &quot;EMFILE error&quot; --days 7</span><br></pre></td></tr></table></figure>
+
+<p>输出结果:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">============================================================</span><br><span class="line">Result #1 (Score: 4.25)</span><br><span class="line">============================================================</span><br><span class="line">Project: /Users/alex/Projects/fitness-app</span><br><span class="line">Session: a1b2c3d4...</span><br><span class="line">Branch: main</span><br><span class="line">Date: 2026-01-10</span><br><span class="line"></span><br><span class="line">PROBLEM:</span><br><span class="line">Getting EMFILE error when running tests, too many open files</span><br><span class="line"></span><br><span class="line">SOLUTION:</span><br><span class="line">The issue was too many file watchers. Fixed by increasing the limit...</span><br><span class="line"></span><br><span class="line">COMMANDS RUN (3 total):</span><br><span class="line">  $ ulimit -n</span><br><span class="line">  $ ulimit -n 10240</span><br><span class="line">  $ echo &quot;ulimit -n 10240&quot; &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<p>此外，该脚本支持按照日期范围和特定项目进行过滤：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">仅今天的会话</span></span><br><span class="line">python3 search_history.py --today &quot;newsletter&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">昨天</span></span><br><span class="line">python3 search_history.py --yesterday &quot;bug fix&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">过去 7 天</span></span><br><span class="line">python3 search_history.py --days 7 &quot;refactor&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">自特定日期以来</span></span><br><span class="line">python3 search_history.py --since 2026-01-01 &quot;feature&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">仅搜索指定项目</span></span><br><span class="line">python3 search_history.py &quot;vitest config&quot; --project ~/Projects/fitness-app</span><br></pre></td></tr></table></figure>
+
+<h3 id="场景二：回忆工作内容"><a href="#场景二：回忆工作内容" class="headerlink" title="场景二：回忆工作内容"></a>场景二：回忆工作内容</h3><p>用户: “What did I work on yesterday?” (我昨天做了什么？)</p>
+<p>Claude (调用脚本):</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 search_history.py --digest yesterday</span><br></pre></td></tr></table></figure>
+
+<p>输出内容：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">## January 16, 2026 - 32 sessions</span><br><span class="line"></span><br><span class="line">### 1. Set Context Menu Feature Spec</span><br><span class="line">   Session: `1498ff91`</span><br><span class="line">   Branch: `fitnessFunctions`</span><br><span class="line">   Files: set-context-menu.md, SetContextMenu.vue, SetContextMenuPO.ts</span><br><span class="line">   Commands: 12 executed</span><br><span class="line"></span><br><span class="line">### 2. Fix Pipeline: Missing i18n, Unused Exports</span><br><span class="line">   Session: `23351e77`</span><br><span class="line">   Branch: `fitnessFunctions`</span><br><span class="line">   Files: de.json, en.json, claude-qa.yml</span><br><span class="line">   Commands: 6 executed</span><br><span class="line"></span><br><span class="line">### 3. Adding AI Coding Articles to Second Brain</span><br><span class="line">   Session: `5c909423`</span><br><span class="line">   Branch: `main`</span><br><span class="line">   Files: article.md, dex-horthy.md, diagrams-guide.md</span><br><span class="line">   Commands: 1 executed</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在这个技能出现之前，我们可能会浪费很多时间去重新解决之前已经解决过的问题。“我知道我们讨论过这个问题，但我找不到记录了。” 现在，我们只需要问 Claude 即可。<br>这样做的好处包括：</p>
+<ul>
+<li>不再重复解决问题 - Claude 可以立即找到过去的解决方案。</li>
+<li>每日摘要助力站会 - “我们昨天做了什么？” 可以提供现成的总结。</li>
+<li>保留操作命令 - 你可以使用相同的命令复现确切的解决方案。</li>
+<li>跨项目搜索 - 从你参与过的任何项目中查找解决方案。</li>
+</ul>
+<p>这个 Skill 将 Claude 从一个无状态的助手转变为更接近于一个拥有持久记忆的编程伙伴，让它记得你们一起做过的事情。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>Skill 地址：<a target="_blank" rel="noopener" href="https://github.com/alexanderop/dotfiles/blob/main/claude/skills/conversation-search/SKILL.md">https://github.com/alexanderop/dotfiles/blob/main/claude/skills/conversation-search/SKILL.md</a></li>
+</ul>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI,Claude Code" >
+    <span class="tag-code">AI,Claude Code</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2026/01/11/claude-code-customization/">
+        <span class="nav-arrow">← </span>
+        
+          Claude Code 定制化指南：详解 CLAUDE.md、Skills 与 Subagents
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Claude-Code-%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8%E5%AF%B9%E8%AF%9D"><span class="toc-nav-text">Claude Code 如何存储对话</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Skill-%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-nav-text">Skill 文件结构</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Python-%E8%84%9A%E6%9C%AC%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-nav-text">Python 脚本的实现原理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1"><span class="toc-nav-text">数据建模</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95%EF%BC%9A%E5%9F%BA%E4%BA%8E%E6%9D%83%E9%87%8D%E7%9A%84%E7%9B%B8%E5%85%B3%E6%80%A7%E8%AF%84%E5%88%86"><span class="toc-nav-text">搜索算法：基于权重的相关性评分</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96%EF%BC%9A%E5%A4%8D%E7%8E%B0%E8%AE%B0%E5%BF%86%E7%9A%84%E5%85%B3%E9%94%AE"><span class="toc-nav-text">信息提取：复现记忆的关键</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%AF%8F%E6%97%A5%E6%91%98%E8%A6%81%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-nav-text">每日摘要模式的实现</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97"><span class="toc-nav-text">使用指南</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%80%EF%BC%9A%E6%89%BE%E5%9B%9E%E4%B8%A2%E5%A4%B1%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-nav-text">场景一：找回丢失的解决方案</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%9C%BA%E6%99%AF%E4%BA%8C%EF%BC%9A%E5%9B%9E%E5%BF%86%E5%B7%A5%E4%BD%9C%E5%86%85%E5%AE%B9"><span class="toc-nav-text">场景二：回忆工作内容</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%8F%82%E8%80%83"><span class="toc-nav-text">参考</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2026/01/18/talk-to-claude-memory/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>

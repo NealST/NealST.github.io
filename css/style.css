@@ -916,6 +916,13 @@ h2.article-head {
 .author .share-icons .icon-douban {
   color: #00b51d;
 }
+.author .share-icons .fa-xiaohongshu {
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  vertical-align: middle;
+}
 .project-app {
   max-width: 1020px;
   min-width: 300px;
