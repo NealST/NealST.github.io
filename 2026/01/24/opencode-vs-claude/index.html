@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.jpg">
+  
+  <title>
+    
+      深入对比 OpenCode 与 Claude Code | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.jpg" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>深入对比 OpenCode 与 Claude Code</h2>
+  <p class="post-date">2026-01-24</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F5278f6e8e35048a881fcf81035908630?format=webp&width=2000"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>来自 builder.io 团队的 Alice Moore 设计了一组实验对 opencode 和 claude code 进行了深度对比，以下为笔者整理后的分享。</p>
+</blockquote>
+<p>OpenCode 旨在复刻 Claude Code 的所有“魔法”，两者都允许开发者直接在命令行中与代码库对话、执行终端指令，甚至完成功能交付——全程无需切换窗口。核心差异在于生态的开放性：Claude Code 将用户严格限制在 Anthropic 的生态圈内，作为 Anthropic 的官方命令行工具，它的体验打磨得十分精致，能扫描你的代码仓库并安全地处理编辑，用户无法随心所欲地切换到 GPT 或尝试本地模型，尽管市面上有一些社区代理项目作为变通方案，但它们往往脆弱且缺乏官方支持。</p>
+<p>OpenCode 则是 SST 团队推出的开源替代方案。它采取了将用户界面（UI）与 AI 能力解耦的策略，支持接入超过 75 家不同的模型提供商。</p>
+<p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F5d03abf949ce459a9a6d59e823966e0e?format=webp&width=2000"></p>
+<p>它的杀手锏在于灵活性，这种灵活性的代价是成熟度。OpenCode 迭代速度极快，这意味着你偶尔会遇到 Bug。但如果你愿意为了“运行任意模型”的自由而容忍一些打磨上的小瑕疵，那么它绝对是一个极具吸引力的选择。</p>
+<h2 id="理论特性对比"><a href="#理论特性对比" class="headerlink" title="理论特性对比"></a>理论特性对比</h2><table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">Claude Code</th>
+<th align="left">OpenCode</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>源代码</strong></td>
+<td align="left">专有软件 (闭源)</td>
+<td align="left">MIT 协议开源</td>
+</tr>
+<tr>
+<td align="left"><strong>模型支持</strong></td>
+<td align="left">仅限 Claude</td>
+<td align="left">支持 75+ 提供商，以及 Ollama</td>
+</tr>
+<tr>
+<td align="left"><strong>订阅与授权</strong></td>
+<td align="left">原生支持 (Pro&#x2F;Max 计划)</td>
+<td align="left">情况不一 (Zen 计划 + 自带 Key。部分 OAuth 流程目前处于变动中)</td>
+</tr>
+<tr>
+<td align="left"><strong>价格</strong></td>
+<td align="left">$20-200&#x2F;月，或按 API 计费</td>
+<td align="left">工具免费。费用直接付给你的模型提供商</td>
+</tr>
+<tr>
+<td align="left"><strong>桌面端&#x2F;Web 端</strong></td>
+<td align="left">研究预览版 (Research preview)</td>
+<td align="left">桌面应用 (Beta 测试版)</td>
+</tr>
+<tr>
+<td align="left"><strong>IDE 插件</strong></td>
+<td align="left">VS Code, JetBrains</td>
+<td align="left">VS Code</td>
+</tr>
+<tr>
+<td align="left"><strong>架构</strong></td>
+<td align="left">命令行 (CLI) 工具</td>
+<td align="left">客户端&#x2F;服务端 + HTTP API</td>
+</tr>
+<tr>
+<td align="left"><strong>MCP 配置</strong></td>
+<td align="left">会话切换，懒加载 (实验性功能)</td>
+<td align="left">针对每个 Agent 的 Glob 匹配模式</td>
+</tr>
+<tr>
+<td align="left"><strong>本地模型</strong></td>
+<td align="left">不支持 (存在非官方变通方案)</td>
+<td align="left">支持 (原生集成 Ollama)</td>
+</tr>
+</tbody></table>
+<p>OpenCode 采用客户端&#x2F;服务端（C&#x2F;S）设计，从而解锁了一系列“高阶玩法”，比如在远程 Docker 容器中运行会话。目前，SST 团队正全力打造“Workspaces（工作区）”功能。</p>
+<p><img src="http://youke.猪猪网络.cn/s1/2026/01/24/69748110b8635.webp"></p>
+<p>它能确保即便你合上笔记本电脑，任务状态依然持久在线——这种持久化的工作流，Claude Code 由于其相对简单的 CLI 架构目前无法实现。</p>
+<h2 id="实战效果对比"><a href="#实战效果对比" class="headerlink" title="实战效果对比"></a>实战效果对比</h2><p>在实战效果方面，Alice Moore 设计了一个实验：统一使用 Claude Sonnet 4.5 模型，将这两个工具分别置于全新的 Docker 容器中运行，彻底排除本地配置可能带来的干扰。</p>
+<h3 id="测试方法论"><a href="#测试方法论" class="headerlink" title="测试方法论"></a>测试方法论</h3><ul>
+<li><strong>代码库</strong>：一个包含既有测试用例的中型 TypeScript&#x2F;Node.js 项目。</li>
+<li><strong>模型</strong>：两款工具均使用 Claude Sonnet 4.5。</li>
+<li><strong>运行环境</strong>：无任何预设配置或历史记录的全新 Docker 容器。</li>
+<li><strong>评估维度</strong>：任务完成度、耗时、权限交互频率、代码变更（Diff）质量，以及错误恢复能力。</li>
+</ul>
+<h3 id="测试任务清单"><a href="#测试任务清单" class="headerlink" title="测试任务清单"></a>测试任务清单</h3><p><strong>任务 1：跨文件重命名（“压力测试”）</strong><br>这是最容易出错的环节。在多个文件中重构全局变量，是检验 AI Agent 真实能力的试金石。</p>
+<ul>
+<li><strong>提示词</strong>：“找出代码库中所有 <code>user_id</code> 的定义和引用。按照驼峰命名法（camelCase），将它们全部重命名为 <code>userId</code>。修改后必须确保代码仍能通过编译。”</li>
+</ul>
+<p><strong>任务 2：Bug 修复</strong><br>这个任务非常贴近实战。我在项目中预埋了一个隐蔽的类型错误，考察工具能否在没有我“手把手指导”的情况下，自主定位并修复它。</p>
+<ul>
+<li><strong>提示词</strong>：“在这个项目中有一个类型错误。找到并修复它，最后运行 TypeScript 编译器进行验证。”</li>
+</ul>
+<p><strong>任务 3：代码重构</strong><br>考察代码维护能力。我要求模型识别出重复的模糊匹配逻辑，并将它们抽象提取为一个公用的辅助函数。</p>
+<ul>
+<li><strong>提示词</strong>：“<code>suggestEnumValue</code> 和 <code>suggestFieldName</code> 函数包含了相似的模糊匹配逻辑。请将公共模式提取出来，封装成一个共享的辅助函数。”</li>
+</ul>
+<p><strong>任务 4：编写测试</strong><br>这是开发者通常最不愿意做的工作。我指定了一个没有任何测试代码的模块，看它们能否模仿项目中现有的测试风格，补全测试用例。</p>
+<ul>
+<li><strong>提示词</strong>：“<code>validators.ts</code> 模块目前没有任何测试。请参照现有的测试模式，为该模块所有导出的函数编写全面的单元测试。”</li>
+</ul>
+<h3 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h3><table>
+<thead>
+<tr>
+<th align="left">任务</th>
+<th align="left">Claude Code</th>
+<th align="left">OpenCode</th>
+<th align="left">胜出者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>跨文件重命名</strong></td>
+<td align="left">完成重命名，保留了注释 (3分06秒)</td>
+<td align="left">完成全部重命名 (3分13秒)</td>
+<td align="left">视偏好而定</td>
+</tr>
+<tr>
+<td align="left"><strong>Bug 修复</strong></td>
+<td align="left">修复正确 (41秒)</td>
+<td align="left">修复正确 (40秒)</td>
+<td align="left">平局</td>
+</tr>
+<tr>
+<td align="left"><strong>代码重构</strong></td>
+<td align="left">重构干净利落 (2分10秒)</td>
+<td align="left">重构 + 顺手修了个无关的类型错误 (3分16秒)</td>
+<td align="left">平局</td>
+</tr>
+<tr>
+<td align="left"><strong>编写测试</strong></td>
+<td align="left">写了 73 个测试 (3分12秒)</td>
+<td align="left">写了 94 个测试 (9分11秒)</td>
+<td align="left">OpenCode</td>
+</tr>
+<tr>
+<td align="left"><strong>总耗时</strong></td>
+<td align="left"><strong>9分09秒</strong></td>
+<td align="left"><strong>16分20秒</strong></td>
+<td align="left"><strong>Claude Code</strong></td>
+</tr>
+</tbody></table>
+<p>总结下来：Claude Code 胜在速度，OpenCode 赢在周全。</p>
+<h3 id="重命名任务：注释的去留"><a href="#重命名任务：注释的去留" class="headerlink" title="重命名任务：注释的去留"></a>重命名任务：注释的去留</h3><p>在代码重命名的硬指标上，两款 Agent 都交出了满分答卷：变量、参数、接口，修改准确无误，编译构建也是一遍通过。真正的分歧点，在于它们如何处理代码中的“软信息”。</p>
+<p>Claude Code 的处理方式更显细腻。它保留了 JSDoc 注释和说明性文字，并给出了理由：这些注释引用的是业务“概念”，而非具体的“变量名”。在它看来，文档说明和代码逻辑是两个应当区分对待的层级。</p>
+<p><video src="https://vimeo.com/1157843616?share=copy&fl=sv&fe=ci"></video></p>
+<p>OpenCode 在这里表现得更像一个追求极致统一的开发者。它做得非常彻底，重命名了所有内容，连注释也没放过。当 Claude 原封不动地保留了 “Initialize the user context with the given user_id” 时，OpenCode 直接把它更新成了 “Initialize the user context with the given userId”。</p>
+<p><video src="https://vimeo.com/1157844892?share=copy&fl=sv&fe=ci"></video></p>
+<p>至于孰优孰劣，取决于你的使用场景。如果你的注释会被其他工具解析并生成 API 文档，OpenCode 的处理会帮你节省手动清理的时间；如果是写给内部维护者看的备注，保留原始术语有时反而表意更清晰。值得肯定的是，这两款工具都没有这一过程中“丢失”文件，它们只是基于不同的逻辑做出了不同的选择。</p>
+<h3 id="编写测试：速度与质量的博弈"><a href="#编写测试：速度与质量的博弈" class="headerlink" title="编写测试：速度与质量的博弈"></a>编写测试：速度与质量的博弈</h3><p>乍一看，OpenCode 似乎反应迟钝：耗时 9 分钟，而 Claude 仅需 3 分钟。但如果深究细节，会发现两者策略截然不同。</p>
+<p>OpenCode 采取了稳扎稳打的策略：它先运行 <code>pnpm install</code> 确保依赖环境最新，接着运行整个测试套件以防止引入回归错误。它编写了 94 个测试用例，并确认它们与项目中现存的 200 多个测试能和谐共处。</p>
+<p>Claude Code 则主打极致速度。它编写了 73 个测试，验证了这些新测试能跑通，然后没跑全量测试就直接“打完收工”了。</p>
+<p>Claude Code 默认现有基础是稳固的，只管全速冲线；而 OpenCode 则假设环境可能存在变数，必须验证整个系统无误后才交付。</p>
+<h2 id="MCP-与“上下文税”"><a href="#MCP-与“上下文税”" class="headerlink" title="MCP 与“上下文税”"></a>MCP 与“上下文税”</h2><p>这两款工具都支持模型上下文协议（MCP），允许你轻松挂载 GitHub 或 Postgres 等外部服务，功能虽然强大，但必须考虑背后那个隐蔽的代价：上下文污染（Context Pollution），当你使用 MCP 服务时，它会将所有可用的工具定义一次性注入模型的上下文中。仅一个 GitHub 服务就能引入 15 个工具，一个数据库服务端又能再加一打。</p>
+<p>在我的测试中，同时挂载 7 个活跃服务时，还没开始输入提示词，MCP 就已经占据了 200k Token 窗口的四分之一。按照 Claude Opus 4.5 的定价，这简直是在烧钱（每场会话起步价约为 1.25 美元），而这些成本，可能仅仅是为了加载一堆根本用不到的工具。</p>
+<p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F75f265fc3551493695924d9b167d48fb?format=webp&width=2000"></p>
+<h3 id="Claude-Code-的处理方式"><a href="#Claude-Code-的处理方式" class="headerlink" title="Claude Code 的处理方式"></a>Claude Code 的处理方式</h3><p>Claude Code 目前采用的是<strong>手动管理</strong>模式。你需要通过命令行（<code>claude mcp add</code>）添加服务端，再用 <code>/mcp</code> 命令来手动开关。如果你追求严格的环境隔离，就需要在各种配置文件和启动参数（Flags）之间反复切换。</p>
+<p>不过通过设置 <code>ENABLE_EXPERIMENTAL_MCP_CLI=true</code>，可以启用<strong>懒加载（lazy-loads）</strong>模式。它能按需调用工具，而非开局就全量加载，这对降低开销帮助巨大。但该功能目前仍处于实验阶段，且不支持为不同任务创建持久化的配置档案（Profiles）。</p>
+<h3 id="OpenCode-的处理方式"><a href="#OpenCode-的处理方式" class="headerlink" title="OpenCode 的处理方式"></a>OpenCode 的处理方式</h3><p>OpenCode 管理工具的方式更像是在处理项目的依赖项。你可以在 <code>opencode.jsonc</code> 文件中进行配置，并通过 Glob 匹配模式来精准控制“谁能看到什么”。</p>
+<p>这种声明式（declarative）的风格保证了上下文的纯净，你可以将特定的工具精准投喂给需要它的 Agent，而不是把杂乱无章的所有工具（kitchen sink）都一股脑地塞进每一场对话里。</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>如果你只需要挂载一两个服务，两款工具体验差异不大，你几乎感觉不到上下文“臃肿”带来的影响。</p>
+<p>但如果你是在搭建一套复杂的重型技术栈，比如同时接入 GitHub、Sentry 和数据库访问，那么 OpenCode 会更适合。它的机制能确保你的上下文窗口不会彻底失控，帮你省下可观的 Token 费用。</p>
+<h2 id="安全与权限"><a href="#安全与权限" class="headerlink" title="安全与权限"></a>安全与权限</h2><p>让大模型直接访问 Shell 终端，类似于<strong>把电钻交给一个蹒跚学步的幼儿</strong>。效率虽然高，但风险同样巨大。</p>
+<p>能读写文件、执行命令的 Agent 是效率的<strong>倍增器</strong>，但稍有不慎，它们也可能成为破坏系统的根源。</p>
+<h3 id="Claude-Code-的策略"><a href="#Claude-Code-的策略" class="headerlink" title="Claude Code 的策略"></a>Claude Code 的策略</h3><p>Claude Code 走的是“<strong>稳字当头</strong>”路线。它默认为只读模式，在写入文件或执行命令前都会征求你的许可。这会增加了操作的繁琐度，但这层繁琐可以筑起任务执行到意外发生的 <code>rm -rf</code> 之间的<strong>最后一道防线</strong>。</p>
+<p>个人是 <strong>Plan Mode（规划模式）</strong> 的忠实拥趸。它能把 Agent 限制在分析和规划阶段，让你安心地进行架构梳理，而完全不用担心误触任何代码。</p>
+<p>当然，如果你喜欢<strong>在危险边缘疯狂试探</strong>，也可以用 <code>--dangerously-skip-permissions</code> 标志来撤掉这张安全网。但我建议只在一次性容器等隔离环境中使用。Anthropic 正在研发更深度的沙箱机制，但在那之前，这些繁琐的询问是非常有必要的。</p>
+<h3 id="OpenCode-的策略"><a href="#OpenCode-的策略" class="headerlink" title="OpenCode 的策略"></a>OpenCode 的策略</h3><p>OpenCode 主打<strong>透明度</strong>。作为开源软件，你的安全团队可以直接审计其代码。它在哪儿运行、能访问什么，全在你的掌控之中。</p>
+<p>他们的路线图包含了“Workspaces”，支持在 Docker 或云端沙箱中运行会话，能让 Agent 与你的宿主操作系统彻底隔离。</p>
+<p>在绝对意义上，没有哪个工具是完美安全的。Claude 通过<strong>软件限制</strong>提供安全感，而 OpenCode 通过<strong>基础设施控制权</strong>提供安全感。选哪个，取决于你的风险偏好。</p>
+<h2 id="上手门槛"><a href="#上手门槛" class="headerlink" title="上手门槛"></a>上手门槛</h2><p>Claude Code 的启动体验非常丝滑。只需运行 <code>npm install</code>，它就能自动搞定 Anthropic 账户的认证。如果你已经是 Pro 或 Max 订阅用户，CLI 工具会<strong>立刻识别</strong>你的权益。此外，官方还提供了适配 VS Code 和 JetBrains 的扩展插件。</p>
+<p>OpenCode 的路径则略有不同。你需要通过 <code>curl</code> 命令进行安装，安装程序会引导你选择模型提供商。万一某种认证方式失效，你可以随时切换提供商，或者退回到使用标准 API Key 的老办法。同时，它也配备了桌面端应用和 VS Code 扩展。</p>
+<p><strong>省流总结</strong>：Claude Code 能让你以最快速度跑通 “Hello World”；OpenCode 虽然前期配置稍显繁琐，但赋予了你<strong>彻底摆脱单一供应商依赖的自由</strong>。</p>
+<h2 id="最终决策指南"><a href="#最终决策指南" class="headerlink" title="最终决策指南"></a>最终决策指南</h2><p><strong>在以下情况下，请选择 Claude Code：</strong></p>
+<ul>
+<li>你追求 Anthropic 官方那种<strong>精致、原生</strong>的体验。</li>
+<li>你手头已经有 Claude Pro 或 Max 订阅，并且想把它的价值<strong>最大化</strong>。</li>
+<li>你的安全团队只认<strong>大厂背书</strong>，需要供应商的安全承诺。</li>
+<li>Claude 模型已经能完美覆盖你 <strong>100%</strong> 的需求。</li>
+<li>你喜欢简单直接，<strong>只想开箱即用</strong>，不想折腾配置。</li>
+</ul>
+<p><strong>在以下情况下，请切换到 OpenCode：</strong></p>
+<ul>
+<li>你偏爱可以审计、Fork 或深度定制的<strong>开源软件</strong>。</li>
+<li>你需要<strong>更多选项</strong>：为了隐私跑本地模型，或者为了省钱随时切换便宜的供应商。</li>
+<li>你是<strong>硬核玩家（Power User）</strong>，想要对上下文限制和 Agent 定义拥有<strong>细粒度</strong>的控制权。</li>
+<li>你需要认证状态在不同工具间<strong>持久化</strong>，厌倦了重复登录。</li>
+<li>你热衷于<strong>折腾</strong>和打造完全属于自己的开发环境。</li>
+</ul>
+<p>讲真，这两个都是靠谱的选择。归根结底，就看你是更喜欢一座<strong>修剪得整整齐齐的“围墙花园”</strong>，还是一座<strong>四通八达的开放式公园</strong>。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2026/01/18/talk-to-claude-memory/">
+        <span class="nav-arrow">← </span>
+        
+          如何构建一个能让 Claude Code 做记忆检索的 Skill
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%90%86%E8%AE%BA%E7%89%B9%E6%80%A7%E5%AF%B9%E6%AF%94"><span class="toc-nav-text">理论特性对比</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%AE%9E%E6%88%98%E6%95%88%E6%9E%9C%E5%AF%B9%E6%AF%94"><span class="toc-nav-text">实战效果对比</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="toc-nav-text">测试方法论</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%B5%8B%E8%AF%95%E4%BB%BB%E5%8A%A1%E6%B8%85%E5%8D%95"><span class="toc-nav-text">测试任务清单</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="toc-nav-text">测试结果</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%87%8D%E5%91%BD%E5%90%8D%E4%BB%BB%E5%8A%A1%EF%BC%9A%E6%B3%A8%E9%87%8A%E7%9A%84%E5%8E%BB%E7%95%99"><span class="toc-nav-text">重命名任务：注释的去留</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%BC%96%E5%86%99%E6%B5%8B%E8%AF%95%EF%BC%9A%E9%80%9F%E5%BA%A6%E4%B8%8E%E8%B4%A8%E9%87%8F%E7%9A%84%E5%8D%9A%E5%BC%88"><span class="toc-nav-text">编写测试：速度与质量的博弈</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#MCP-%E4%B8%8E%E2%80%9C%E4%B8%8A%E4%B8%8B%E6%96%87%E7%A8%8E%E2%80%9D"><span class="toc-nav-text">MCP 与“上下文税”</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Claude-Code-%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="toc-nav-text">Claude Code 的处理方式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#OpenCode-%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="toc-nav-text">OpenCode 的处理方式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-nav-text">结论</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%AE%89%E5%85%A8%E4%B8%8E%E6%9D%83%E9%99%90"><span class="toc-nav-text">安全与权限</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Claude-Code-%E7%9A%84%E7%AD%96%E7%95%A5"><span class="toc-nav-text">Claude Code 的策略</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#OpenCode-%E7%9A%84%E7%AD%96%E7%95%A5"><span class="toc-nav-text">OpenCode 的策略</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%8A%E6%89%8B%E9%97%A8%E6%A7%9B"><span class="toc-nav-text">上手门槛</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%9C%80%E7%BB%88%E5%86%B3%E7%AD%96%E6%8C%87%E5%8D%97"><span class="toc-nav-text">最终决策指南</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2026/01/24/opencode-vs-claude/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>
