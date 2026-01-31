@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.jpg">
+  
+  <title>
+    
+      为什么说“下一个 Token 预测”是对 AI 认知的陈腐偏见 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.jpg" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>为什么说“下一个 Token 预测”是对 AI 认知的陈腐偏见</h2>
+  <p class="post-date">2026-01-31</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://youke.猪猪网络.cn/s1/2026/01/31/697dc8c103114.webp">[^fig1]<br>[^fig1]: “一张鹦鹉的电影级特写，它半张脸显露为先进的控制论机械结构，象征着 AI 推理背后隐藏的复杂性。” — 由 Nano Banana 生成</p>
+<blockquote>
+<p>在 medium 上看到了博主 Adham Khaled 对于 AI 认知的一个分享，觉得非常不错。为了方便大家理解，我做了结构梳理，行文优化和内容补充。</p>
+</blockquote>
+<h2 id="还原论的陷阱：被误解的点火装置"><a href="#还原论的陷阱：被误解的点火装置" class="headerlink" title="还原论的陷阱：被误解的点火装置"></a>还原论的陷阱：被误解的点火装置</h2><p>在 AI 圈的讨论以及日常工作中，我们经常常能听到一种深度还原论的观点：“LLM 本质上就是根据概率预测下一个 Token，这模型没有灵魂，只是一只‘随机鹦鹉’罢了”。</p>
+<p>从物理层面看，这没什么毛病，就像我们可以说：</p>
+<ul>
+<li>法拉利引擎的本质，不过是一连串受控的汽油爆炸；</li>
+<li>人类大脑的本质，不过是碳基神经元之间的电化学信号交换。</li>
+</ul>
+<p><strong>但技术分析不能止步于“点火装置”。</strong> 如果你只盯着爆炸，那就没法解释赛车为何能以 300 公里的时速过弯；如果只盯着 Token 预测，那你将完全错过 AI 推理时代的新质生产力。</p>
+<p>AI 已经从文本概率进化到了策略优化。支撑这一跨越的，是底层算法逻辑的全面迭代：从早期的 RLHF（基于人类反馈的强化学习），再到后来的 DPO（直接偏好优化），以及如今的 GRPO（群体相对策略优化） 与 RLVR（基于可验证奖励的强化学习）。</p>
+<h2 id="1-0-时代：强化学习与讨好型人格的局限"><a href="#1-0-时代：强化学习与讨好型人格的局限" class="headerlink" title="1.0 时代：强化学习与讨好型人格的局限"></a>1.0 时代：强化学习与讨好型人格的局限</h2><p>在 GPT-3 时代（2020–2022），我们主要依靠 <strong>RLHF（基于人类反馈的强化学习）</strong>。</p>
+<p>当时的逻辑类似训狗：模型生成答案，人类给出好评或差评。为了量化这个过程，工程师们引入了 <strong>PPO（近端策略优化）</strong> 算法，通过一个额外的奖励模型来充当评委。</p>
+<ul>
+<li><strong>缺陷：</strong> 这一阶段的模型是讨好型人格。它们学习的是如何让答案看起来像人类喜欢的样子，而非什么是正确的逻辑，这就带来了严重的幻觉问题 — 模型会为了显得专业而编造事实。</li>
+<li><strong>结论：</strong> 此时的 AI 确实更像一只学舌的鹦鹉，只是模仿人类的语调，而非理解世界的真理。</li>
+</ul>
+<h2 id="2-0-时代：DPO-与-偏好的内生化"><a href="#2-0-时代：DPO-与-偏好的内生化" class="headerlink" title="2.0 时代：DPO 与 偏好的内生化"></a>2.0 时代：DPO 与 偏好的内生化</h2><p>到了2024年，<strong>DPO（直接偏好优化）</strong> 逐渐取代了复杂的 PPO。</p>
+<p>DPO 取消了中间环节的“奖励模型”，直接将人类的偏好数据喂给模型，比如：</p>
+<ul>
+<li>答案 A： “中国的首都名为北京。”（胜者）</li>
+<li>答案 B： “中国的首都是一种烤鸭。”（败者）</li>
+</ul>
+<p>DPO 的策略是将这些数据直接喂进模型的损失函数中，告诉算法：最大化 A 的概率，最小化 B 的概率。</p>
+<p>虽然 DPO 极大提升了训练效率，并让 AI 变得更聪明、更符合人类价值观，但它依然建立在<strong>模仿偏好</strong>的基础上，直到推理模型的爆发，AI 才真正进化到了了逻辑推理的阶段。</p>
+<h2 id="推理时代：GRPO-如何重塑-AI-的思考"><a href="#推理时代：GRPO-如何重塑-AI-的思考" class="headerlink" title="推理时代：GRPO 如何重塑 AI 的思考"></a>推理时代：GRPO 如何重塑 AI 的思考</h2><p>在 2024 年末和 2025 年初，DeepSeek-R1 等模型的崛起，标志着 <strong>GRPO（群体相对策略优化）</strong> 时代的到来。</p>
+<p>GRPO 不再需要人类手把手教模型怎么写，而是让模型在实战中自我进化：</p>
+<ol>
+<li><strong>群体竞争：</strong> 面对一道复杂数学题，模型同时生成 16 个甚至更多解题路径。</li>
+<li><strong>自我博弈：</strong> 模型不依赖外部评分，而是通过群体内部的相对比较，识别出哪条路径导致了成功，哪条导致了死胡同。</li>
+<li><strong>强化路径：</strong> 那些通往正确答案的神经通路被反复强化，错误的被抑制。</li>
+</ol>
+<p>这就已经超越了概率预测的范畴，进入了策略博弈的领域。模型在学习如何调度其有限的计算资源（思维链），以达成逻辑上的自洽。它不仅只是预测下一个Token，而是在构建一个通往真理的路径图。</p>
+<h2 id="为什么-AI-写代码比你强：RLVR-带来的硬约束"><a href="#为什么-AI-写代码比你强：RLVR-带来的硬约束" class="headerlink" title="为什么 AI 写代码比你强：RLVR 带来的硬约束"></a>为什么 AI 写代码比你强：RLVR 带来的硬约束</h2><p>如果说 GRPO 是让 AI 自我思考，那么 <strong>RLVR（基于可验证奖励的强化学习）</strong> 则是给 AI 叠上了一套“客观真理”的 BUFF。</p>
+<p>在编程、数学、逻辑证明等领域，好坏不再由人类主观判定，而是由编译器和逻辑判定引擎决定：</p>
+<ul>
+<li>代码写错了？ 运行一下，报错即惩罚。</li>
+<li>数学算错了？验证结果，错误即归零。</li>
+</ul>
+<p>在 RLVR 的反馈循环中，AI 不再关心人类想听什么，它只关心物理世界中什么是运行得通的。这种基于Ground Truth（基本真理）的进化，让 AI 拥有了超越人类经验的自学习能力。</p>
+<h2 id="结语：认知落后是最大的风险"><a href="#结语：认知落后是最大的风险" class="headerlink" title="结语：认知落后是最大的风险"></a>结语：认知落后是最大的风险</h2><p>当一些人还在争论 AI 是否有“意识”、是否只是“统计学”时，部分领先的工程师已经开始利用这些推理引擎重构代码库、加速新药研发、推导物理公式。</p>
+<p><strong>下一个 Token 预测这种论调只是 AI 的物理外壳，而目标驱动的策略优化才是它的灵魂。</strong></p>
+<p>认知指导行动，如果你相信 AI 只是只鹦鹉，你就只会像用鹦鹉一样使用它，让它写写邮件、总结一下会议纪要，把它当成玩具。</p>
+<p>在这个“推理时代”，我们需要放下这些过时的偏见。<strong>AI 正在学会思考，而我们首先需要学会如何正确看待它的思考。</strong></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2026/01/24/opencode-vs-claude/">
+        <span class="nav-arrow">← </span>
+        
+          深入对比 OpenCode 与 Claude Code
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%BF%98%E5%8E%9F%E8%AE%BA%E7%9A%84%E9%99%B7%E9%98%B1%EF%BC%9A%E8%A2%AB%E8%AF%AF%E8%A7%A3%E7%9A%84%E7%82%B9%E7%81%AB%E8%A3%85%E7%BD%AE"><span class="toc-nav-text">还原论的陷阱：被误解的点火装置</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-0-%E6%97%B6%E4%BB%A3%EF%BC%9A%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E4%B8%8E%E8%AE%A8%E5%A5%BD%E5%9E%8B%E4%BA%BA%E6%A0%BC%E7%9A%84%E5%B1%80%E9%99%90"><span class="toc-nav-text">1.0 时代：强化学习与讨好型人格的局限</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-0-%E6%97%B6%E4%BB%A3%EF%BC%9ADPO-%E4%B8%8E-%E5%81%8F%E5%A5%BD%E7%9A%84%E5%86%85%E7%94%9F%E5%8C%96"><span class="toc-nav-text">2.0 时代：DPO 与 偏好的内生化</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%8E%A8%E7%90%86%E6%97%B6%E4%BB%A3%EF%BC%9AGRPO-%E5%A6%82%E4%BD%95%E9%87%8D%E5%A1%91-AI-%E7%9A%84%E6%80%9D%E8%80%83"><span class="toc-nav-text">推理时代：GRPO 如何重塑 AI 的思考</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-AI-%E5%86%99%E4%BB%A3%E7%A0%81%E6%AF%94%E4%BD%A0%E5%BC%BA%EF%BC%9ARLVR-%E5%B8%A6%E6%9D%A5%E7%9A%84%E7%A1%AC%E7%BA%A6%E6%9D%9F"><span class="toc-nav-text">为什么 AI 写代码比你强：RLVR 带来的硬约束</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BB%93%E8%AF%AD%EF%BC%9A%E8%AE%A4%E7%9F%A5%E8%90%BD%E5%90%8E%E6%98%AF%E6%9C%80%E5%A4%A7%E7%9A%84%E9%A3%8E%E9%99%A9"><span class="toc-nav-text">结语：认知落后是最大的风险</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2026/01/31/ai-understanding/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>
