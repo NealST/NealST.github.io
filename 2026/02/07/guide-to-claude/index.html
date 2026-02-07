@@ -212,7 +212,7 @@
   <article class="post-article">
     <section class="markdown-content"><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fc46f9083ec71424d8b2c6ae0820a148e?format=webp&width=2000"></p>
 <p>如果你正在使用 <a target="_blank" rel="noopener" href="https://claude.com/product/claude-code">Claude Code</a>（或者 Cursor、Zed 等支持类似机制的 AI 编程工具），可能会遇到一个常见痛点：<strong>AI 总是记不住你的项目规范</strong>。它不知道你对于命名导出和默认导出的偏好，也不知道你的测试命令是 <code>pnpm test:e2e</code>，于是每次执行编程任务时它只能一遍又一遍的去读取你的项目代码以获取上述知识，这不仅会增加任务执行的耗时，还会浪费不少 token。</p>
-<p>于是工程侧推出了 <code>CLAUDE.md</code> 的方案，它是一个 Markdown 文件，角色类似于项目的“系统设定”，Claude 会在每次会话开始时自动读取它，能让 AI 瞬间懂你的项目。</p>
+<p>于是工程侧推出了 <code>CLAUDE.md</code> 的方案，它是一个 Markdown 文件，角色类似于项目的“系统设定”，Claude 会在每次会话开始时自动读取它，从而形成对你项目的第一印象。</p>
 <h2 id="如何创建？"><a href="#如何创建？" class="headerlink" title="如何创建？"></a>如何创建？</h2><p>最快的方法是运行命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/init</span><br></pre></td></tr></table></figure>
 <p>Claude 会根据你的项目结构自动生成一个初版。</p>
@@ -235,30 +235,24 @@
 </blockquote>
 </li>
 <li><p><strong>代码风格 (Code Style)</strong><br>明确你的风格偏好，不要只说“代码要规范”，“要具体”这种正确的废话。</p>
-<blockquote>
 <ul>
 <li>TypeScript strict mode，禁止使用 <code>any</code></li>
 <li>必须使用 Named Exports</li>
 <li>CSS 仅使用 Tailwind utility classes</li>
 </ul>
-</blockquote>
 </li>
 <li><p><strong>常用命令 (Commands)</strong><br>告诉 Claude 怎么干活。</p>
-<blockquote>
 <ul>
 <li><code>npm run dev</code>: 启动开发服务器</li>
 <li><code>npm run test</code>: 运行 Jest 测试</li>
 <li><code>npm run db:migrate</code>: 执行数据库迁移</li>
 </ul>
-</blockquote>
 </li>
 <li><p><strong>避坑指南 (Gotchas)</strong><br>项目里那些特殊的规则和警告。</p>
-<blockquote>
 <ul>
 <li>认证模块有特殊的重试逻辑，不要改动</li>
 <li>API 端点必须包含特定的 Header</li>
 </ul>
-</blockquote>
 </li>
 </ol>
 <h3 id="完整示例-Next-js-项目"><a href="#完整示例-Next-js-项目" class="headerlink" title="完整示例 (Next.js 项目)"></a>完整示例 (Next.js 项目)</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Project: ShopFront</span></span><br><span class="line"></span><br><span class="line">Next.js 14 e-commerce application with App Router, Stripe payments, and Prisma ORM.</span><br><span class="line"></span><br><span class="line"><span class="section">## Code Style</span></span><br><span class="line"><span class="bullet">-</span> TypeScript strict mode, no <span class="code">`any`</span> types</span><br><span class="line"><span class="bullet">-</span> Use named exports, not default exports</span><br><span class="line"><span class="bullet">-</span> CSS: Tailwind utility classes, no custom CSS files</span><br><span class="line"></span><br><span class="line"><span class="section">## Commands</span></span><br><span class="line"><span class="bullet">-</span> <span class="code">`npm run dev`</span>: Start development server (port 3000)</span><br><span class="line"><span class="bullet">-</span> <span class="code">`npm run test`</span>: Run Jest tests</span><br><span class="line"><span class="bullet">-</span> <span class="code">`npm run lint`</span>: ESLint check</span><br><span class="line"><span class="bullet">-</span> <span class="code">`npm run db:migrate`</span>: Run Prisma migrations</span><br><span class="line"></span><br><span class="line"><span class="section">## Architecture</span></span><br><span class="line"><span class="bullet">-</span> <span class="code">`/app`</span>: Next.js App Router pages</span><br><span class="line"><span class="bullet">-</span> <span class="code">`/components/ui`</span>: Reusable UI components</span><br><span class="line"><span class="bullet">-</span> <span class="code">`/lib`</span>: Utilities and shared logic</span><br><span class="line"></span><br><span class="line"><span class="section">## Important Notes</span></span><br><span class="line"><span class="bullet">-</span> NEVER commit .env files</span><br><span class="line"><span class="bullet">-</span> The Stripe webhook handler must validate signatures</span><br><span class="line"><span class="bullet">-</span> Product images are stored in Cloudinary, not locally</span><br></pre></td></tr></table></figure>
