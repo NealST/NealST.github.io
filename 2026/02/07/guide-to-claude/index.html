@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.jpg">
+  
+  <title>
+    
+      CLAUDE.md 全面指南与最佳实践 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.jpg" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>CLAUDE.md 全面指南与最佳实践</h2>
+  <p class="post-date">2026-02-07</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>如果你正在使用 <a target="_blank" rel="noopener" href="https://claude.com/product/claude-code">Claude Code</a>（或者 Cursor、Zed 等支持类似机制的 AI 编程工具），可能会遇到一个常见痛点：<strong>AI 总是记不住你的项目规范</strong>。它不知道你对于命名导出和默认导出的偏好，也不知道你的测试命令是 <code>pnpm test:e2e</code>，于是每次执行编程任务时它只能一遍又一遍的去读取你的项目代码以获取上述知识，这不仅会增加任务执行的耗时，还会浪费不少 token。</p>
+<p>于是工程侧推出了 <code>CLAUDE.md</code> 的方案，它是一个 Markdown 文件，角色类似于项目的“系统设定”，Claude 会在每次会话开始时自动读取它，能让 AI 瞬间懂你的项目。</p>
+<h2 id="如何创建？"><a href="#如何创建？" class="headerlink" title="如何创建？"></a>如何创建？</h2><p>最快的方法是运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/init</span><br></pre></td></tr></table></figure>
+<p>Claude 会根据你的项目结构自动生成一个初版。</p>
+<p><strong>建议</strong>：以 <code>/init</code> 为起点，然后大胆删除默认内容，只留下真正重要的信息，因为 Context Window（上下文窗口）是宝贵的，<code>CLAUDE.md</code> 里的每一行字都会占用 token。</p>
+<h3 id="文件位置"><a href="#文件位置" class="headerlink" title="文件位置"></a>文件位置</h3><p>你可以把文件放在以下几个地方：</p>
+<ol>
+<li><strong>项目根目录</strong>：最常见，推荐提交到 Git，可以让团队其他人共享。</li>
+<li>**<code>.claude/CLAUDE.md</code>**：利于保持根目录整的洁。</li>
+<li>**<code>~/.claude/CLAUDE.md</code>**：用户级全局配置，适用于所有项目。</li>
+<li><strong><code>CLAUDE.local.md</code><strong>：用于存放</strong>不希望提交到 Git</strong> 的个人偏好（比如你个人的编辑器习惯），但要记得把它加到 <code>.gitignore</code> 里。</li>
+</ol>
+<blockquote>
+<p><strong>注意</strong>：文件名区分大小写，必须严格是 <code>CLAUDE.md</code>。</p>
+</blockquote>
+<h2 id="应该怎么写？"><a href="#应该怎么写？" class="headerlink" title="应该怎么写？"></a>应该怎么写？</h2><p>一个优秀的 <code>CLAUDE.md</code> 应该包含以下四个核心部分：</p>
+<ol>
+<li><p><strong>项目简介 (Project Context)</strong><br>一句话讲清楚这个项目是做什么的。</p>
+<blockquote>
+<p>“这是一个使用 Next.js App Router、Stripe 支付和 Prisma ORM 的电商应用。”</p>
+</blockquote>
+</li>
+<li><p><strong>代码风格 (Code Style)</strong><br>明确你的风格偏好，不要只说“代码要规范”，“要具体”这种正确的废话。</p>
+<blockquote>
+<ul>
+<li>TypeScript strict mode，禁止使用 <code>any</code></li>
+<li>必须使用 Named Exports</li>
+<li>CSS 仅使用 Tailwind utility classes</li>
+</ul>
+</blockquote>
+</li>
+<li><p><strong>常用命令 (Commands)</strong><br>告诉 Claude 怎么干活。</p>
+<blockquote>
+<ul>
+<li><code>npm run dev</code>: 启动开发服务器</li>
+<li><code>npm run test</code>: 运行 Jest 测试</li>
+<li><code>npm run db:migrate</code>: 执行数据库迁移</li>
+</ul>
+</blockquote>
+</li>
+<li><p><strong>避坑指南 (Gotchas)</strong><br>项目里那些特殊的规则和警告。</p>
+<blockquote>
+<ul>
+<li>认证模块有特殊的重试逻辑，不要改动</li>
+<li>API 端点必须包含特定的 Header</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<h3 id="完整示例-Next-js-项目"><a href="#完整示例-Next-js-项目" class="headerlink" title="完整示例 (Next.js 项目)"></a>完整示例 (Next.js 项目)</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Project: ShopFront</span></span><br><span class="line"></span><br><span class="line">Next.js 14 e-commerce application with App Router, Stripe payments, and Prisma ORM.</span><br><span class="line"></span><br><span class="line"><span class="section">## Code Style</span></span><br><span class="line"><span class="bullet">-</span> TypeScript strict mode, no <span class="code">`any`</span> types</span><br><span class="line"><span class="bullet">-</span> Use named exports, not default exports</span><br><span class="line"><span class="bullet">-</span> CSS: Tailwind utility classes, no custom CSS files</span><br><span class="line"></span><br><span class="line"><span class="section">## Commands</span></span><br><span class="line"><span class="bullet">-</span> <span class="code">`npm run dev`</span>: Start development server (port 3000)</span><br><span class="line"><span class="bullet">-</span> <span class="code">`npm run test`</span>: Run Jest tests</span><br><span class="line"><span class="bullet">-</span> <span class="code">`npm run lint`</span>: ESLint check</span><br><span class="line"><span class="bullet">-</span> <span class="code">`npm run db:migrate`</span>: Run Prisma migrations</span><br><span class="line"></span><br><span class="line"><span class="section">## Architecture</span></span><br><span class="line"><span class="bullet">-</span> <span class="code">`/app`</span>: Next.js App Router pages</span><br><span class="line"><span class="bullet">-</span> <span class="code">`/components/ui`</span>: Reusable UI components</span><br><span class="line"><span class="bullet">-</span> <span class="code">`/lib`</span>: Utilities and shared logic</span><br><span class="line"></span><br><span class="line"><span class="section">## Important Notes</span></span><br><span class="line"><span class="bullet">-</span> NEVER commit .env files</span><br><span class="line"><span class="bullet">-</span> The Stripe webhook handler must validate signatures</span><br><span class="line"><span class="bullet">-</span> Product images are stored in Cloudinary, not locally</span><br></pre></td></tr></table></figure>
+
+<h2 id="进阶技巧：保持文件整洁"><a href="#进阶技巧：保持文件整洁" class="headerlink" title="进阶技巧：保持文件整洁"></a>进阶技巧：保持文件整洁</h2><h3 id="1-使用-imports-这里引用"><a href="#1-使用-imports-这里引用" class="headerlink" title="1. 使用 @imports 这里引用"></a>1. 使用 <code>@imports</code> 这里引用</h3><p>不要把所有文档都塞进 <code>CLAUDE.md</code>。你可以使用 <code>@path/to/file</code> 语法引用其他文件：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">See @README.md for project overview</span><br><span class="line">See @docs/api-patterns.md for API conventions</span><br></pre></td></tr></table></figure>
+<p>这样不仅让主文件保持清爽，还能按需加载上下文。</p>
+<h3 id="2-模块化规则-claude-rules"><a href="#2-模块化规则-claude-rules" class="headerlink" title="2. 模块化规则 (.claude/rules/)"></a>2. 模块化规则 (<code>.claude/rules/</code>)</h3><p>对于大型项目，你可以在 <code>.claude/rules/</code> 目录下创建多个 <code>.md</code> 文件（如 <code>style.md</code>, <code>security.md</code>）。Claude 会自动加载这个目录下的所有规则，无需手动 import。这非常适合不同团队（前端、安全组）维护各自的规范。</p>
+<h3 id="3-子目录级配置"><a href="#3-子目录级配置" class="headerlink" title="3. 子目录级配置"></a>3. 子目录级配置</h3><p>如果你的项目是 Monorepo，你可以在子目录（如 <code>/packages/ui</code> 或 <code>/api</code>）里放单独的 <code>CLAUDE.md</code>。Claude 只有在处理该目录下的文件时才会读取它们。</p>
+<h2 id="维护之道：持续迭代"><a href="#维护之道：持续迭代" class="headerlink" title="维护之道：持续迭代"></a>维护之道：持续迭代</h2><p><code>CLAUDE.md</code> 并不是一次性写完就丢的文件，它需要随着项目不断演进。</p>
+<ol>
+<li><p><strong>边做边加 (Organic Growth)</strong><br>当 Claude 犯错时（比如用错了日志库），不要只是纠正它一次。告诉它：“**Add to CLAUDE.md: always use the logger instead of console.log.**” 这样它以后就不会再犯了。</p>
+</li>
+<li><p><strong>从 Code Review 中学习</strong><br>PR 里的评论是最好的素材。如果你在 Review 别人代码时指出了一个规范问题，或者别人指出了你的问题，就把这个规则加到 <code>CLAUDE.md</code> 里，这能形成一个良性循环：<strong>Code Review 发现问题 -&gt; 更新文档 -&gt; 避免问题再次发生</strong>。</p>
+</li>
+<li><p><strong>定期检查</strong><br>每隔几周，让 Claude 自己检查一下这个文件：“Review to <code>CLAUDE.md</code> and suggest improvements.” 删除过时的，合并重复的。</p>
+</li>
+</ol>
+<h2 id="延伸探讨：CLAUDE-md-vs-AGENTS-md"><a href="#延伸探讨：CLAUDE-md-vs-AGENTS-md" class="headerlink" title="延伸探讨：CLAUDE.md vs AGENTS.md"></a>延伸探讨：CLAUDE.md vs AGENTS.md</h2><p>在 AI 编程领域，你可能还听说过 <code>AGENTS.md</code>。它们看起来很像，但定位略有不同。</p>
+<h3 id="1-核心区别"><a href="#1-核心区别" class="headerlink" title="1. 核心区别"></a>1. 核心区别</h3><ul>
+<li>**<code>CLAUDE.md</code>**：是 <strong>Anthropic Claude Code CLI</strong> 的专用配置文件。它针对 Claude Code 的工作流进行了优化（例如支持 <code>/init</code> 命令、<code>.claude/rules/</code> 自动加载机制等）。</li>
+<li><strong><code>AGENTS.md</code><strong>：是一个</strong>开放标准</strong>（由 Agentic AI Foundation 维护）。它的目标是成为所有 AI 编程代理（如 Cursor, Windsurf, Devin, GitHub Copilot 等）通用的“说明书”。</li>
+</ul>
+<h3 id="2-生态支持"><a href="#2-生态支持" class="headerlink" title="2. 生态支持"></a>2. 生态支持</h3><ul>
+<li>如果你的团队全员使用 Claude Code，**<code>CLAUDE.md</code>** 是最佳选择，因为它是原生的，整合度最高。</li>
+<li>如果你的项目是开源的，或者团队成员使用不同的 AI 工具（有人用 Cursor，有人用 Windsurf），那么 <strong><code>AGENTS.md</code></strong> 更具通用性。目前许多工具都开始支持读取根目录下的 <code>AGENTS.md</code> 作为上下文。</li>
+</ul>
+<h3 id="3-如何共存？"><a href="#3-如何共存？" class="headerlink" title="3. 如何共存？"></a>3. 如何共存？</h3><p>你完全可以两者兼得。一种简单的做法是维护一份核心文档，然后通过软链接或者引用的方式，让两个文件共享同一份内容。这样无论你的协作者使用什么 AI 工具，都能获得一致的项目上下文。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>CLAUDE.md</code> 可以固化你的项目上下文信息以帮助 claude 更高效的理解你的项目，在 claude code 中你可以在项目根目录运行 <code>/init</code> 就可以直接生成一份初始化文件，把它当成给你分配的一名实习生：你给它的入职文档越清晰，它干活就越靠谱。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2026/01/31/ai-understanding/">
+        <span class="nav-arrow">← </span>
+        
+          为什么说“下一个 Token 预测”是对 AI 认知的陈腐偏见
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%EF%BC%9F"><span class="toc-nav-text">如何创建？</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE"><span class="toc-nav-text">文件位置</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E5%86%99%EF%BC%9F"><span class="toc-nav-text">应该怎么写？</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B-Next-js-%E9%A1%B9%E7%9B%AE"><span class="toc-nav-text">完整示例 (Next.js 项目)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%BF%9B%E9%98%B6%E6%8A%80%E5%B7%A7%EF%BC%9A%E4%BF%9D%E6%8C%81%E6%96%87%E4%BB%B6%E6%95%B4%E6%B4%81"><span class="toc-nav-text">进阶技巧：保持文件整洁</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-%E4%BD%BF%E7%94%A8-imports-%E8%BF%99%E9%87%8C%E5%BC%95%E7%94%A8"><span class="toc-nav-text">1. 使用 @imports 这里引用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-%E6%A8%A1%E5%9D%97%E5%8C%96%E8%A7%84%E5%88%99-claude-rules"><span class="toc-nav-text">2. 模块化规则 (.claude&#x2F;rules&#x2F;)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-%E5%AD%90%E7%9B%AE%E5%BD%95%E7%BA%A7%E9%85%8D%E7%BD%AE"><span class="toc-nav-text">3. 子目录级配置</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BB%B4%E6%8A%A4%E4%B9%8B%E9%81%93%EF%BC%9A%E6%8C%81%E7%BB%AD%E8%BF%AD%E4%BB%A3"><span class="toc-nav-text">维护之道：持续迭代</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%BB%B6%E4%BC%B8%E6%8E%A2%E8%AE%A8%EF%BC%9ACLAUDE-md-vs-AGENTS-md"><span class="toc-nav-text">延伸探讨：CLAUDE.md vs AGENTS.md</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB"><span class="toc-nav-text">1. 核心区别</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-%E7%94%9F%E6%80%81%E6%94%AF%E6%8C%81"><span class="toc-nav-text">2. 生态支持</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-%E5%A6%82%E4%BD%95%E5%85%B1%E5%AD%98%EF%BC%9F"><span class="toc-nav-text">3. 如何共存？</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2026/02/07/guide-to-claude/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>
