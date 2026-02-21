@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.jpg">
+  
+  <title>
+    
+      生成式 UI 的三种范式以及为什么我们需要 MCP Apps | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.jpg" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>生成式 UI 的三种范式以及为什么我们需要 MCP Apps</h2>
+  <p class="post-date">2026-02-21</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>AI Agent 在推理和规划方面已经变得越来越强大，但在 UI 层却基本停滞不前，这在很大程度上限制了用户体验。当前围绕于 Agent 的实践更多聚焦于工作流编排和工具技能的实现，在用户体验上仍然依赖于聊天界面，即使任务明显需要表单、预览、控制面板或分步反馈，agent 无法让用户直接进行这种任务交互，带来的常见问题包括：</p>
+<ul>
+<li>工具执行和进度隐藏在聊天消息背后</li>
+<li>用户输入模糊，容易被误解，且难以验证</li>
+<li>多步流程感觉不透明，导致用户不信任结果</li>
+</ul>
+<p>于是，生成式 UI 应运而生。</p>
+<h2 id="什么是生成式-UI？"><a href="#什么是生成式-UI？" class="headerlink" title="什么是生成式 UI？"></a>什么是生成式 UI？</h2><p>生成式 UI（有时称为 GenUI）是一种模式，在这种模式下，用户界面的部分内容由 AI Agent 在运行时生成、选择或控制，而不是由开发者完全预先定义。</p>
+<p>UI 不是预先硬编码每一个按钮、表单或面板，而是根据用户的需求和上下文动态创建的。Agent 可以决定显示什么 UI、需要从用户那里获取什么输入，以及随着任务的进展状态应该如何更新。</p>
+<p>Agent 不仅仅是生成文本，它还可以：</p>
+<ul>
+<li>收集结构化、经过验证的输入</li>
+<li>在确切需要时渲染特定于任务的 UI</li>
+<li>将进度和中间结果显示为真实的 UI</li>
+<li>随着计划的演变调整界面</li>
+</ul>
+<p>这使得 UI 成为 Agent 执行的活跃部分，而不仅仅是聊天框周围的静态包装器，agent 不再需要从文本中推断意图。在用户感知和体验层面，Agent 系统变得更容易理解且更具引导性，用户不再是与一个黑盒交互，而是与一个通过 UI 暴露其状态的系统交互。</p>
+<p><strong>生成式 UI &#x3D; LLM 输出 → 实时、交互式的 UI</strong></p>
+<p><strong>示例：</strong></p>
+<ul>
+<li>一个旅行查询 → 行程卡片 + 地图 + 可展开的部分</li>
+<li>一个比较查询 → 可排序的表格</li>
+</ul>
+<p>生成式 UI 目前主要有三种范式，主要通过诸如 A2UI、Open-JSON-UI 或 MCP Apps 等 UI 规范来实现。</p>
+<h2 id="生成式-UI-的三种范式"><a href="#生成式-UI-的三种范式" class="headerlink" title="生成式 UI 的三种范式"></a>生成式 UI 的三种范式</h2><p>大多数生成式 UI 实现可以归入三种模式。区分它们的是前端保留了多少控制权，以及赋予了 Agent 多少自由度。</p>
+<blockquote>
+<p>下述代码示例均以 copilotKit（一个基于React的开源框架，开发者可以通过极简代码将智能助手深度集成到 Web 应用中） 作为技术实现。</p>
+</blockquote>
+<h3 id="静态生成式-UI"><a href="#静态生成式-UI" class="headerlink" title="静态生成式 UI"></a>静态生成式 UI</h3><p>静态生成式 UI 是约束最强的模式。</p>
+<p>开发者预先构建 UI 组件，Agent 的角色仅限于决定何时出现某个组件以及它接收什么数据。布局和交互完全由应用程序拥有。</p>
+<p>以 CopilotKit 中实现一个天气展示的卡片为例，这种模式使用 <code>useFrontendTool</code> Hook 实现，它将预定义的 UI 组件绑定到操作的生命周期。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Weather tool - 一个可调用的工具，在样式化卡片中显示天气数据</span></span><br><span class="line"><span class="title function_">useFrontendTool</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;get_weather&quot;</span>,</span><br><span class="line">  <span class="attr">description</span>: <span class="string">&quot;获取某个位置的当前天气信息&quot;</span>,</span><br><span class="line">  <span class="attr">parameters</span>: z.<span class="title function_">object</span>(&#123; <span class="attr">location</span>: z.<span class="title function_">string</span>().<span class="title function_">describe</span>(<span class="string">&quot;要获取天气的城市或位置&quot;</span>) &#125;),</span><br><span class="line">  <span class="attr">handler</span>: <span class="title function_">async</span> (&#123; location &#125;) =&gt; &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">r</span>) =&gt;</span> <span class="built_in">setTimeout</span>(r, <span class="number">500</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">getMockWeather</span>(location);</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">render</span>: <span class="function">(<span class="params">&#123; status, args, result &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (status === <span class="string">&quot;inProgress&quot;</span> || status === <span class="string">&quot;executing&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">WeatherLoadingState</span> <span class="attr">location</span>=<span class="string">&#123;args?.location&#125;</span> /&gt;</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (status === <span class="string">&quot;complete&quot;</span> &amp;&amp; result) &#123;</span><br><span class="line">      <span class="keyword">const</span> data = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(result) <span class="keyword">as</span> <span class="title class_">WeatherData</span>;</span><br><span class="line">      <span class="keyword">return</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">WeatherCard</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">location</span>=<span class="string">&#123;data.location&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">temperature</span>=<span class="string">&#123;data.temperature&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">conditions</span>=<span class="string">&#123;data.conditions&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">humidity</span>=<span class="string">&#123;data.humidity&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">windSpeed</span>=<span class="string">&#123;data.windSpeed&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line">      );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;&gt;</span><span class="tag">&lt;/&gt;</span></span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><code>useFrontendTool</code> Hook 允许应用程序注册 <code>get_weather</code> 工具，并将预定义的 React 渲染器附加到其生命周期的每个阶段。展示效果：</p>
+<p><img src="https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Futfvm28l3sqrblzuquw2.png"></p>
+<p>Agent 可以调用该工具并流式传输参数，但它永远不会控制布局或发明 UI。</p>
+<h3 id="声明式生成式-UI"><a href="#声明式生成式-UI" class="headerlink" title="声明式生成式 UI"></a>声明式生成式 UI</h3><p>声明式生成式 UI 介于静态和完全开放式方法之间。</p>
+<p>Agent 不选择预定义的组件，而是返回一个结构化的 UI 描述。这个描述定义了卡片、列表、表单或小部件等内容，然后由前端渲染它们。</p>
+<p>这里使用的两个常见的声明式规范是：</p>
+<ol>
+<li><strong>A2UI</strong> → 来自 Google 的声明式生成式 UI 规范，基于 JSONL，Agent 可以使用它在响应中返回 UI 小部件。</li>
+<li><strong>Open‑JSON‑UI</strong> → OpenAI 内部声明式生成式 UI schema 的开放标准化。</li>
+</ol>
+<p>两者都为 Agent 定义了结构化的、与平台无关的方式来用 JSON 描述 UI。</p>
+<p>你可以使用 <a target="_blank" rel="noopener" href="https://a2ui-composer.ag-ui.com/">A2UI Composer</a> 为你生成规范，而不是手工编写 A2UI JSON。复制输出并将其粘贴到 Agent 的提示词中作为参考模板。<br><img src="https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F1t1yvtk2r1sixyg26njt.png"><br><img src="https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fc1trcbzm894v5eq3vtpk.png"></p>
+<p>然后在 <code>prompt_builder.py</code> 中，挑选一个具有代表性的 A2UI 模板（例如，一个简单的表单或列表）。这就是 Agent 学习输出的内容：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">UI_EXAMPLES = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">---BEGIN FORM_EXAMPLE---</span></span><br><span class="line"><span class="string">[</span></span><br><span class="line"><span class="string">  &#123; &quot;beginRendering&quot;: &#123; &quot;surfaceId&quot;: &quot;form-surface&quot;, &quot;root&quot;: &quot;form-column&quot;,</span></span><br><span class="line"><span class="string">                        &quot;styles&quot;: &#123; &quot;primaryColor&quot;: &quot;#9B8AFF&quot;, &quot;font&quot;: &quot;Plus Jakarta Sans&quot; &#125; &#125; &#125;,</span></span><br><span class="line"><span class="string">  &#123; &quot;surfaceUpdate&quot;: &#123;</span></span><br><span class="line"><span class="string">      &quot;surfaceId&quot;: &quot;form-surface&quot;,</span></span><br><span class="line"><span class="string">      &quot;components&quot;: [</span></span><br><span class="line"><span class="string">        &#123; &quot;id&quot;: &quot;form-column&quot;, &quot;component&quot;: &#123; &quot;Column&quot;: &#123;</span></span><br><span class="line"><span class="string">            &quot;children&quot;: &#123; &quot;explicitList&quot;: [&quot;form-title&quot;, &quot;name-field&quot;, &quot;submit-button&quot;] &#125;</span></span><br><span class="line"><span class="string">        &#125; &#125; &#125;,</span></span><br><span class="line"><span class="string">        &#123; &quot;id&quot;: &quot;form-title&quot;, &quot;component&quot;: &#123; &quot;Text&quot;: &#123;</span></span><br><span class="line"><span class="string">            &quot;usageHint&quot;: &quot;h2&quot;, &quot;text&quot;: &#123; &quot;literalString&quot;: &quot;Contact Us&quot; &#125;</span></span><br><span class="line"><span class="string">        &#125; &#125; &#125;,</span></span><br><span class="line"><span class="string">        &#123; &quot;id&quot;: &quot;name-field&quot;, &quot;component&quot;: &#123; &quot;TextField&quot;: &#123;</span></span><br><span class="line"><span class="string">            &quot;label&quot;: &#123; &quot;literalString&quot;: &quot;Your Name&quot; &#125;,</span></span><br><span class="line"><span class="string">            &quot;text&quot;: &#123; &quot;path&quot;: &quot;name&quot; &#125;,</span></span><br><span class="line"><span class="string">            &quot;textFieldType&quot;: &quot;shortText&quot;</span></span><br><span class="line"><span class="string">        &#125; &#125; &#125;,</span></span><br><span class="line"><span class="string">        &#123; &quot;id&quot;: &quot;submit-button&quot;, &quot;component&quot;: &#123; &quot;Button&quot;: &#123;</span></span><br><span class="line"><span class="string">            &quot;child&quot;: &quot;submit-text&quot;, &quot;primary&quot;: true,</span></span><br><span class="line"><span class="string">            &quot;action&quot;: &#123; &quot;name&quot;: &quot;submit_form&quot;, &quot;context&quot;: [</span></span><br><span class="line"><span class="string">              &#123; &quot;key&quot;: &quot;name&quot;, &quot;value&quot;: &#123; &quot;path&quot;: &quot;name&quot; &#125; &#125;</span></span><br><span class="line"><span class="string">            ] &#125;</span></span><br><span class="line"><span class="string">        &#125; &#125; &#125;,</span></span><br><span class="line"><span class="string">        &#123; &quot;id&quot;: &quot;submit-text&quot;, &quot;component&quot;: &#123; &quot;Text&quot;: &#123;</span></span><br><span class="line"><span class="string">            &quot;text&quot;: &#123; &quot;literalString&quot;: &quot;Send Message&quot; &#125;</span></span><br><span class="line"><span class="string">        &#125; &#125; &#125;</span></span><br><span class="line"><span class="string">      ]</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">  &#125;,</span></span><br><span class="line"><span class="string">  &#123; &quot;dataModelUpdate&quot;: &#123;</span></span><br><span class="line"><span class="string">      &quot;surfaceId&quot;: &quot;form-surface&quot;, &quot;path&quot;: &quot;/&quot;, &quot;contents&quot;: [</span></span><br><span class="line"><span class="string">        &#123; &quot;key&quot;: &quot;name&quot;, &quot;valueString&quot;: &quot;&quot; &#125;</span></span><br><span class="line"><span class="string">      ]</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">]</span></span><br><span class="line"><span class="string">---END FORM_EXAMPLE---</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个单一的 JSONL 格式块在 A2UI 中定义了一个“联系我们”表单。你将其提供给 Agent，以便它学习 A2UI 期望的三个消息包：<code>surfaceUpdate</code>（组件）、<code>dataModelUpdate</code>（状态），然后是 <code>beginRendering</code>（渲染信号）。</p>
+<p>然后将 <code>UI_EXAMPLES</code> 添加到 Agent 使用的系统提示词中。通过将 <code>UI_EXAMPLES</code>（以及 A2UI schema）附加到 Agent 的指令中，你可以确保每当用户请求 UI 时，它都会根据你的模板流式传回有效的 JSON。</p>
+<p>最后一步是使用 <code>createA2UIMessageRenderer</code>，它接收 Agent 的 A2UI JSON 和你的主题，然后 <code>renderActivityMessages</code> 告诉 CopilotKit 在渲染聊天消息时使用它。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">CopilotKitProvider</span>, <span class="title class_">CopilotSidebar</span> &#125; <span class="keyword">from</span> <span class="string">&quot;@copilotkitnext/react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; createA2UIMessageRenderer &#125; <span class="keyword">from</span> <span class="string">&quot;@copilotkit/a2ui-renderer&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; a2uiTheme &#125; <span class="keyword">from</span> <span class="string">&quot;../theme&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用你的主题实例化一次 A2UI 渲染器</span></span><br><span class="line"><span class="keyword">const</span> A2UIRenderer = <span class="title function_">createA2UIMessageRenderer</span>(&#123; <span class="attr">theme</span>: a2uiTheme &#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">A2UIPage</span>(<span class="params">&#123; children &#125;: &#123; children: React.ReactNode &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">CopilotKitProvider</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">runtimeUrl</span>=<span class="string">&quot;/api/copilotkit-a2ui&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">renderActivityMessages</span>=<span class="string">&#123;[A2UIRenderer]&#125;</span>   // ← <span class="attr">挂载</span> <span class="attr">A2UI</span> <span class="attr">渲染器</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">showDevConsole</span>=<span class="string">&#123;false&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">CopilotSidebar</span> <span class="attr">defaultOpen</span> <span class="attr">labels</span>=<span class="string">&#123;&#123;</span> <span class="attr">modalHeaderTitle:</span> &quot;<span class="attr">A2UI</span> <span class="attr">Assistant</span>&quot; &#125;&#125; /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">CopilotKitProvider</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出展示：<br><img src="https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F4w2t5bbhe0oo0c63vzit.png"></p>
+<p>这种其实就比较类似于那种低代码协议的模式，让 agent 生成原子化的 UI 描述，然后由前端来完成协议解析和渲染。如果你需要比静态 UI 更多的灵活性，同时仍保持清晰的边界和可预测的渲染，这种模式就比较适合。</p>
+<h3 id="开放式生成式-UI-MCP-Apps"><a href="#开放式生成式-UI-MCP-Apps" class="headerlink" title="开放式生成式 UI (MCP Apps)"></a>开放式生成式 UI (MCP Apps)</h3><p>开放式生成式 UI 是最灵活、最强大的。</p>
+<p>在这种模式下，Agent 返回一个完整的 UI 表面。这可以是 HTML、iframe 或其他自由格式的内容。前端主要充当一个容器，显示 Agent 提供的任何内容。</p>
+<p>这种方法通常与 <strong>MCP Apps</strong> 一起使用，外部应用程序暴露它们自己的 UI，这些 UI 可以嵌入到 Agent 体验中。</p>
+<p>传统的 MCP 工具返回文本、图像、资源或结构化数据，宿主将其作为对话的一部分显示。MCP Apps 扩展了这种模式，允许工具在其工具描述中声明对交互式 UI 的引用，宿主会在原地渲染该 UI。</p>
+<p>这种方式可能会引入安全和性能问题、不一致的样式，且主要适用于 web 前端技术栈。但对于复杂的工具和丰富的应用程序，这种模式解锁了仅靠静态或声明式 UI 无法实现的功能。</p>
+<p>在 CopilotKit 中，通过将 <code>MCPAppsMiddleware</code> 附加到 Agent 中来启用 MCP Apps 支持，这允许运行时连接到一个或多个 MCP Apps 服务器。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app/api/copilotkit/route.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">CopilotRuntime</span>,</span><br><span class="line">  <span class="title class_">ExperimentalEmptyAdapter</span>,</span><br><span class="line">  copilotRuntimeNextJSAppRouterEndpoint,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&quot;@copilotkit/runtime&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">BuiltInAgent</span> &#125; <span class="keyword">from</span> <span class="string">&quot;@copilotkit/runtime/v2&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">NextRequest</span> &#125; <span class="keyword">from</span> <span class="string">&quot;next/server&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">MCPAppsMiddleware</span> &#125; <span class="keyword">from</span> <span class="string">&quot;@ag-ui/mcp-apps-middleware&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 创建 Agent 并添加 MCP Apps 中间件</span></span><br><span class="line"><span class="keyword">const</span> agent = <span class="keyword">new</span> <span class="title class_">BuiltInAgent</span>(&#123;</span><br><span class="line">  <span class="attr">model</span>: <span class="string">&quot;openai/gpt-4o&quot;</span>,</span><br><span class="line">  <span class="attr">prompt</span>: <span class="string">&quot;You are a helpful assistant.&quot;</span>,</span><br><span class="line">&#125;).<span class="title function_">use</span>(</span><br><span class="line">   <span class="keyword">new</span> <span class="title class_">MCPAppsMiddleware</span>(&#123;</span><br><span class="line">    <span class="attr">mcpServers</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&quot;http&quot;</span>,</span><br><span class="line">        <span class="attr">url</span>: <span class="string">&quot;http://localhost:3108/mcp&quot;</span>,</span><br><span class="line">        <span class="attr">serverId</span>: <span class="string">&quot;my-server&quot;</span> <span class="comment">// 推荐：稳定的标识符</span></span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 创建一个服务适配器，如果不相关则为空</span></span><br><span class="line"><span class="keyword">const</span> serviceAdapter = <span class="keyword">new</span> <span class="title class_">ExperimentalEmptyAdapter</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 创建运行时并添加 Agent</span></span><br><span class="line"><span class="keyword">const</span> runtime = <span class="keyword">new</span> <span class="title class_">CopilotRuntime</span>(&#123;</span><br><span class="line">  <span class="attr">agents</span>: &#123;</span><br><span class="line">    <span class="attr">default</span>: agent,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 创建 API 路由</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">POST</span> = <span class="keyword">async</span> (<span class="params"><span class="attr">req</span>: <span class="title class_">NextRequest</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; handleRequest &#125; = <span class="title function_">copilotRuntimeNextJSAppRouterEndpoint</span>(&#123;</span><br><span class="line">    runtime,</span><br><span class="line">    serviceAdapter,</span><br><span class="line">    <span class="attr">endpoint</span>: <span class="string">&quot;/api/copilotkit&quot;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">handleRequest</span>(req);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="MCP-Apps：工具的端到端交付"><a href="#MCP-Apps：工具的端到端交付" class="headerlink" title="MCP Apps：工具的端到端交付"></a>MCP Apps：工具的端到端交付</h2><h3 id="为什么我们需要-MCP-Apps？"><a href="#为什么我们需要-MCP-Apps？" class="headerlink" title="为什么我们需要 MCP Apps？"></a>为什么我们需要 MCP Apps？</h3><p>我们日常的很多工作都是在处理和检查一些具体的产出物（简称工件），例如：</p>
+<ul>
+<li>审查代码差异（Diffs）</li>
+<li>检查追踪、日志和时间线</li>
+<li>查看和确认表格和仪表盘信息</li>
+<li>批准或编辑真实的工单</li>
+</ul>
+<p>如果你强行将这些内容塞进聊天界面，通常只有两种结果：要么是消耗大量 Token 的长篇大论，要么是一个你不太信任的简短摘要。</p>
+<p>多 Agent 工作流会让这个问题变得更糟，因为它们会产出成倍的工件。你会迷失在 12 个终端和 20 个浏览器标签页中，因为需求工单、代码 Diff、运行日志、预览环境和 PR 全都散落在不同的地方。</p>
+<p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fdd1f009137a046689faf90e77af579ba?format=webp&width=2000"></p>
+<p><strong>MCP Apps 的核心理念是：与其在所有应用中加入聊天机器人，不如将应用直接放入一个统一的聊天中。</strong></p>
+<h3 id="MCP-Apps-是如何工作的？"><a href="#MCP-Apps-是如何工作的？" class="headerlink" title="MCP Apps 是如何工作的？"></a>MCP Apps 是如何工作的？</h3><p>传统的 MCP 工具返回文本、图像或结构化数据，宿主（Host）将其作为对话的一部分显示。MCP Apps 扩展了这一模式，允许工具在其描述中声明一个交互式 UI 的引用（例如 <code>ui://</code> 资源）。</p>
+<p>当 LLM 决定调用支持 MCP Apps 的工具时，会发生以下情况：</p>
+<ol>
+<li><strong>UI 预加载与资源获取</strong>：宿主从服务器获取 UI 资源（通常是打包好的 HTML、JS 和 CSS）。</li>
+<li><strong>沙盒渲染</strong>：宿主通常在对话内部的一个沙盒化 <code>iframe</code> 中渲染 HTML。这限制了应用对父页面的访问，确保了安全性。</li>
+<li><strong>双向通信</strong>：应用和宿主通过基于 <code>postMessage</code> 的 JSON-RPC 协议进行通信。应用可以请求工具调用、发送消息、更新模型的上下文，并从宿主接收数据。</li>
+</ol>
+<p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F8e093a7f9a054dbf8f8ad4460fd048d1?format=webp&width=2000"></p>
+<h3 id="MCP-Apps-的绝佳应用场景"><a href="#MCP-Apps-的绝佳应用场景" class="headerlink" title="MCP Apps 的绝佳应用场景"></a>MCP Apps 的绝佳应用场景</h3><ol>
+<li><strong>差异审查与批准</strong>：Agent 修改代码后，不再是在聊天中告诉你已经帮你把那个 Bug 修复了，优化了 3 个函数。而是可以渲染一个真实的 Diff UI（文件树、搜索、代码块选择）。你可以像在 GitHub 上审查 PR 一样，清晰地看到每一行修改，然后点击“批准”或“拒绝”。<br><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff9c3a971fe84446480ad35b2dd2413d8?format=webp&width=2000"></li>
+<li><strong>日志和实时指标探索</strong>：渲染一个带有时间线和过滤器的实时流。你可以挑选出重要的片段（例如某个错误类），应用发出该选择，然后 Agent 运行有针对性的工具调用。</li>
+<li><strong>配置向导</strong>：当你需要选择大量选项时，聊天可以变成一个包含多选、复选框和文本字段的表单。UI 最终发出一个干净的对象，而不是与模型进行 20 次来回对话。</li>
+</ol>
+<h3 id="需要注意的“坑”"><a href="#需要注意的“坑”" class="headerlink" title="需要注意的“坑”"></a>需要注意的“坑”</h3><ul>
+<li><strong>宿主 UX 成为你产品的一部分</strong>：应用无法控制其容器。如果宿主在一个狭窄的面板中渲染视图，应用可能会显得很糟糕。</li>
+<li><strong>模型看不见 iframe</strong>：Agent 只能看到应用发出的内容（事件、上下文更新、工具结果）。如果你在表单中输入内容但从未点击“提交”，Agent 就无从反应。<br><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F6c3d256879d34cc7b2187aff07c5c0df?format=webp&width=2000"></li>
+<li><strong>往返延迟</strong>：由 UI 触发的工具调用仍然是工具调用。如果每次点击都触发工具调用，UI 会感觉卡顿，因此需要良好的加载动画设计。</li>
+</ul>
+<p>MCP Apps 的设计思想其实比较类似于软件工程的交付思路。传统的交付方式是 <code>api first</code>, 主要对外暴露接口，而后来进一步演化出端到端的交付，即统一封装好前后端能力一起交付给用户使用。MCP Apps 也是在单一的 MCP server 中加入了 UI 协议的部分。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>AI Agent 的能力正在飞速进化，但如果交互方式依然停留在纯文本的“聊天框”时代，其潜力将大打折扣。<strong>生成式 UI (Generative UI)</strong> 的出现，正是为了打破这一瓶颈，让 Agent 能够根据任务需求，动态生成最合适的交互界面。</p>
+<p>从<strong>静态生成式 UI</strong>（预定义组件，Agent 填数据）到<strong>声明式生成式 UI</strong>（Agent 输出结构化描述，前端渲染），再到最灵活的**开放式生成式 UI (MCP Apps)**（Agent 直接提供完整的交互式应用），我们看到了 UI 控制权在前端与 Agent 之间的不断平衡与演进。</p>
+<p>特别是 <strong>MCP Apps</strong>，通过在聊天界面中直接嵌入沙盒化的交互式应用（如代码 Diff 审查、实时日志探索、复杂配置向导），它不仅解决了多 Agent 协同带来的“工件爆炸”问题，更将 AI 助手从一个单纯的“问答机器人”升级为了一个真正的“智能工作区”。</p>
+<p>虽然 MCP Apps 目前仍面临宿主 UX 限制、模型视野盲区以及网络延迟等挑战，但它代表了未来 Agent 交互的必然趋势：<strong>让 AI 适应我们的工作方式，而不是让我们去适应 AI 的聊天框。</strong></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+  <a href="/tags#Front-end-engineering" >
+    <span class="tag-code">Front-end-engineering</span>
+  </a>
+
+  <a href="/tags#React" >
+    <span class="tag-code">React</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2026/02/07/guide-to-claude/">
+        <span class="nav-arrow">← </span>
+        
+          CLAUDE.md 全面指南与最佳实践
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%94%9F%E6%88%90%E5%BC%8F-UI%EF%BC%9F"><span class="toc-nav-text">什么是生成式 UI？</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%94%9F%E6%88%90%E5%BC%8F-UI-%E7%9A%84%E4%B8%89%E7%A7%8D%E8%8C%83%E5%BC%8F"><span class="toc-nav-text">生成式 UI 的三种范式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%9D%99%E6%80%81%E7%94%9F%E6%88%90%E5%BC%8F-UI"><span class="toc-nav-text">静态生成式 UI</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%A3%B0%E6%98%8E%E5%BC%8F%E7%94%9F%E6%88%90%E5%BC%8F-UI"><span class="toc-nav-text">声明式生成式 UI</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%BC%80%E6%94%BE%E5%BC%8F%E7%94%9F%E6%88%90%E5%BC%8F-UI-MCP-Apps"><span class="toc-nav-text">开放式生成式 UI (MCP Apps)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#MCP-Apps%EF%BC%9A%E5%B7%A5%E5%85%B7%E7%9A%84%E7%AB%AF%E5%88%B0%E7%AB%AF%E4%BA%A4%E4%BB%98"><span class="toc-nav-text">MCP Apps：工具的端到端交付</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81-MCP-Apps%EF%BC%9F"><span class="toc-nav-text">为什么我们需要 MCP Apps？</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#MCP-Apps-%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84%EF%BC%9F"><span class="toc-nav-text">MCP Apps 是如何工作的？</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#MCP-Apps-%E7%9A%84%E7%BB%9D%E4%BD%B3%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-nav-text">MCP Apps 的绝佳应用场景</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E2%80%9C%E5%9D%91%E2%80%9D"><span class="toc-nav-text">需要注意的“坑”</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2026/02/21/generative-ui/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>
