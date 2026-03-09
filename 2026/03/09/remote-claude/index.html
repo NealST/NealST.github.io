@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.jpg">
+  
+  <title>
+    
+      在手机上运行 Claude Code：移动端 AI 编程的思考 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.jpg" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>在手机上运行 Claude Code：移动端 AI 编程的思考</h2>
+  <p class="post-date">2026-03-09</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fb7a9625cca7341e2b57224a63cd6bb5d?format=webp&width=2000"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一直以来，在手机上写代码都是是开发圈里的一个梗，随着 Anthropic 官方近期推出了<strong>远程控制（Remote Control）</strong> 功能，加上一些比较传统 DIY 的手段以及社区内的创新手法。现在，让 Claude Code 跑在你的手机上已经有相当多的姿势。本文梳理了一些主流方案并总结了它们各自的一些优缺点。在纯技术实现之外笔者认为还有一个更底层的问题值得讨论：在一个 6 英寸的屏幕上运行命令行终端，真的是与 AI 智能体交互的正确方式吗？</p>
+<h2 id="手机上运行-claude-code-的实现方式"><a href="#手机上运行-claude-code-的实现方式" class="headerlink" title="手机上运行 claude code 的实现方式"></a>手机上运行 claude code 的实现方式</h2><p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb217d1d6708425b84da44fad0d828cd?format=webp&width=2000"></p>
+<h3 id="DIY-手法：SSH-Tailscale-Tmux"><a href="#DIY-手法：SSH-Tailscale-Tmux" class="headerlink" title="DIY 手法：SSH + Tailscale + Tmux"></a>DIY 手法：SSH + Tailscale + Tmux</h3><p>步骤如下：</p>
+<ol>
+<li><strong>保持开机</strong>：在远程开启一台运行着 Claude Code 的 PC 设备。</li>
+<li><strong>内网穿透</strong>：使用 Tailscale 在你的电脑和手机之间建立一个安全的私有加密网络。</li>
+<li><strong>终端模拟器</strong>：在手机上安装 Termux（Android）或 Blink（iOS）作为原生终端。</li>
+<li><strong>远程连接</strong>：通过 SSH 连入你的远程 PC 设备。</li>
+<li><strong>会话保持</strong>：在 PC 设备上运行 tmux（或 zellij）来维持终端会话，确保手机锁屏时任务不会被中断。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">On your desktop</span></span><br><span class="line">npm install -g @anthropics/claude-code</span><br><span class="line">sudo apt install tmux</span><br><span class="line">curl -fsSL &lt;https://tailscale.com/install.sh&gt; | sh</span><br><span class="line">sudo tailscale up</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">On your phone (Termux)</span></span><br><span class="line">pkg update &amp;&amp; pkg install openssh</span><br><span class="line">ssh your-username@100.64.0.5</span><br><span class="line">tmux new -s code</span><br><span class="line">claude</span><br></pre></td></tr></table></figure>
+
+<p>如果一切顺利，整个配置过程大约需要 20 分钟。配置完成后，就可以在手机上运行完整的 Claude Code 会话，并且可以执行任何 unix shell 命令，其本质是把移动设备作为输入终端，把远程 PC 设备作为 claude code 的执行终端。</p>
+<p>这套方案的缺陷在于：手机一旦锁屏，或者从 Wi-Fi 切换到蜂窝网络，传统的 SSH 链接就会瞬间断开，这个问题可以通过引入 <a target="_blank" rel="noopener" href="https://mosh.org/">Mosh (Mobile Shell)</a> （一个基于 UDP 协议的交互式安全终端替代品，专为移动漫游而生，其主要特点是允许你在 Wi-Fi 和蜂窝网络间无缝切换，即使 IP 改变也不会断线，甚至在客户端休眠很久之后唤醒，连接照样可用，此外由于 Mosh 能够在本地预测键盘输入并拥有极低的网络延迟感，它确实能消除一部分弱网环境下的终端卡顿）来缓解，但 Mosh 也会带来额外的学习和配置成本且也并不能在根本上规避这个问题。</p>
+<h3 id="官方解法：Claude-Code-Remote-Control-深度解析"><a href="#官方解法：Claude-Code-Remote-Control-深度解析" class="headerlink" title="官方解法：Claude Code Remote Control 深度解析"></a>官方解法：Claude Code Remote Control 深度解析</h3><p>Anthropic 官方近期推出了一个备受期待的功能：<strong>Remote Control（远程控制）</strong>，接入只需不到 5 秒。</p>
+<p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F5edc984c054d4e40b39c9d80044579cc?format=webp&width=2000"></p>
+<h4 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h4><p>手机上通过 claude 网页端连接你电脑的 claude code 会话，从而完成指令执行。</p>
+<ul>
+<li><strong>如何启动</strong>：在任意活跃的本地 Claude Code 会话中，运行 <code>/rc</code>（或专门开启一个进程 <code>claude remote-control</code>），它会在终端生成一个 URL 或二维码。</li>
+<li><strong>如何连接</strong>：使用手机的浏览器或 Claude App（iOS&#x2F;Android）扫描二维码，即可直接进入 <code>claude.ai/code</code> 网页端。此时，你的手机和电脑将完全同步，你在手机上发出的每一条指令，都会穿透回去指挥家里的电脑干活。</li>
+<li><strong>网络与安全保障</strong>：传统的远程控制往往需要你在路由器上“打个洞”（开放入站端口或做端口映射），这就很不安全。而 Remote Control 走的是“纯出站连接” - 就跟你平时用浏览器上网一样，是家里的电脑主动去连接 Anthropic 的云端服务器，因此完全不需要修改任何防火墙设置，而且所有传输的数据都经过了 TLS 加密。更贴心的是，如果你遇到网络波动或是电脑短暂休眠，只要在 10 分钟内恢复网络，会话就能自动重连，不会轻易断掉。</li>
+</ul>
+<h4 id="远程控制的局限性"><a href="#远程控制的局限性" class="headerlink" title="远程控制的局限性"></a>远程控制的局限性</h4><p>这个方案确实相对比较优雅，你可以饭前在工位上触发一个重构任务，饭后躺在沙发上时用手机扫码监控它的进展，但也有明显的局限性：</p>
+<ol>
+<li><strong>强依赖本地环境</strong>：本地电脑必须保持开机且终端不能关闭，一旦 <code>claude</code> 进程被杀或电脑断网超过 10 分钟，会话就会终止。</li>
+<li><strong>只能续杯，不能新开</strong>：目前只能监控和继续那些已经在电脑上发起的任务，无法从手机端强行启动一个新会话。</li>
+<li><strong>单线联系</strong>：每个 Claude Code 会话目前仅支持一个远程连接。</li>
+</ol>
+<p>在社区反馈中，开发者也都比较喜欢该功能，但对其的不满也主要集中于新开会话的受限。</p>
+<h3 id="第三方应用与云端部署的方式"><a href="#第三方应用与云端部署的方式" class="headerlink" title="第三方应用与云端部署的方式"></a>第三方应用与云端部署的方式</h3><p>除了硬核 DIY 和官方方案，社区也有一些创新的手法：</p>
+<ul>
+<li><p><strong>Mobile IDE for Claude Code（iOS 伴侣应用）</strong>：一个 iOS 应用，可以通过 CloudKit 同步你的编程提示词和执行结果。比如你在手机上输入”帮我重构这个 React 组件”，iPhone 会把这条消息同步到 Mac 上的 Claude Code，Mac 执行完毕后，结果会自动返回到手机。免费版每天 1 条提示词，付费版无限使用。</p>
+</li>
+<li><p><strong>Railway 的 claude-code-ssh 模板</strong>：Railway 是一个云部署平台，它们提供了一个”一键部署”模板，可以在云端启动一个 Claude Code 容器，给你一个 SSH 地址。你的笔记本就不用 24 小时开机了，代码在云上跑，你可以随时从任何设备（包括手机）连接进去继续工作。</p>
+</li>
+<li><p><strong>The Vibe Companion（浏览器网页版）</strong>：一位开发者 Stan Girard 从 Claude Code 的二进制文件中发现了隐藏的 <code>-sdk-url</code> 参数，基于此开发了一个开源的网页 UI。你不需要下载 app，直接在浏览器里就能用手机编程，简洁而优雅。</p>
+</li>
+<li><p><strong>Takopi（Telegram 机器人版）</strong>：把 Claude Code 接入 Telegram，用户故事是：你在 Telegram 群聊里发送一条消息”帮我写个登录表单”，Takopi 机器人接收到后，在后台唤起 Claude Code 执行任务，最后把代码以 Telegram 消息的形式发回给你，形式上是把 IM 软件变成了编程界面。</p>
+</li>
+</ul>
+<p>这些方案都很有创造力，但它们潜意识里都带有一个包含路径依赖的前提假设：<strong>终端命令行依然是这类 AI 工具的正确交互界面。</strong> 但随着开发者的角色逐渐从“直接写代码”转化为“编排写代码的 AI 智能体”，这个前提假设可能并不成立。</p>
+<h2 id="灵魂拷问：命令行终端真的是正确的交互界面吗？"><a href="#灵魂拷问：命令行终端真的是正确的交互界面吗？" class="headerlink" title="灵魂拷问：命令行终端真的是正确的交互界面吗？"></a>灵魂拷问：命令行终端真的是正确的交互界面吗？</h2><p>上面列举了很多煞费苦心把终端塞进手机的方法，但从第一性原理出发去思考，开发者到底为什么会想要一个“手机上的 Claude Code”？</p>
+<p>我想这并不是因为大家享受用大拇指在碎玻璃屏幕上敲击 <code>git push</code>（应该没有人会想要一个宽仅 390 像素的命令行窗口），仔细观察论坛上的真实诉求会发现，开发者的核心诉求其实是这四点：</p>
+<ol>
+<li>长时间运行的 AI 任务，不必一直守在桌面旁等待，能远程感知到其执行进度。</li>
+<li>AI 弹出变更需要确认时，能在手机上滑一下屏幕选择“拒绝&#x2F;批准”。</li>
+<li>灵感突现时，随时随地就能立项并发起工作。</li>
+<li>不被物理工作站束缚，保持持续发布的敏捷节奏。</li>
+</ol>
+<p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F58cf2b341a0f4d0eab4b7bf0676f93c5?format=webp&width=2000"></p>
+<p><strong>本质来说，这并不仅仅是命令行终端交互层面的问题，而是 agent 产品应该如何设计的问题</strong></p>
+<p>在手机终端上，用户无法看到一个直观的可视化 Diff 审查面板，也无法将改动后的组件跟原本的设计稿做并排比对，手机还会直接地把<code>useState</code> 自动纠正成大写的 <code>Use State</code>。</p>
+<p>在移动设备上强行保留终端模式并非一种妥协，而是一种极其糟糕的交互倒退。</p>
+<h2 id="终局演进：走向云原生与可视化界面"><a href="#终局演进：走向云原生与可视化界面" class="headerlink" title="终局演进：走向云原生与可视化界面"></a>终局演进：走向云原生与可视化界面</h2><p>笔者认为未来的趋势必然是云原生化。当智能体运行在一个隔离的云端容器中，而不是本地的 <code>localhost</code> 时，It’s something change the game，用户首先可以获得以下收益：</p>
+<ul>
+<li><strong>摆脱设备焦虑</strong>：不用再担心设备关机或休眠，你可以给 AI 丢下一个耗时 30 分钟的复杂重构任务，然后安心合上盖子出门，云端运行的智能体不会因此罢工，它依然会稳稳地执行完流程并提交代码。</li>
+<li><strong>告别环境污染与端口冲突</strong>：云端为每一次任务提供干净独立的沙箱隔离环境，不需要再浪费时间在终端里排查那些占用了 3000 端口的僵尸进程，每一次运行都是清爽的从零开始。</li>
+<li><strong>随时随地的发起任务</strong>：不管在哪个地方，都可以通过一个 discord 消息或者什么其他的通知推送就可以直接发起任务让 agent 帮你干活。</li>
+<li><strong>直观的可视化上下文</strong>：彻底告别终端里枯燥且难以审阅的纯文本代码流。而可以是一个适配了移动设备的可视化页面，能让你最直观地审阅改动，真切看到 AI 到底帮你干了啥。</li>
+</ul>
+<p><img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F2def5b06dfa64718bdf2dc2a2f02f03a?format=webp&width=2000"></p>
+<p>对于团队协作的场景同样可以助益良多：当智能体在本地运行时，任务编排就像是一场单人运动：一个开发者、一台机器、一个会话。但当它们运行在具有统一界面的云端时，整个团队，包括产品经理、设计师和开发人员，都能在一个连接着真实代码库的共享可视化界面上，进行原型设计、代码审查和快速迭代。</p>
+<p>比如，产品经理可以直接在手机端滑动批准新的页面布局；设计师无需配置环境拉取代码，就能直观地指出某个像素间距的误差；主导项目的工程师则可以在同一个控制大盘里，同时审查三个并行运转的 AI 任务。</p>
+<p>此时，手机不再是一个类似板砖的糟糕交互设备，而是一个强力的 <strong>agent 调度中心</strong>，这种工作流也更具备团队扩展性，而强行塞进手机里的终端显然无法做到这点。</p>
+<h3 id="总结：终端只是起点，并非终点"><a href="#总结：终端只是起点，并非终点" class="headerlink" title="总结：终端只是起点，并非终点"></a>总结：终端只是起点，并非终点</h3><p>在手机上跑 Claude Code 固然很酷，无论是用传统的 SSH，还是拥抱官方稳定可靠的 Remote Control 扫码方案，都极大地拓展了编程的物理边界。</p>
+<p>但要真正回答“如何随时随地使用 AI 开发”这个问题，正确的出路不应该是造一个更小的终端框架，而是彻底重构智能体的生存环境，那些独立于本地机器运行的云原生 AI Agent，配上任何设备都能调用的富可视化界面，才是未来真正的答案。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mosh.org/">https://mosh.org/</a></li>
+<li><a target="_blank" rel="noopener" href="https://code.claude.com/docs/en/remote-control">https://code.claude.com/docs/en/remote-control</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.builder.io/blog/claude-code-mobile-phone">https://www.builder.io/blog/claude-code-mobile-phone</a></li>
+</ul>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+  <a href="/tags#tooling" >
+    <span class="tag-code">tooling</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2026/03/04/claude-code-one-piece/">
+        <span class="nav-arrow">← </span>
+        
+          如何给 Claude Code 的思考提示符注入有趣的灵魂
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%89%8B%E6%9C%BA%E4%B8%8A%E8%BF%90%E8%A1%8C-claude-code-%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-nav-text">手机上运行 claude code 的实现方式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#DIY-%E6%89%8B%E6%B3%95%EF%BC%9ASSH-Tailscale-Tmux"><span class="toc-nav-text">DIY 手法：SSH + Tailscale + Tmux</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%98%E6%96%B9%E8%A7%A3%E6%B3%95%EF%BC%9AClaude-Code-Remote-Control-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90"><span class="toc-nav-text">官方解法：Claude Code Remote Control 深度解析</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-nav-text">工作原理</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-nav-text">远程控制的局限性</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%94%E7%94%A8%E4%B8%8E%E4%BA%91%E7%AB%AF%E9%83%A8%E7%BD%B2%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-nav-text">第三方应用与云端部署的方式</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%81%B5%E9%AD%82%E6%8B%B7%E9%97%AE%EF%BC%9A%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%BB%88%E7%AB%AF%E7%9C%9F%E7%9A%84%E6%98%AF%E6%AD%A3%E7%A1%AE%E7%9A%84%E4%BA%A4%E4%BA%92%E7%95%8C%E9%9D%A2%E5%90%97%EF%BC%9F"><span class="toc-nav-text">灵魂拷问：命令行终端真的是正确的交互界面吗？</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BB%88%E5%B1%80%E6%BC%94%E8%BF%9B%EF%BC%9A%E8%B5%B0%E5%90%91%E4%BA%91%E5%8E%9F%E7%94%9F%E4%B8%8E%E5%8F%AF%E8%A7%86%E5%8C%96%E7%95%8C%E9%9D%A2"><span class="toc-nav-text">终局演进：走向云原生与可视化界面</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A%E7%BB%88%E7%AB%AF%E5%8F%AA%E6%98%AF%E8%B5%B7%E7%82%B9%EF%BC%8C%E5%B9%B6%E9%9D%9E%E7%BB%88%E7%82%B9"><span class="toc-nav-text">总结：终端只是起点，并非终点</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%8F%82%E8%80%83"><span class="toc-nav-text">参考</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2026/03/09/remote-claude/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>
