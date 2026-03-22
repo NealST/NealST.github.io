@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.jpg">
+  
+  <title>
+    
+      WebMCP，以及它对浏览器内 AI 辅助的真正意义 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.jpg" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>WebMCP，以及它对浏览器内 AI 辅助的真正意义</h2>
+  <p class="post-date">2026-03-15</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><blockquote>
+<p>原文：<a target="_blank" rel="noopener" href="https://www.builder.io/blog/webmcp">Everyone’s Missing the Point of WebMCP</a>，作者 Alice Moore</p>
+</blockquote>
+<p><img src="https://cdn.builder.io/api/v1/image/assets/YJIGb4i01jvw0SRdL5Bt/98a83a892165453d8593fe192e8b22cb?format=webp&width=2000"></p>
+<p>AI 助手在帮用户处理浏览器内的任务时越来越得心应手，但它们仍然需要人频繁地从旁引导。</p>
+<p>它们会点错东西，会跑偏思路。它们能完成令人印象深刻的工作，但前提是有人一步一步地在界面上推着它走。问题的根源不在于网页缺少某种暴露数据的新方式，而在于这些助手仍然要在一个专为人类设计的软件里靠猜来完成操作。</p>
+<p>WebMCP 有意思，就在这里。</p>
+<p>不是因为它要取代 API，也不是因为每个网站突然都变成了 AI 的接入端点，而是因为它让一个正在运行的页面有了一种途径：向已经在浏览器里协助用户的助手暴露结构化的操作。少了盲目点击，少了 UI 瞎猜，用户、助手和应用之间的协作有了更清晰的路径。</p>
+<p>如果这一切能实现，其含义比表面看起来实在得多：浏览器内的 AI 辅助，或许真的可以从”好看的 demo”走向日常可用的东西。</p>
+<h2 id="WebMCP-是什么？"><a href="#WebMCP-是什么？" class="headerlink" title="WebMCP 是什么？"></a>WebMCP 是什么？</h2><p><a target="_blank" rel="noopener" href="https://webmachinelearning.github.io/webmcp/">WebMCP</a> 是一项拟议中的浏览器端标准，用于从正在运行的网页中暴露结构化工具。Chrome 将其描述为：让网站向 AI 智能体暴露结构化工具，从而让它们以更快的速度、更高的可靠性和更精准的方式执行操作。该提案将这些工具定义为：携带自然语言描述和结构化 schema 的 JavaScript 函数，直接由页面本身对外暴露。</p>
+<p>这就是 WebMCP 不一样的地方。</p>
+<p>对于后端 <a target="_blank" rel="noopener" href="https://www.builder.io/blog/model-context-protocol">MCP</a> 或传统 API 而言，AI 是直接与后端服务通信的 — 不需要任何活跃的页面。当智能体需要对数据和系统进行结构化的、面向智能体的访问时，这依然是最佳方案。</p>
+<p>对于浏览器自动化而言，智能体会尝试像人一样操作界面：点击、滚动、输入、从错误中恢复，并理解屏幕上显示的内容。Playwright 本是为 Web 应用端到端测试而生的，而 Playwright MCP 则将这套模型通过结构化的 accessibility 快照延伸到了 LLM 的使用场景。OpenAI 的”computer use”也是类似的思路：像人类一样使用图形界面。</p>
+<p>WebMCP 介于两者之间。它赋予页面一种表达能力：”这是我支持的操作，这是它们的含义，这是助手在与用户共享同一个活跃上下文时调用它们的方式。”</p>
+<h2 id="WebMCP-vs-MCP-vs-浏览器自动化"><a href="#WebMCP-vs-MCP-vs-浏览器自动化" class="headerlink" title="WebMCP vs MCP vs 浏览器自动化"></a>WebMCP vs MCP vs 浏览器自动化</h2><p>最简明的区分方式如下：<br><img src="https://cdn.builder.io/api/v1/image/assets/YJIGb4i01jvw0SRdL5Bt/ea0ba2d3f2434405a52d47d00a3613d2?format=webp&format=webp&width=2000&height=1200"></p>
+<ul>
+<li><strong>使用 API 或后端 MCP</strong>：当智能体需要直接、结构化地访问系统和数据，且无需依赖活跃页面时。</li>
+<li><strong>使用浏览器自动化</strong>：当它需要像人类一样操作 UI 时，无论是用于测试、任务执行，还是完整的 computer use 场景。</li>
+<li><strong>使用 WebMCP</strong>：当用户已经在浏览器中，且希望助手能以比盲目点击和 DOM 猜测更可靠的方式配合页面工作时。该提案将其定位于有用户参与的本地浏览器工作流，而非服务器间通信或无监督的自主执行场景。</li>
+</ul>
+<p>三层各司其职，职责分明。</p>
+<h2 id="WebMCP-真正适用的场景"><a href="#WebMCP-真正适用的场景" class="headerlink" title="WebMCP 真正适用的场景"></a>WebMCP 真正适用的场景</h2><p>WebMCP 并非 API 或后端访问的替代品。</p>
+<p>如果智能体需要批量结构化数据、程序化的条件分支，或者根本不依赖活跃页面的工作，后端集成仍然是更合适的选择。WebMCP 面向的是那些希望在活跃的用户体验中与助手协同配合的网站。</p>
+<p><img src="https://cdn.builder.io/api/v1/image/assets/YJIGb4i01jvw0SRdL5Bt/2d1ed1ff9a04413185ea1d81a6c44506?format=webp&width=2000"></p>
+<p>这意味着更少的 UI 摸索，以及用户、页面与助手之间更充分的上下文共享。Chrome 把速度、可靠性和精准度放在首位，原因也在于此。</p>
+<p>这也解释了为什么 WebMCP 对 AI 浏览器和浏览器内助手的意义，远大于对传统页面抓取讨论的意义。</p>
+<h2 id="WebMCP-为何对-AI-浏览器和助手意义重大"><a href="#WebMCP-为何对-AI-浏览器和助手意义重大" class="headerlink" title="WebMCP 为何对 AI 浏览器和助手意义重大"></a>WebMCP 为何对 AI 浏览器和助手意义重大</h2><p>这里真正发生的变化不是某款具体产品，而是一个方向：人们想要在浏览器里、在自己正在做的事情当中得到帮助，而不仅仅是在一个独立的聊天窗口里。AI 浏览器、<a target="_blank" rel="noopener" href="https://www.builder.io/blog/agentic-ide">智能 IDE</a> 以及浏览器内助手，都在朝这个方向发力。</p>
+<p>这个诉求很好理解，但实际体验参差不齐。这些系统在演示中往往表现亮眼，一旦落地使用便开始露出破绽，尤其是当它们不得不从混乱的界面和残缺的上下文中推断意图时。如果你曾亲眼目睹一个 AI 浏览器走错一步，然后自信满满地在错误的基础上越走越远，你就明白问题所在了。</p>
+<p>这正是 WebMCP 的价值所在。它提供了一条比让助手只通过 UI 逆向工程每个网站更清晰的路径。如果一个网站能够直接暴露结构化的操作和上下文，助手就少了很多猜测的必要。这并不能消除所有失败场景，但确实能让交互从”computer use 杂技”的范畴，向人们真正可以信赖、用于重复性任务的方向迈进。</p>
+<p>这一点之所以重要，是因为浏览器本身就已经掌握着助手通常费力重建的那些上下文信息：当前页面、当前会话、用户所处的状态，以及他们恰好需要帮助的那个时刻。WebMCP 无法像变魔术一样解决信任或权限问题，但它确实为网站提供了一种更清晰的参与方式，而不是逼着助手从像素和标记语言中推断一切。</p>
+<h2 id="为何部分产品副驾驶可能沦为多余"><a href="#为何部分产品副驾驶可能沦为多余" class="headerlink" title="为何部分产品副驾驶可能沦为多余"></a>为何部分产品副驾驶可能沦为多余</h2><p>这是更有意思的一面。</p>
+<p>如果 WebMCP 真的普及，它大概不会威胁 SaaS 本身的存在。但它或许会削减部分产品内嵌副驾驶的必要性——尤其是那些功能较浅、本质上只是将用户本可通过更泛用型助手触发的操作重新打包的副驾驶。</p>
+<p>很多软件公司都想要自己的专属助手，这逻辑乍看说得通——拥有这个应用，在上面做自己的 AI 层是合理的。</p>
+<p>但用户不一定总想用你的助手作为主要界面。</p>
+<p>他们或许更青睐自己的助手：那个已经熟悉他们的写作风格、习惯偏好、文档资料、打开的标签页，以及整个工作流的助手，一个可以随他们从一个应用跳到下一个应用的助手。</p>
+<p><img src="https://cdn.builder.io/api/v1/image/assets/YJIGb4i01jvw0SRdL5Bt/709181ea4e16408196686dbde2c1b1c0?format=webp&width=2000"></p>
+<p>这正是 WebMCP 在产品策略上变得有意思的地方。如果产品在浏览器中向外部助手暴露干净、结构化的操作，那么一些”挂在角落里的 AI 小助理”功能，看起来就不再像坚实的护城河，而更像一层便利涂层。不是因为产品团队停止创造价值，而是因为跨应用助手在处理那些”浅层副驾驶”最初被设计来应对的任务时，变得愈发得心应手。</p>
+<p>这个规律并非放之四海而皆准。产品依然掌握着深度的工作流知识、私有数据、权限体系和后端集成，这些都是实实在在的优势。但一个副驾驶越是依赖通用的摘要、起草、搜索或界面点击操作，就越会在一个能跨应用通用的用户专属助手面前感受到压力。</p>
+<p>这更像是一次<a target="_blank" rel="noopener" href="https://www.builder.io/blog/how-product-teams-built-with-builder">产品策略层面的迁移</a>，而非一场产品大洗牌。留存下来的价值，是那些真正难以复制的东西：领域专属的判断力、特权访问、工作流设计，以及产品中外部助手难以廉价替代的部分。最先承压的，是那层薄薄的聊天界面。</p>
+<p>所以，WebMCP 大概不意味着”一个协议取代所有 SaaS”。</p>
+<p>它或许意味着：用户会减少对”每个产品里那个不同的助手”的依赖，转而更多地依赖一个能跨产品通用的助手。</p>
+<p>这个转变比”SaaS 被取代”要窄得多，但也更可能发生——而且影响或许更为深远。</p>
+<h2 id="WebMCP-不等同于用-AI-测试人类界面"><a href="#WebMCP-不等同于用-AI-测试人类界面" class="headerlink" title="WebMCP 不等同于用 AI 测试人类界面"></a>WebMCP 不等同于用 AI 测试人类界面</h2><p>这个区别值得厘清，但不需要过度渲染。</p>
+<p>有时你确实需要一个智能体像人一样使用界面，这在 QA、端到端测试和 computer use 工作流中依然重要。Playwright 和 Playwright MCP 适用于这种场景，OpenAI 的 computer use 工具也是如此。</p>
+<p>WebMCP 面向的是另一项任务：在一个运行中的应用里暴露结构化操作，让用户和助手能够在同一个上下文中更可靠地协同工作。人类界面依然是主角，助手只是有了更清晰、更安全的方式在其中提供帮助。</p>
+<p>所以浏览器自动化与 WebMCP 有交叉，但它们解决的是不同的问题。</p>
+<h2 id="WebMCP-与无障碍访问"><a href="#WebMCP-与无障碍访问" class="headerlink" title="WebMCP 与无障碍访问"></a>WebMCP 与无障碍访问</h2><p>这里还有一个比”AI 购物助手帮你找优惠券”更有实质意义的角度。</p>
+<p>WebMCP 提案明确纳入了辅助技术，并将无障碍访问作为其核心目标之一：让辅助工具获得超越传统无障碍树所能暴露范围的 Web 应用功能访问能力。</p>
+<p>这一点不容忽视。</p>
+<p>如果浏览器端 AI 在理解活跃网站方面持续进步，同时网站也暴露出更清晰的可操作结构，那么对于那些面对密集界面、精细操作障碍或视觉复杂度挑战的用户来说，网络将变得更易使用。这不是泛泛而谈的未来愿景，而是对用户当下正在尝试完成的任务的切实帮助。</p>
+<p>传统无障碍层可以帮助辅助工具理解页面上的内容，但对于如何在复杂应用中最优雅地完成一项任务，它并不总能给出清晰的路径。结构化操作有望弥合这一鸿沟。这并非要取代无障碍的基础规范，而是能让辅助帮助在那些技术上已符合无障碍标准、实际操作起来却仍令人头疼的软件中，变得更加实用。</p>
+<h2 id="开发者现在就该开始探索-WebMCP-吗？"><a href="#开发者现在就该开始探索-WebMCP-吗？" class="headerlink" title="开发者现在就该开始探索 WebMCP 吗？"></a>开发者现在就该开始探索 WebMCP 吗？</h2><p>我认为：是的。</p>
+<p>实际部署仍然依赖于浏览器的支持以及某种客户端层（例如 MCP 服务器或浏览器扩展），没有一套所有助手都能统一消费的现成方案。这对基于它构建产品的人来说确实需要考量。权限、身份认证和信任机制，都需要在真实产品中落地解决，而不能靠协议名称来一笔带过。但这是谨慎原型化的理由，而不是彻底无视这个方向的借口。</p>
+<p>如果你的产品有一个用户真正花时间停留的活跃界面——尤其是那些流程复杂或摩擦感强的 - WebMCP 就值得<a target="_blank" rel="noopener" href="https://www.builder.io/blog/ai-prototyping">现在就开始原型验证</a>。</p>
+<p>AWS 或 Google Cloud 这样的产品很好地说明了这一点：强大的 API 并不能让产品内置的引导功能变得无关紧要。人们依然会在这些控制台上花费大量真实时间，他们依然需要<a target="_blank" rel="noopener" href="https://www.builder.io/blog/ai-ux-design">即时的上下文帮助</a>。一个受用户掌控、能在界面内主动操作的助手，和塞给用户一堆文档然后祈祷他们自己看明白，是截然不同的两件事。</p>
+<p>WebMCP 值得密切关注，对于合适的产品，也值得尽早测试 - 因为它有可能让你的产品在用户已经身处其中的地方，与助手的配合变得更顺畅。</p>
+<p>WebMCP 大概不是那种让人眼前一亮的技术。但如果浏览器里的 AI 辅助哪天真正好用了，背后很可能有它的一份功劳。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+  <a href="/tags#AI-engineering" >
+    <span class="tag-code">AI-engineering</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2026/03/09/remote-claude/">
+        <span class="nav-arrow">← </span>
+        
+          在手机上运行 Claude Code：移动端 AI 编程的思考
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#WebMCP-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-nav-text">WebMCP 是什么？</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#WebMCP-vs-MCP-vs-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="toc-nav-text">WebMCP vs MCP vs 浏览器自动化</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#WebMCP-%E7%9C%9F%E6%AD%A3%E9%80%82%E7%94%A8%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="toc-nav-text">WebMCP 真正适用的场景</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#WebMCP-%E4%B8%BA%E4%BD%95%E5%AF%B9-AI-%E6%B5%8F%E8%A7%88%E5%99%A8%E5%92%8C%E5%8A%A9%E6%89%8B%E6%84%8F%E4%B9%89%E9%87%8D%E5%A4%A7"><span class="toc-nav-text">WebMCP 为何对 AI 浏览器和助手意义重大</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%BA%E4%BD%95%E9%83%A8%E5%88%86%E4%BA%A7%E5%93%81%E5%89%AF%E9%A9%BE%E9%A9%B6%E5%8F%AF%E8%83%BD%E6%B2%A6%E4%B8%BA%E5%A4%9A%E4%BD%99"><span class="toc-nav-text">为何部分产品副驾驶可能沦为多余</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#WebMCP-%E4%B8%8D%E7%AD%89%E5%90%8C%E4%BA%8E%E7%94%A8-AI-%E6%B5%8B%E8%AF%95%E4%BA%BA%E7%B1%BB%E7%95%8C%E9%9D%A2"><span class="toc-nav-text">WebMCP 不等同于用 AI 测试人类界面</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#WebMCP-%E4%B8%8E%E6%97%A0%E9%9A%9C%E7%A2%8D%E8%AE%BF%E9%97%AE"><span class="toc-nav-text">WebMCP 与无障碍访问</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%BC%80%E5%8F%91%E8%80%85%E7%8E%B0%E5%9C%A8%E5%B0%B1%E8%AF%A5%E5%BC%80%E5%A7%8B%E6%8E%A2%E7%B4%A2-WebMCP-%E5%90%97%EF%BC%9F"><span class="toc-nav-text">开发者现在就该开始探索 WebMCP 吗？</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2026/03/15/web-mcp/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>
