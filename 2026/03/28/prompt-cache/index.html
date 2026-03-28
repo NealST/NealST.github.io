@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="墨筝写字的地方，聊聊技术，见闻和思考">
+  <meta name="keyword" content="software development, programming, technology">
+  
+    <link rel="shortcut icon" href="/css/images/logo.jpg">
+  
+  <title>
+    
+      当我们在说 prompt cache 的时候我们在说什么 | 墨筝
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SLTXCE1YRJ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-SLTXCE1YRJ');
+    </script>
+
+  
+    
+<script src="/js/local-search.js"></script>
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.jpg" />
+</div>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>墨筝</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/series/" class="item-link">Series</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+      
+        <li class="menu-item menu-item-search right-list">
+    <a role="button" class="popup-trigger">
+        <i class="fa fa-search fa-fw"></i>
+    </a>
+</li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/series/" class="menu-link">Series</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+    
+      <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+            <span class="search-icon">
+                <i class="fa fa-search"></i>
+            </span>
+            <div class="search-input-container">
+                <input autocomplete="off" autocapitalize="off"
+                    placeholder="Please enter your keyword(s) to search." spellcheck="false"
+                    type="search" class="search-input">
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times-circle"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>当我们在说 prompt cache 的时候我们在说什么</h2>
+  <p class="post-date">2026-03-28</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>随着 AI 应用的普及，大语言模型 (LLM) 已经成了基础设施，不管是帮你写代码的 Copilot，还是做知识库问答的系统。但应用一上规模，一个很现实的问题就摆在面前：把一堆重复的指令反反复复发给模型，账单上的 Token 开销是在成倍往上涨的。</p>
+<p>看看现在的生产级 AI 系统，架构里通常都塞满了长长的系统设定 (System prompt) 、复杂的工具说明 (Tool schemas) 、从知识库里检索出来的文档 (RAG) 还有之前的历史对话。光是这些前置条件，每次请求随便就能凑满几千个 Token。每天处理上百万次请求的应用，如果每次都在让模型重复读这些没变过的内容，无疑是在烧钱。</p>
+<p>为了解决这个吞金兽，<strong>Prompt Caching（提示词缓存）</strong> 技术出现了。现在 Anthropic 和 OpenAI 这些头部大厂的原生 API 都已经支持。</p>
+<p>这门技术说白了就是把请求里重复的 Prompt 片段缓存下来，下次直接用。这不仅能明显降低响应延迟，最关键的是把 Token 成本给打下来了。这篇文章，我们来聊聊：</p>
+<ul>
+<li>Prompt Caching 到底是什么，它是怎么运作的？</li>
+<li>Anthropic 和 OpenAI 在缓存实现上的差异是什么？</li>
+<li>所谓的降本，究竟能省多少钱？</li>
+<li>哪些实际业务场景最吃这套技术？</li>
+<li>一个能在生产环境里把 Token 成本干掉 70%-90% 的架构到底该长什么样。</li>
+</ul>
+<hr>
+<h2 id="什么是-Prompt-Caching？"><a href="#什么是-Prompt-Caching？" class="headerlink" title="什么是 Prompt Caching？"></a>什么是 Prompt Caching？</h2><p>它就是一种缓存机制。当发给模型的多次请求中，有大段相同内容的 Prompt 时，系统会把它们存起来复用，而不是每次都让模型重算一遍。</p>
+<p>你想，系统指令、工具格式、边界守则还有那些业务文档平时又不会轻易变。老是重复发送既浪费了算力，又增加了成本。Prompt Caching 就分三步把这事解决了：</p>
+<ol>
+<li>存下之前已经算过的前置 Prompt 片段。</li>
+<li>遇到有同样片段的新请求，直接提出来用。</li>
+<li>这些被复用的 Token，结算时给你打个大折扣。</li>
+</ol>
+<p>就这么简单。对于那种“长篇大论的静态 Prompt”配合“一两句用户短提问”的业务系统，这绝对是降维打击。</p>
+<hr>
+<h2 id="Prompt-Caching-的工作原理"><a href="#Prompt-Caching-的工作原理" class="headerlink" title="Prompt Caching 的工作原理"></a>Prompt Caching 的工作原理</h2><p>从技术层面看，核心动作就是：<strong>识别出不同请求里那些完全相同的“前缀 Tokens (prefix tokens)”。</strong></p>
+<p>要是新来的请求，开头一连串 Token 跟之前某次请求的开头完全对得上，服务商就不会再费劲算一遍，而是直接拉取之前算好的状态（也就是 KV Cache）拿去复用。</p>
+<p>整个工作流程如下：</p>
+<ol>
+<li><strong>第一次请求</strong>：老老实实读完整个 Prompt，算完之后把这些“静态前缀”扔进缓存池。</li>
+<li><strong>后来的请求</strong>：</li>
+</ol>
+<ul>
+<li>模型一瞄，哎这前缀眼熟。</li>
+<li>直接把缓存里的 Token 序列调出来。</li>
+<li>算力这时候才启动，只去跑那些新加进去的动态 Token。</li>
+</ul>
+<p><img src="https://im.gurl.eu.org/file/AgACAgEAAxkDAAEBeEVpx5d9jvgSwjU8YHMrvWBbmzHuwwACOQtrGwTKQEZdWzLa0KuXqgEAAwIAA3cAAzoE.jpg"></p>
+<p>LLM 跑长文本是最吃显存和算力的。把算好的前缀直接匹配复用，就等于生生省下了这部分吃算力的大头。</p>
+<hr>
+<h2 id="能带来什么好处？"><a href="#能带来什么好处？" class="headerlink" title="能带来什么好处？"></a>能带来什么好处？</h2><p>在正儿八经的商业项目里，Prompt Caching 给的好处是立竿见影的：</p>
+<h3 id="1-成本断崖式下跌"><a href="#1-成本断崖式下跌" class="headerlink" title="1. 成本断崖式下跌"></a>1. 成本断崖式下跌</h3><p>这招能把 LLM 的开销砍掉一大截。被缓存命中的 Token 享受的是超低折扣价。打个比方（以最新的 GPT 定价参考），标准的输入 Token 大概是 1.25 刀 &#x2F; 百万 Token，但要是走缓存，直接跌到 0.125 刀&#x2F; 百万 Token，整整便宜了 <strong>10 倍</strong>。</p>
+<h3 id="2-响应变得飞快-低-TTFT"><a href="#2-响应变得飞快-低-TTFT" class="headerlink" title="2. 响应变得飞快 (低 TTFT)"></a>2. 响应变得飞快 (低 TTFT)</h3><p>前面那长长一串文本模型不用再一行行看了，首字吐出来的时间自然就快了。如果你做的是聊天机器人、代码 Copilot 或者那种随问随答的文档工具，用户手感会好很多。</p>
+<h3 id="3-抗压能力更强"><a href="#3-抗压能力更强" class="headerlink" title="3. 抗压能力更强"></a>3. 抗压能力更强</h3><p>流量一上万，缓存的威力就全出来了。几万次请求不需要底层模型去重复跑那些冗余计算，这让规模化的 AI 应用在商业算账时终于能松一口气了。</p>
+<hr>
+<h2 id="谁最需要它？"><a href="#谁最需要它？" class="headerlink" title="谁最需要它？"></a>谁最需要它？</h2><p>业界玩得最溜的那拨人，像 ChatGPT、Cursor、Perplexity AI 还有 Notion AI，其实后台早就把这套吃透了。两个最典型的场景：</p>
+<h3 id="检索增强生成-RAG"><a href="#检索增强生成-RAG" class="headerlink" title="检索增强生成 (RAG)"></a>检索增强生成 (RAG)</h3><p>RAG 系统得从知识库里掏文档塞进 Prompt 喂给模型。如果被高频检索的总是那么几份文档（比如企业内网支持、产品文档检索），上了缓存之后单次调用的成本呈一条直线往下降。</p>
+<h3 id="智能排障系统-Troubleshooting"><a href="#智能排障系统-Troubleshooting" class="headerlink" title="智能排障系统 (Troubleshooting)"></a>智能排障系统 (Troubleshooting)</h3><p>像那种运维环境下的得力助手，底下往往垫着上万字的排障手册和长长一串工具清单。这类发个起步价就几千 Token 的系统指令，简直就是给 Caching 实战量身定做的。</p>
+<hr>
+<h2 id="拆解一个生产环境下的缓存架构"><a href="#拆解一个生产环境下的缓存架构" class="headerlink" title="拆解一个生产环境下的缓存架构"></a>拆解一个生产环境下的缓存架构</h2><p>现在主流的做法是搞“动静分离”。路子糙但管用：<strong>把那些又长又死板的文本，一股脑全顶在 Prompt 最前面，做成一个又大又容易被命中的“缓存前缀 (Cached Prefix)”。</strong></p>
+<h3 id="A-面：静态前缀（Cached-Prefix）"><a href="#A-面：静态前缀（Cached-Prefix）" class="headerlink" title="A 面：静态前缀（Cached Prefix）"></a>A 面：静态前缀（Cached Prefix）</h3><p>保持死磕一致，位置永远置顶：</p>
+<ul>
+<li>系统核心设定 (System prompt)</li>
+<li>可调用工具表 (Tool schemas)</li>
+<li>长文本业务知识库 (RAG documents)</li>
+</ul>
+<h3 id="B-面：动态部分（Dynamic-Portion）"><a href="#B-面：动态部分（Dynamic-Portion）" class="headerlink" title="B 面：动态部分（Dynamic Portion）"></a>B 面：动态部分（Dynamic Portion）</h3><p>每次都在变化的活水内容，放在最后：</p>
+<ul>
+<li>用户的提问 (User query)</li>
+<li>先前滑动的多轮对话上下文 (Conversation history)</li>
+<li>工具返回的具体结果 (Tool outputs)</li>
+</ul>
+<h3 id="算笔账：有缓存-vs-没缓存"><a href="#算笔账：有缓存-vs-没缓存" class="headerlink" title="算笔账：有缓存 vs 没缓存"></a>算笔账：有缓存 vs 没缓存</h3><p>拿一个需要看 Kubernetes 故障的线上助手来扒一扒，一轮对话的体量差不多长这样：</p>
+<ul>
+<li>系统指令和定义好的工具：<strong>2,500 Token (死的不变)</strong></li>
+<li>K8s 补充的文档：<strong>3,500 Token (死的不变)</strong></li>
+<li>历史记录和这次的问题：<strong>350 Token (活的变的)</strong></li>
+</ul>
+<p>好，这笔请求甩出去是 6350 个输入 Token，不过其中 6000 个是“可缓存”的。假设模型叭叭叭回了 200 个 Token。</p>
+<p><em>（价格大概估一下：输入 1.25 刀&#x2F;M, 输出 10 刀&#x2F;M，缓存命中价 0.125 刀&#x2F;M）</em></p>
+<p><strong>场景 1：无缓存裸奔</strong></p>
+<ul>
+<li>请求成本 &#x3D; (6,350 × $1.25&#x2F;M) + (200 × $10&#x2F;M) &#x3D; <strong>$0.00994 &#x2F; 次</strong></li>
+</ul>
+<p><strong>场景 2：跑了 Prompt Caching 后</strong></p>
+<ul>
+<li>前缀缓存成本：6,000 × $0.125&#x2F;M &#x3D; $0.00075</li>
+<li>动态处理成本：350 × $1.25&#x2F;M &#x3D; $0.00044</li>
+<li>模型输出成本：$0.002</li>
+<li>请求成本 &#x3D; <strong>$0.00319 &#x2F; 次</strong></li>
+</ul>
+<p><strong>结论出来了：</strong> 单发请求的账单硬生生被砍掉了 68%。对于那种一个月有 100 万次调用的系统来说，没优化的账单得逼近 30 万美金，而一招精准的缓存部署直接把它拍在 10 万美金以内。工程的底子稳了，那就是实打实的利润。</p>
+<hr>
+<h2 id="在-Anthropic-上怎么用-Prompt-Caching"><a href="#在-Anthropic-上怎么用-Prompt-Caching" class="headerlink" title="在 Anthropic 上怎么用 Prompt Caching"></a>在 Anthropic 上怎么用 Prompt Caching</h2><p>Anthropic 走的是**“听你的” (明确控制)**路线。写代码的时候，你得手动塞个 <code>cache_control</code> 参数，划个圈告诉它“这块地盘我要缓存”。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;这段超长文本给我缓存1小时&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;cache_control&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ephemeral&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;ttl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1h&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>不过它有些死规矩：</strong></p>
+<ul>
+<li><strong>门槛限制</strong>：标记缓存的这块内容，最小不能低于 1024 Token。</li>
+<li>**过期时间 (TTL)**：默认挺短的，就 5 分钟，你可以手动拉长到 1 小时。</li>
+<li><strong>打断点</strong>：单次请求里最多只认你 4 个缓存断点。</li>
+<li><strong>收费讲究</strong>：Anthropic 存新缓存 (Cache writes) 时得加收 25% 的溢价；但如果后来命中了缓存 (Cache hits) 的话，那块只收底价的 10%。</li>
+</ul>
+<hr>
+<h2 id="在-OpenAI-上怎么用-Prompt-Caching"><a href="#在-OpenAI-上怎么用-Prompt-Caching" class="headerlink" title="在 OpenAI 上怎么用 Prompt Caching"></a>在 OpenAI 上怎么用 Prompt Caching</h2><p>OpenAI 就有点不一样了，它属于**“我来搞定” (隐式自动化)**类型。</p>
+<p>你不用手动加啥强制参数，系统自己有个黑盒在后端跑，属于尽力而为。要是碰到一样的，默认就给你留存几分钟。</p>
+<p>但要是你想在工程上更有把握点，可以往参数里塞 <code>prompt_cache_key</code> 和 <code>prompt_cache_retention</code> 这俩标签：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;gpt-4.5&quot;</span><span class="punctuation">,</span> <span class="comment">// 或你自己接的版本</span></span><br><span class="line">  <span class="attr">&quot;prompt_cache_key&quot;</span><span class="punctuation">:</span> <span class="string">&quot;k8s-docs-system-v1&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;prompt_cache_retention&quot;</span><span class="punctuation">:</span> <span class="string">&quot;extended&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;messages&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">     <span class="comment">// ... 你的前缀结构设定</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>**<code>prompt_cache_key</code>**：你可以把特定的业务甚至单个大客户单独拎出来设个 key，并发高的时候命中率更稳。</li>
+<li>**<code>prompt_cache_retention</code>**：要是你选了 <code>extended</code>（强力留存），对那种长尾流量多或者前缀特别长的业务就很友好。</li>
+</ul>
+<p>当你看着 API 吐回来的包里写着：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;input_tokens_details&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;cached_tokens&quot;</span><span class="punctuation">:</span> <span class="number">1400</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这事儿就算成了。</p>
+<hr>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>这年头，做 API 调用或者接大厂云服务（不管直连还是走云代理商），这昂贵的 Token 可都是按量烧的。熟练掌握不管是隐式的还是明给的缓存参数，紧盯 Token 回执报告，这已经成了产品开发的基础功。</p>
+<p>就像开头算的那笔账，做个简单的动静分离架构，就能眼见为实地抹掉 70-90% 的请求负担。大家都在卷 AI 落地的生存力，上 <strong>Prompt Caching 根本不是拿来给 PPT 贴金的，这就是能让团队活久一点的基建底座</strong>。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#AI" >
+    <span class="tag-code">AI</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2026/03/15/web-mcp/">
+        <span class="nav-arrow">← </span>
+        
+          WebMCP，以及它对浏览器内 AI 辅助的真正意义
+        
+      </a>
+    
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Utterances START -->
+      <div id="utterances"></div>
+      <script src="https://utteranc.es/client.js"
+        repo="NealST/NealST.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async></script>    
+      <!-- Utterances END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Prompt-Caching%EF%BC%9F"><span class="toc-nav-text">什么是 Prompt Caching？</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Prompt-Caching-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-nav-text">Prompt Caching 的工作原理</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%83%BD%E5%B8%A6%E6%9D%A5%E4%BB%80%E4%B9%88%E5%A5%BD%E5%A4%84%EF%BC%9F"><span class="toc-nav-text">能带来什么好处？</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-%E6%88%90%E6%9C%AC%E6%96%AD%E5%B4%96%E5%BC%8F%E4%B8%8B%E8%B7%8C"><span class="toc-nav-text">1. 成本断崖式下跌</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-%E5%93%8D%E5%BA%94%E5%8F%98%E5%BE%97%E9%A3%9E%E5%BF%AB-%E4%BD%8E-TTFT"><span class="toc-nav-text">2. 响应变得飞快 (低 TTFT)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-%E6%8A%97%E5%8E%8B%E8%83%BD%E5%8A%9B%E6%9B%B4%E5%BC%BA"><span class="toc-nav-text">3. 抗压能力更强</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%B0%81%E6%9C%80%E9%9C%80%E8%A6%81%E5%AE%83%EF%BC%9F"><span class="toc-nav-text">谁最需要它？</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90-RAG"><span class="toc-nav-text">检索增强生成 (RAG)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%99%BA%E8%83%BD%E6%8E%92%E9%9A%9C%E7%B3%BB%E7%BB%9F-Troubleshooting"><span class="toc-nav-text">智能排障系统 (Troubleshooting)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%8B%86%E8%A7%A3%E4%B8%80%E4%B8%AA%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84"><span class="toc-nav-text">拆解一个生产环境下的缓存架构</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#A-%E9%9D%A2%EF%BC%9A%E9%9D%99%E6%80%81%E5%89%8D%E7%BC%80%EF%BC%88Cached-Prefix%EF%BC%89"><span class="toc-nav-text">A 面：静态前缀（Cached Prefix）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#B-%E9%9D%A2%EF%BC%9A%E5%8A%A8%E6%80%81%E9%83%A8%E5%88%86%EF%BC%88Dynamic-Portion%EF%BC%89"><span class="toc-nav-text">B 面：动态部分（Dynamic Portion）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%AE%97%E7%AC%94%E8%B4%A6%EF%BC%9A%E6%9C%89%E7%BC%93%E5%AD%98-vs-%E6%B2%A1%E7%BC%93%E5%AD%98"><span class="toc-nav-text">算笔账：有缓存 vs 没缓存</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%9C%A8-Anthropic-%E4%B8%8A%E6%80%8E%E4%B9%88%E7%94%A8-Prompt-Caching"><span class="toc-nav-text">在 Anthropic 上怎么用 Prompt Caching</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%9C%A8-OpenAI-%E4%B8%8A%E6%80%8E%E4%B9%88%E7%94%A8-Prompt-Caching"><span class="toc-nav-text">在 OpenAI 上怎么用 Prompt Caching</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="toc-nav-text">写在最后</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'https://nealst.github.io/2026/03/28/prompt-cache/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', '/css/images/error_icon.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== '/css/images/error_icon.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2026 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/yanm1ng">yanm1ng</a>
+    
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      hljs.configure({useBR: true});
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+
+<script src="/js/script.js"></script>
+
+
+  </body>
+</html>
