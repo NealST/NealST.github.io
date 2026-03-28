@@ -210,7 +210,8 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>随着 AI 应用的普及，大语言模型 (LLM) 已经成了基础设施，不管是帮你写代码的 Copilot，还是做知识库问答的系统。但应用一上规模，一个很现实的问题就摆在面前：把一堆重复的指令反反复复发给模型，账单上的 Token 开销是在成倍往上涨的。</p>
+    <section class="markdown-content"><p><img src="https://im.gurl.eu.org/file/AgACAgEAAxkDAAEBeEZpx5kmDhu4L7EIlB6jTtlWrgXyPwACOwtrGwTKQEbXfe_coLsQTQEAAwIAA3cAAzoE.png"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>随着 AI 应用的普及，大语言模型 (LLM) 已经成了基础设施，不管是帮你写代码的 Copilot，还是做知识库问答的系统。但应用一上规模，一个很现实的问题就摆在面前：把一堆重复的指令反反复复发给模型，账单上的 Token 开销是在成倍往上涨的。</p>
 <p>看看现在的生产级 AI 系统，架构里通常都塞满了长长的系统设定 (System prompt) 、复杂的工具说明 (Tool schemas) 、从知识库里检索出来的文档 (RAG) 还有之前的历史对话。光是这些前置条件，每次请求随便就能凑满几千个 Token。每天处理上百万次请求的应用，如果每次都在让模型重复读这些没变过的内容，无疑是在烧钱。</p>
 <p>为了解决这个吞金兽，<strong>Prompt Caching（提示词缓存）</strong> 技术出现了。现在 Anthropic 和 OpenAI 这些头部大厂的原生 API 都已经支持。</p>
 <p>这门技术说白了就是把请求里重复的 Prompt 片段缓存下来，下次直接用。这不仅能明显降低响应延迟，最关键的是把 Token 成本给打下来了。这篇文章，我们来聊聊：</p>
